@@ -814,7 +814,8 @@ return {
     /// SetFeatureDirection (a front only: right and up from the world's up), AddTeamResource ("metal" / "energy";
     /// counted as income, as BAR's top bar shows it), SendMessageToTeam, GetFeatureTeam, FeatureDefs (to leave out
     /// parts a map doesn't define), MoveCtrl.Enable (any unit, buildings included; it then holds its place: no
-    /// gravity, no ground tracking), MoveCtrl.SetPosition; callins Initialize, FeatureCreated, FeatureDestroyed,
+    /// gravity, no ground tracking), MoveCtrl.SetPosition, GetFeaturesInRectangle and SetFeaturePosition (BAR's footprint
+    /// clearance: features step aside while a building is created over them); callins Initialize, FeatureCreated, FeatureDestroyed,
     /// AllowFeatureBuildStep (negative part on reclaim), AllowUnitCreation, UnitCreated (on the nanoframe),
     /// UnitDestroyed, GameFrame. For guardian towers (checked 2026-10-16): UnitDefNames (speed in elmos a second: the
     /// move types divide it by GAME_SPEED), WeaponDefNames, GetUnitHealth,
@@ -2208,6 +2209,47 @@ local function Overlaps(x, z, hx, hz, x1, z1, x2, z2)
 	return x + hx > x1 and x - hx < x2 and z + hz > z1 and z - hz < z2
 end
 
+-- BAR's "Footprint clearance" gadget (luarules/gadgets/unit_footprint_clearance.lua) destroys every feature whose
+-- position lies within a new building's or factory's xsize * 5 by zsize * 5 (geothermal vents apart), as the unit is
+-- created. A tunnel's top, a part of any structure or a feature made to be built on would go with it. LuaRules gadgets
+-- see a new unit before LuaGaia's (orders 100 and 300, EventHandler.cpp keeps clients in that order), so this one's
+-- features step aside in AllowUnitCreation, the last say before the unit is made, and come back in UnitCreated, after
+-- the clearance has looked; the next frame brings back any that are still aside (a unit refused after all).
+local aside = {} -- featureID -> where it stood
+local CLEARANCE = 5 -- BAR's: xsize * 5 either side
+
+local function StepAside(x, z, def, facing)
+	local rx, rz = (def.xsize or 2) * CLEARANCE + 16, (def.zsize or 2) * CLEARANCE + 16
+	if facing == 1 or facing == 3 then
+		rx, rz = rz, rx
+	end
+	local features = Spring.GetFeaturesInRectangle(x - rx, z - rz, x + rx, z + rz)
+	for i = 1, #features do
+		local id = features[i]
+		if (partOf[id] or builtOn[id]) and not aside[id] then
+			local fx, fy, fz = Spring.GetFeaturePosition(id)
+			if fx then
+				aside[id] = { fx, fy, fz }
+				-- Along x, towards the middle of the map, clear of the rectangle.
+				local dx = 2 * rx + 64
+				if fx > Game.mapSizeX / 2 then
+					dx = -dx
+				end
+				Spring.SetFeaturePosition(id, fx + dx, fy, fz)
+			end
+		end
+	end
+end
+
+local function StepBack()
+	for id, p in pairs(aside) do
+		if Spring.ValidFeatureID(id) then
+			Spring.SetFeaturePosition(id, p[1], p[2], p[3])
+		end
+		aside[id] = nil
+	end
+end
+
 -- Building is kept out of gaps and open middles; on a standing tunnel top (or a feature that can be built on) only
 -- buildings that aren't factories may go, since nothing can move there. A top with a roof to lift buildings onto
 -- takes only buildings wholly on it, clear of those already there (lifted, they no longer block the ground).
@@ -2247,11 +2289,15 @@ function gadget:AllowUnitCreation(unitDefID, builderID, builderTeam, x, y, z, fa
 			return false, true
 		end
 	end
+	if def.isImmobile then
+		StepAside(x, z, def, facing)
+	end
 	return true, true
 end
 
 -- A building begun on a tunnel's roof is lifted onto it, nanoframe and all, and stays there (MoveCtrl holds it).
 function gadget:UnitCreated(unitID, unitDefID, unitTeam, builderID)
+	StepBack()
 	local def = UnitDefs[unitDefID]
 	if not (def and def.isImmobile and not def.isFactory) then
 		return
@@ -2323,6 +2369,7 @@ function gadget:UnitDestroyed(unitID, unitDefID, unitTeam)
 end
 
 function gadget:GameFrame(n)
+	StepBack()
 	PumpFrame(n)
 	GuardFrame(n)
 	PadFrame(n)

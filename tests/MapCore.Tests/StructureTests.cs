@@ -78,6 +78,20 @@ sealed class MockEngine
     /// <summary>The unit types' heights, as UnitDefs gives them (a unit's middle is half its height up).</summary>
     readonly Dictionary<int, double> heights = [];
 
+    /// <summary>The unit types' footprints (xsize, squares of 8) and whether they are buildings or factories.</summary>
+    readonly Dictionary<int, (int Size, bool Immobile)> footprints = [];
+
+    /// <summary>
+    /// Whether BAR's "Footprint clearance" gadget runs (luarules/gadgets/unit_footprint_clearance.lua, read 2026-10-19):
+    /// as a building or factory is created it destroys every feature whose position lies within xsize * 5 by zsize * 5
+    /// of it, geothermal vents apart. It is LuaRules (order 100), so it sees the unit before the map's LuaGaia gadget
+    /// (order 300). On by default, as in BAR.
+    /// </summary>
+    public bool BarClearance = true;
+
+    /// <summary>Features BAR's clearance destroyed, by name.</summary>
+    public readonly List<string> Cleared = [];
+
     /// <summary>The weapon def ID the map's guardian rocket gets when the map ships its weapon file (as BAR loads weapons/*.lua).</summary>
     public const int RocketWeapon = 41;
 
@@ -194,6 +208,18 @@ sealed class MockEngine
         });
         F("ValidFeatureID", a => [Features.ContainsKey((int)Num(a, 0))]);
         F("GetFeaturePosition", a => Features.TryGetValue((int)Num(a, 0), out var f) ? [f.X, f.Y, f.Z] : []);
+        F("SetFeaturePosition", a =>
+        {
+            if (Features.TryGetValue((int)Num(a, 0), out var f))
+                (f.X, f.Y, f.Z) = (Num(a, 1), Num(a, 2), Num(a, 3));
+            return [];
+        });
+        // As LuaSyncedRead.cpp: the features whose positions lie in the rectangle.
+        F("GetFeaturesInRectangle", a =>
+        {
+            double x1 = Num(a, 0), z1 = Num(a, 1), x2 = Num(a, 2), z2 = Num(a, 3);
+            return [List(Features.Where(f => f.Value.X >= x1 && f.Value.X <= x2 && f.Value.Z >= z1 && f.Value.Z <= z2).Select(f => (object)(double)f.Key))];
+        });
         F("GetFeatureHeading", a => Features.TryGetValue((int)Num(a, 0), out var f) ? [(double)f.Heading] : []);
         F("GetFeatureHealth", a => Features.TryGetValue((int)Num(a, 0), out var f) ? [f.Health, f.MaxHealth, 0.0] : []);
         F("SetFeatureHealth", a =>
@@ -362,6 +388,11 @@ sealed class MockEngine
         }));
         spring.Set("MoveCtrl", moveCtrl);
         g.Set("Spring", spring);
+        var game = new LuaMap();
+        game.Set("mapSizeX", (double)MapWidth);
+        game.Set("mapSizeZ", (double)MapHeight);
+        game.Set("squareSize", 8.0);
+        g.Set("Game", game);
 
         var vfs = new LuaMap();
         vfs.Set("FileExists", LuaInterpreter.Function("FileExists", a => [File.Exists(Path.Combine(root, ((string)a[0]!).Replace('/', Path.DirectorySeparatorChar)))]));
@@ -393,6 +424,7 @@ sealed class MockEngine
             t.Set("height", height);
             t.Set("metalCost", metal);
             heights[id] = height;
+            footprints[id] = (size, immobile);
             unitDefs.Set((double)id, t);
         }
         U(Turret, "turret", true, false, false, 4);
@@ -488,6 +520,16 @@ sealed class MockEngine
         if (!AllowBuild(unitDef, x, z))
             return null;
         int id = AddUnit(unitDef, x, z);
+        if (BarClearance && footprints.TryGetValue(unitDef, out var fp) && fp.Immobile)
+        {
+            double r = fp.Size * 5;
+            foreach (var (fid, f) in Features.Where(f => Math.Abs(f.Value.X - x) <= r && Math.Abs(f.Value.Z - z) <= r && f.Value.Name != "geovent").ToList())
+            {
+                Features.Remove(fid);
+                Cleared.Add(f.Name);
+                lua.Invoke(gadget.Get("FeatureDestroyed"), gadget, (double)fid, -1.0); // DestroyFeature tells every gadget at once
+            }
+        }
         Call("UnitCreated", (double)id, (double)unitDef, 0.0, 1.0);
         return id;
     }
@@ -893,6 +935,48 @@ static class StructureTests
         engine.Reclaim(100, (600, 0, engine.Named("bunker_broken").Single().Id, 0.01)); // no markers placed: what is left of it is reclaimed
         Assert.True(engine.Build(MockEngine.Turret, top.X1 + 32, top.Z1 + 30) is int again && engine.Units[again].Y == 80,
             "rebuilt, the roof takes buildings again where the gone ones stood");
+    }
+
+    /// <summary>
+    /// BAR's footprint clearance destroys features under a new building. Found in game: a build-on feature vanished when
+    /// built on. The gadget's features step aside while the building is made, so a tunnel's roof (and what it holds) and a
+    /// build-on feature stay; a plain rock still goes, as BAR means it to.
+    /// </summary>
+    [Test]
+    public static void BarsFootprintClearanceLeavesStructuresBe()
+    {
+        var s = Fresh("structures-clearance");
+        s.AddStructureKind("bunker", StructureType.Tunnel, StructureKindSettings.Built(StructureLook.Metal, StructureType.Tunnel) with { Gap = 6, Depth = 4 });
+        s.PlaceStructure("bunker", 3008, 3008, 0);
+        var rockDef = FeatureDefs.Load(s.Package.Root).SelectMany(f => f.Features).Single(f => f.Name == "agorm_rock2");
+        s.AddCustomFeature("platform", "agorm_rock2", CustomFeatureSettings.FromDefinition(rockDef) with { BuildOn = 2, FootprintX = 4, FootprintZ = 4 });
+        var top = StructureLayout.Parts(s.Structures.Kinds["bunker"], s.Structures.Instances.Single()).Single(p => p.Role == "centre");
+        var engine = new MockEngine(s);
+        int platform = engine.AddFeature("platform", 2048, 2048);
+        int rock = engine.AddFeature("agorm_rock1", 1024, 1024);
+        engine.Load();
+        var before = engine.Features.ToDictionary(f => f.Key, f => (f.Value.X, f.Value.Y, f.Value.Z));
+
+        // On the roof, over the top's own position: the turret is lifted onto it and the top stays, where it was.
+        var (cx, cz) = ((top.X1 + top.X2) / 2, (top.Z1 + top.Z2) / 2);
+        int centre = engine.Named("bunker_centre").Single().Id;
+        int onRoof = engine.Build(MockEngine.Turret, cx, cz) ?? throw new TestFailure("a turret on the roof's middle is allowed");
+        Assert.True(engine.Features.ContainsKey(centre) && engine.Cleared.Count == 0, $"the roof outlasts BAR's clearance (cleared: {string.Join(", ", engine.Cleared)})");
+        Assert.True(engine.Units[onRoof] is { MoveCtrl: true, Y: 80 }, $"and the turret stands on it, 80 up ({engine.Units[onRoof].Y})");
+        Assert.True(engine.Features.All(f => before.TryGetValue(f.Key, out var p) && p == (f.Value.X, f.Value.Y, f.Value.Z)),
+            "every feature is back where it stood, in the same frame");
+
+        // On the build-on feature: it stays too.
+        Assert.True(engine.Build(MockEngine.Turret, 2048, 2048) is int && engine.Features.ContainsKey(platform) && engine.Features[platform] is { X: 2048, Z: 2048 },
+            "a turret on a feature made to be built on leaves it standing, in place");
+
+        // A plain rock under a new building goes, as BAR means it to: the mock's clearance is real.
+        Assert.True(engine.Build(MockEngine.Turret, 1024, 1024) is int && !engine.Features.ContainsKey(rock) && engine.Cleared.SequenceEqual(["agorm_rock1"]),
+            "a rock under a new building is cleared");
+
+        // The tunnel still works afterwards: destroyed, its roof's buildings go with it.
+        engine.Kill(centre);
+        Assert.True(!engine.Units.ContainsKey(onRoof), "the roof's turret goes with the tunnel, as before");
     }
 
     [Test]
