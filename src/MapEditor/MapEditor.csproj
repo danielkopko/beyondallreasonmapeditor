@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- WinForms editor: a thin shell over MapCore. -->
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <RootNamespace>MapEditor</RootNamespace>
+    <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MapCore\MapCore.csproj" />
+  </ItemGroup>
+
+  <!-- BAR's standard units and their pictures (tools/MapResearch barunits), for a guardian tower's targets. -->
+  <ItemGroup>
+    <Content Include="BarUnits\**" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <!-- BAR's own features, with the models of the ones maps use (tools/MapResearch barfeatures), to draw them. -->
+  <ItemGroup>
+    <Content Include="BarFeatures\**" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

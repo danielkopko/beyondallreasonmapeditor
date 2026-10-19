@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Developer tool: measurements behind design decisions (see PLAN.md, Step 6). Not part of the editor. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>MapResearch</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\MapCore\MapCore.csproj" />
+  </ItemGroup>
+
+</Project>

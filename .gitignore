@@ -1,0 +1,14 @@
+bin/
+obj/
+.vs/
+*.user
+# Map archives and editor workspaces are large and binary.
+testdata/
+workspace/
+out/
+
+# Third-party map archives kept beside the project (large; the tests use testdata/).
+/*.sd7
+/*.sdz
+# Local Claude Code settings.
+.claude/

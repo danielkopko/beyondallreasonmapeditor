@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- File formats and editing operations. No UI dependencies. -->
+  <PropertyGroup>
+    <RootNamespace>MapCore</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="MapCore.Tests" />
+    <InternalsVisibleTo Include="MapResearch" />
+  </ItemGroup>
+
+</Project>

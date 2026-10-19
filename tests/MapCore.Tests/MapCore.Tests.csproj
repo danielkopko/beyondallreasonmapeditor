@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Console test runner. No test-framework packages, so the build stays offline. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>MapCore.Tests</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\MapCore\MapCore.csproj" />
+  </ItemGroup>
+
+</Project>

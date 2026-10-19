@@ -1,0 +1,26 @@
+# Not used for the shipped build any more: since 2026-10-16 every wreck ships (barfeatures <out> <commit> all <unit catalog>).
+# Kept as the list of wrecks the seven maps tried so far place, for a smaller build (pass this file instead of all).
+# Wrecks whose models ship with the editor (MapResearch barfeatures): the ones the seven maps tried so far place.
+# acidicquarry, all_that_glitters, all_that_simmers, ascendancy, crimson_bay, folsomdamr, industrial_revolution
+armadvsol_dead
+armafus_dead
+armamd_dead
+armanni_dead
+armasp_dead
+armcarry_dead
+armckfus_dead
+armestor_dead
+armfus_dead
+armgate_dead
+armgmm_dead
+armnanotc_dead
+armpb_dead
+armsolar_dead
+armtarg_dead
+armuwadves_dead
+armwin_dead
+corbats_dead
+corpship_dead
+corpt_dead
+corroy_dead
+corssub_dead

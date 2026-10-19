@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Command-line front end over MapCore. Every editor operation is reachable from here. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>MapTool</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MapCore\MapCore.csproj" />
+  </ItemGroup>
+
+  <!-- BAR's standard units (the editor's copy), for a guardian tower's "default" targets. -->
+  <ItemGroup>
+    <Content Include="..\MapEditor\BarUnits\**" LinkBase="BarUnits" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <!-- BAR's own features and their models (the editor's copy), for previews of them. -->
+  <ItemGroup>
+    <Content Include="..\MapEditor\BarFeatures\**" LinkBase="BarFeatures" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>
