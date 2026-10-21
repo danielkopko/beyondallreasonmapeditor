@@ -359,7 +359,10 @@ static int Usage()
           install <archive> [<maps folder>] [--overwrite] [--allow-same-name]
                                               Copy a map into BAR's maps folder (found automatically when
                                               not given). Refuses if another archive there has the same
-                                              name and version, or a file of that name exists.
+                                              name and version, or a file of that name exists. Also puts
+                                              the map's picture where BAR's lobby looks for it (its minimap,
+                                              in LuaMenu/Images/Minimaps beside the maps folder): the lobby
+                                              shows pictures only of maps it knows otherwise.
           png-diff <a.png> <b.png>            Count pixels whose colour differs (exit code 1 if any do)
           extract <archive> <folder>          Extract a map into a new or empty folder
           pack    <folder> <archive> [--overwrite]
@@ -776,6 +779,16 @@ static int Install(string archive, string[] options)
     if (same.Count > 0 && !allowSame)
         throw new InvalidOperationException("Not copied. Give the map a new name or version, remove the other archive, or add --allow-same-name.");
     Console.WriteLine($"Copied \"{name} {version}\" to {MapInstaller.Install(archive, folder, overwrite)}");
+    try
+    {
+        Console.WriteLine(MapInstaller.InstallLobbyPicture(archive, folder) is string picture
+            ? $"Lobby picture: {picture}"
+            : "warning: no lobby picture written (the map's minimap couldn't be read); the lobby will show none.");
+    }
+    catch (Exception ex) when (ex is IOException or InvalidDataException or UnauthorizedAccessException or ArgumentException or InvalidOperationException)
+    {
+        Console.WriteLine($"warning: the map is installed, but its lobby picture wasn't written ({ex.Message}); the lobby will show none.");
+    }
     return 0;
 }
 

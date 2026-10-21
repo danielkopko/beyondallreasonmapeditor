@@ -177,6 +177,8 @@ static class SelfTest
                 File.Copy(archive, Path.Combine(maps, "acidicquarry_5.17.sd7"));
                 var copied = await form.CopyToMapsAsync(target, maps, s.Info.Name, s.Info.Version);
                 Check(copied != null && File.Exists(copied), "Save As copies the new map into the maps folder");
+                Check(File.Exists(Path.Combine(outDir, "LuaMenu", "Images", "Minimaps", MapInstaller.LobbyPictureName(s.Info.Name ?? "", s.Info.Version))),
+                    "and puts its picture where BAR's lobby looks for it");
                 Check(await form.CopyToMapsAsync(target, maps, s.Info.Name, s.Info.Version) == null &&
                       form.Messages.Last().Contains("already exists", StringComparison.Ordinal), "a second copy doesn't replace the first without asking");
                 var lookalike = Path.Combine(outDir, "lookalike.sd7");

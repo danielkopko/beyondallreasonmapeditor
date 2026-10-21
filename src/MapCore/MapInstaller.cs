@@ -64,6 +64,61 @@ public static class MapInstaller
         return same;
     }
 
+    /// <summary>
+    /// The file BAR's lobby looks for to show a map's picture (on the setup screen and in the map list) when the lobby
+    /// has none of its own (it ships pictures only for the maps it knows; it never reads one out of a map archive):
+    /// the map's name and version as the engine joins them, spaces made underscores, ".jpg". The lobby reads it from
+    /// LuaMenu/Images/Minimaps in BAR's data folder; the engine tells an image's kind by its contents, so a PNG
+    /// under that name shows too.
+    /// </summary>
+    public static string LobbyPictureName(string name, string? version)
+    {
+        name = name.Trim();
+        version = version?.Trim();
+        // As the engine names a map: its name, and its version after a space unless the name already has it.
+        var full = string.IsNullOrEmpty(version) || name.Contains(version, StringComparison.Ordinal) ? name : $"{name} {version}";
+        return full.Replace(' ', '_') + ".jpg";
+    }
+
+    /// <summary>
+    /// Writes the archive's picture for BAR's lobby (see <see cref="LobbyPictureName"/>) into the data folder that holds
+    /// <paramref name="mapsFolder"/>: the map's own minimap, drawn at the map's proportions with its longer side 1024
+    /// pixels, as the lobby's own pictures are. Replaces an older picture of the same map. Returns where it went, or
+    /// null if the archive's name, .smf or minimap can't be read.
+    /// </summary>
+    public static string? InstallLobbyPicture(string archive, string mapsFolder)
+    {
+        if (ReadIdentity(archive) is not (string name, var version) || string.IsNullOrWhiteSpace(name))
+            return null;
+        var smfEntries = ArchiveIO.List(archive).Where(e => !e.IsDirectory && e.Path.EndsWith(".smf", StringComparison.OrdinalIgnoreCase)).ToList();
+        string? declared = null;
+        try
+        {
+            declared = ArchiveIO.ReadEntry(archive, MapPackage.MapInfoFileName) is byte[] info ? MapInfo.FromBytes(info).MapFile?.Replace('\\', '/') : null;
+        }
+        catch (Exception ex) when (ex is InvalidDataException or InvalidOperationException or Lua.LuaSyntaxException)
+        {
+        }
+        var entry = smfEntries.FirstOrDefault(e => declared != null && e.Path.Equals(declared, StringComparison.OrdinalIgnoreCase))
+                    ?? (smfEntries.Count == 1 ? smfEntries[0] : null);
+        if (entry == null || ArchiveIO.ReadEntry(archive, entry.Path) is not byte[] bytes)
+            return null;
+        var smf = Smf.SmfFile.Load(bytes);
+        double longer = Math.Max(smf.MapX, smf.MapY);
+        int width = Math.Max(1, (int)Math.Round(Smf.Minimap.Size * smf.MapX / longer));
+        int height = Math.Max(1, (int)Math.Round(Smf.Minimap.Size * smf.MapY / longer));
+        var picture = Smf.Minimap.Decode(smf).Resample(width, height);
+        var dataFolder = Path.GetDirectoryName(Path.GetFullPath(mapsFolder).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar))
+                         ?? throw new IOException($"{mapsFolder} has no parent folder for BAR's lobby pictures.");
+        var folder = Path.Combine(dataFolder, "LuaMenu", "Images", "Minimaps");
+        Directory.CreateDirectory(folder);
+        var target = Path.Combine(folder, LobbyPictureName(name, version));
+        var temp = target + ".partial";
+        Imaging.PngWriter.WriteRgba(temp, picture);
+        File.Move(temp, target, overwrite: true);
+        return target;
+    }
+
     /// <summary>Copies the archive into the folder under its own file name; returns where it went.</summary>
     /// <exception cref="IOException">A file of that name is already there and <paramref name="overwrite"/> is false.</exception>
     public static string Install(string archive, string folder, bool overwrite = false)

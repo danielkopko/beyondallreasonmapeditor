@@ -1507,9 +1507,23 @@ sealed partial class MainForm : Form
             replace = true;
         }
         string? copied = null;
-        if (!await RunBusy("Copying into BAR's maps folder", _ => Task.Run(() => copied = MapInstaller.Install(archive, folder, replace))))
+        string? picture = null, pictureProblem = null;
+        if (!await RunBusy("Copying into BAR's maps folder", _ => Task.Run(() =>
+            {
+                copied = MapInstaller.Install(archive, folder, replace);
+                try
+                {
+                    picture = MapInstaller.InstallLobbyPicture(archive, folder);
+                    pictureProblem = picture == null ? "the map's minimap couldn't be read" : null;
+                }
+                catch (Exception ex) when (ex is IOException or InvalidDataException or UnauthorizedAccessException or ArgumentException or InvalidOperationException)
+                {
+                    pictureProblem = ex.Message; // the map is installed all the same
+                }
+            })))
             return null;
         Log($"Copied into BAR's maps folder: {copied}");
+        Log(pictureProblem == null ? $"Its picture for BAR's lobby: {picture}" : $"No picture for BAR's lobby ({pictureProblem}); the lobby will show none.");
         return copied;
     }
 

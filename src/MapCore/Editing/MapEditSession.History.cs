@@ -113,6 +113,11 @@ public sealed partial class MapEditSession
     {
         RecordBaseline();
         var snapshots = CaptureFor(operation);
+        // The minimap is redrawn in the style of the map's own, fitted from the minimap and the texture as they were
+        // before either changed. Fitted after (a whole new texture compared with a minimap of the old one), the redrawn
+        // minimap comes out a flat wash; a primed session has it already.
+        if (minimapStyle == null && snapshots.Any(s => (s.Layers & (MapLayers.Texture | MapLayers.Minimap)) != 0))
+            _ = Style;
         string result;
         try
         {

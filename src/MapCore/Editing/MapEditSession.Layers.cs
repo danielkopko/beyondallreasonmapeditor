@@ -106,8 +106,8 @@ public sealed partial class MapEditSession
                 var (update, changed) = Texture.UpdateFrom(image);
                 if (!changed.IsEmpty)
                 {
+                    RefreshTexture(changed); // the decoded texture first: the minimap is drawn from it
                     RebuildMinimap(changed);
-                    RefreshTexture(changed);
                     textureChanged = true;
                 }
                 return $"texture: {update.TilesRewritten:N0} tiles re-encoded ({update.TilesAdded} new copies of shared tiles)" +

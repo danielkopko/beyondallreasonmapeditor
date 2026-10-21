@@ -2,6 +2,7 @@ using System.Diagnostics;
 using MapCore.Editing;
 using MapCore.Imaging;
 using MapCore.Movement;
+using MapCore.Smf;
 using MapCore.WorldMachine;
 
 namespace MapCore.Tests;
@@ -168,6 +169,29 @@ static class WorldMachineTests
         Assert.True(s.Heights.Heights.AsSpan().SequenceEqual(before), "undo puts the heights back exactly");
     }
 
+    /// <summary>
+    /// How closely <paramref name="a"/> follows <paramref name="b"/>: the correlation of their colour channels, averaged
+    /// over the channels <paramref name="b"/> varies in (a flat one says nothing).
+    /// </summary>
+    internal static double Likeness(RgbaImage a, RgbaImage b)
+    {
+        var found = new List<double>();
+        for (int c = 0; c < 3; c++)
+        {
+            double sa = 0, sb = 0, saa = 0, sbb = 0, sab = 0, n = 0;
+            for (int i = c; i < a.Pixels.Length; i += 4)
+            {
+                double x = a.Pixels[i], y = b.Pixels[i];
+                (sa, sb, saa, sbb, sab, n) = (sa + x, sb + y, saa + x * x, sbb + y * y, sab + x * y, n + 1);
+            }
+            double spreadA = n * saa - sa * sa, spreadB = n * sbb - sb * sb;
+            if (spreadB / (n * n) < 4) // under 2 levels of standard deviation: flat
+                continue;
+            found.Add(spreadA < 1e-9 ? 0 : (n * sab - sa * sb) / Math.Sqrt(spreadA * spreadB));
+        }
+        return found.Count == 0 ? 0 : found.Average();
+    }
+
     [Test]
     public static void TextureSplatAndGrassComeBackAndAJournalReplaysThem()
     {
@@ -227,6 +251,11 @@ static class WorldMachineTests
                 spotChanged++;
         }
         Assert.True(spotChanged == 0, $"metal spots keep their look ({spotChanged} changed)");
+        var old = new RgbaImage(image.Width, image.Height);
+        Buffer.BlockCopy(textureBefore, 0, old.Pixels, 0, textureBefore.Length);
+        var minimap = Minimap.Decode(live.Smf);
+        double toNew = Likeness(minimap, image.Resample(Minimap.Size, Minimap.Size)), toOld = Likeness(minimap, old.Resample(Minimap.Size, Minimap.Size));
+        Assert.True(toNew > toOld + 0.3, $"the minimap shows the texture brought back (likeness {toNew:0.00}), not the old one ({toOld:0.00})");
         var splatPng = Path.Combine(dir, "splat_back.png");
         live.ExportLayer("resource:splatDistrTex", splatPng);
         var back = PngReader.Read(splatPng).ToRgba();

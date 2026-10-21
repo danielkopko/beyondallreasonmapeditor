@@ -13,15 +13,29 @@ public sealed record MinimapStyle(double[] Land, double[] Water)
     /// <summary>Unchanged colours.</summary>
     public static MinimapStyle Identity { get; } = new([1, 0, 1, 0, 1, 0], [1, 0, 1, 0, 1, 0]);
 
-    /// <summary>Fits the style from the minimap and the texture resampled to its size; <paramref name="underWater"/>(x, y) in minimap pixels.</summary>
+    /// <summary>
+    /// On land, the least share of the minimap's variation the texture must explain (r², in each colour channel) for
+    /// the fit to be used: a minimap that isn't a picture of this texture (another layout's, a placeholder) would fit as
+    /// a flat wash. (BAR's own maps fit with 0.78 or more: Acidic Quarry, All That Glitters, All That Simmers,
+    /// Ascendancy, Crimson Bay, Folsom Dam, Industrial Revolution.)
+    /// </summary>
+    public const double LandFitFloor = 0.3;
+
+    /// <summary>
+    /// Fits the style from the minimap and the texture resampled to its size; <paramref name="underWater"/>(x, y) in
+    /// minimap pixels. Where the land fails to fit in a channel (see <see cref="LandFitFloor"/>), the land's colours are
+    /// left as they are, all three (one channel fitted and another not would cast a colour). Under water a flat fit
+    /// stands: minimaps often show the water's surface, whatever the bed below.
+    /// </summary>
     public static MinimapStyle Fit(RgbaImage minimap, RgbaImage texture, Func<int, int, bool> underWater)
     {
         var land = new double[6];
         var water = new double[6];
+        bool landFits = true;
         for (int c = 0; c < 3; c++)
             foreach (bool wet in new[] { false, true })
             {
-                double sxx = 0, sx = 0, sxy = 0, sy = 0, n = 0;
+                double sxx = 0, sx = 0, sxy = 0, sy = 0, syy = 0, n = 0;
                 for (int y = 0; y < minimap.Height; y++)
                     for (int x = 0; x < minimap.Width; x++)
                     {
@@ -29,19 +43,21 @@ public sealed record MinimapStyle(double[] Land, double[] Water)
                             continue;
                         int i = (y * minimap.Width + x) * 4 + c;
                         double t = texture.Pixels[i], m = minimap.Pixels[i];
-                        (sxx, sx, sxy, sy, n) = (sxx + t * t, sx + t, sxy + t * m, sy + m, n + 1);
+                        (sxx, sx, sxy, sy, syy, n) = (sxx + t * t, sx + t, sxy + t * m, sy + m, syy + m * m, n + 1);
                     }
                 var target = wet ? water : land;
-                double det = n * sxx - sx * sx;
+                double det = n * sxx - sx * sx, spread = n * syy - sy * sy, covariance = n * sxy - sx * sy;
                 if (n < 64 || Math.Abs(det) < 1e-9)
                 {
                     (target[c * 2], target[c * 2 + 1]) = (1, 0); // too little of this kind of ground: leave it as is
                     continue;
                 }
-                double a = (n * sxy - sx * sy) / det;
+                if (!wet && (spread < 1e-9 || covariance * covariance / (det * spread) < LandFitFloor))
+                    landFits = false; // the minimap doesn't show this texture
+                double a = covariance / det;
                 (target[c * 2], target[c * 2 + 1]) = (a, (sy - a * sx) / n);
             }
-        return new MinimapStyle(land, water);
+        return new MinimapStyle(landFits ? land : [1, 0, 1, 0, 1, 0], water);
     }
 
     public Rgba Apply(Rgba texture, bool underWater)

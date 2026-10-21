@@ -50,6 +50,7 @@ There is also **MapTool**, a command-line tool that does every edit the editor d
 5. **File › Save As** asks for a new **name** and **version**, then writes a new archive.
    - It refuses the original name and version: BAR would treat a changed map under the same name as a mismatch in multiplayer.
    - Tick *Also copy it into BAR's maps folder* to install it too. The editor checks that folder for another map with the same name and version first.
+   - Installing also puts the map's picture where BAR's lobby looks for it, so the setup screen and map list show it (see *Known limits*).
 
 ### The look
 
@@ -436,7 +437,7 @@ MapTool worldmachine send <archive> <folder>                heights, texture, ma
 MapTool worldmachine bring <archive> <new-archive> <folder> [--as-is] [--stretch | --range lo,hi]   World Machine's outputs back
 MapTool render  <archive> <out.png> [--layer ...]           draw the 2D view
 MapTool render3d <archive> <out.png> [--camera x,z,yaw,pitch,distance] [--passability hovercraft|vehicles|bots] [--models]
-MapTool install <archive> [<maps folder>]                   copy into BAR's maps folder, safely
+MapTool install <archive> [<maps folder>]                   copy into BAR's maps folder, safely, with its lobby picture
 MapTool assets collect <archive>... [--library <folder>]    add maps' assets to the library
 MapTool assets list [--library <folder>]                    the library by category, with ids
 MapTool assets preview <id> [<feature>] <out.png>           draw a library asset's model
@@ -484,7 +485,7 @@ Positions are in game units, with x running east and z running south. Operations
 
 ### Example: a map from a drawing
 
-`out/step41-ravine/simmering_ravine_1.3.sd7` ("Simmering Ravine 1.3") is `mirrored_ravine_map_middle_walls_doors.svg` (a mirrored ravine with walls and doors on the middle path) built on All That Simmers with MapTool, in its textures and colours. `out/step41-ravine/CHECKLIST.md` has the layout, what was checked, pictures and what to try in game.
+`out/step41-ravine/simmering_ravine_1.4.sd7` ("Simmering Ravine 1.4") is `mirrored_ravine_map_middle_walls_doors.svg` (a mirrored ravine with walls and doors on the middle path) built on All That Simmers with MapTool, in its textures and colours. `out/step41-ravine/CHECKLIST.md` has the layout, what was checked, pictures and what to try in game.
 
 - **From the drawing** (a converter in `out/step41-ravine/converter/`, using MapCore): the heightmap (the SVG turned a quarter to fit the 14 x 20 map, Team A north, Team B south), a base texture cut from All That Simmers' own ground, and four operation files.
 - **With MapTool** (`edit … @run_a.txt` to `@run_d.txt`, three of them with `--mirror tb`): All That Simmers' layout cleared (its 2,857 trees and plants, metal, starts), the heights imported, the roads graded with ramps, cliff detail, the texture painted by Beautify in All That Simmers' colours, dirt paths, foot tracks, bridges, ford and spot looks painted, the paths drawn in as one network (dirt; bitumen, concrete and cobbles in the valley, the cobbles running on down the switchbacks to the bridges' stone-flag decks; junctions blended) and the ford's weed beds, its detail maps made again, the door kind, the stone rampart either side of it (ramps), metal, vents, and its own trees with BAR's mossy rocks.
@@ -588,6 +589,11 @@ What the editor relies on, checked against the RecoilEngine source and BAR's own
 - **Start positions:** teams can be moved but not added or removed. Start boxes (`map_startboxes.lua`) don't follow moved start positions.
 - **Metal from images:** a map whose metal comes from `smf.metalmapTex` can't have its metal edited.
 - **The minimap** is redrawn from the texture in the map's own colour style, not rendered in game. Water and lighting are approximated.
+  - The style is fitted from the map as it was before the session's first texture edit. A minimap that isn't a picture of its texture (another layout's, a placeholder) is not followed on land: there the texture's own colours are used.
+- **BAR's lobby** shows pictures only for the maps it ships pictures for. It never reads one from a map archive.
+  - For any other map it reads `LuaMenu/Images/Minimaps/<name>_<version>.jpg` from BAR's data folder (spaces in the name become underscores).
+  - Installing from the editor or with `MapTool install` writes that file: the map's minimap at the map's proportions, longer side 1024 pixels, as PNG data (the engine reads an image by its contents, whatever its extension).
+  - A map copied into the maps folder by hand gets no picture. Each player's lobby reads its own data folder, so other players see the picture only if they installed the map this way too.
 - **Recovery** replays onto the original archive, so if that file is moved or changed, the unsaved edits can't be recovered.
 
 ## Building from source

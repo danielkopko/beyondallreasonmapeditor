@@ -1,6 +1,7 @@
 using MapCore.Editing;
 using MapCore.Heights;
 using MapCore.Imaging;
+using MapCore.Smf;
 
 namespace MapCore.Tests;
 
@@ -142,6 +143,61 @@ static class LayerTests
         Assert.Equal(before.GetPixel(2000, 3000), after.GetPixel(2000, 3000), "far away unchanged");
         Assert.True(!session.Smf.Minimap.AsSpan().SequenceEqual(minimapBefore), "minimap redrawn there");
         Assert.Throws<InvalidOperationException>(() => session.Apply("texture-paint:1,1:10:300,0,0"), "colour out of range");
+    }
+
+    /// <summary>
+    /// A whole new texture imported: the minimap shows it (it was drawn from the texture as it was before the import,
+    /// in a session that had decoded it already, as the editor's always has), in the style fitted from the map as it
+    /// was. A session's first edit (MapTool's way: no window primes the session) comes out exactly as in a primed one;
+    /// fitted after the import instead, a minimap of the old layout against the new texture came out a flat wash.
+    /// </summary>
+    [Test]
+    public static void TextureImportRedrawsTheMinimapAsAPrimedSessionDoes()
+    {
+        var source = FreshSession("minimap-style-source", out _).TextureImage;
+        var mirrored = new RgbaImage(source.Width, source.Height); // another layout in the same colours
+        for (int y = 0; y < source.Height; y++)
+            for (int x = 0; x < source.Width; x++)
+                mirrored.SetPixel(x, y, source.GetPixel(source.Width - 1 - x, y));
+        var path = Path.Combine(TestData.NewWorkDir("minimap-style-png"), "mirrored.png");
+        PngWriter.WriteRgba(path, mirrored);
+
+        var primed = FreshSession("minimap-style-primed", out _);
+        primed.Prime();
+        primed.ImportLayer("texture", path);
+        var plain = FreshSession("minimap-style-plain", out _);
+        plain.ImportLayer("texture", path);
+        Assert.True(plain.Smf.Minimap.AsSpan().SequenceEqual(primed.Smf.Minimap), "the minimap redrawn as a primed session redraws it");
+
+        var minimap = Minimap.Decode(plain.Smf);
+        double toNew = WorldMachineTests.Likeness(minimap, mirrored.Resample(Minimap.Size, Minimap.Size));
+        double toOld = WorldMachineTests.Likeness(minimap, source.Resample(Minimap.Size, Minimap.Size));
+        Assert.True(toNew > toOld + 0.3, $"the minimap shows the new texture (likeness {toNew:0.00}), not the old ({toOld:0.00})");
+    }
+
+    /// <summary>A minimap that isn't a picture of the texture leaves the land's colours as they are; one that is, fits.</summary>
+    [Test]
+    public static void MinimapStyleFitsOnlyAMinimapOfItsTexture()
+    {
+        var texture = new RgbaImage(64, 64);
+        var noise = new RgbaImage(64, 64);
+        var darker = new RgbaImage(64, 64);
+        var halfNoise = new RgbaImage(64, 64);
+        var random = new Random(7);
+        for (int y = 0; y < 64; y++)
+            for (int x = 0; x < 64; x++)
+            {
+                var t = new Rgba((byte)(40 + x * 3), (byte)(60 + y * 2), (byte)(30 + x + y), 255);
+                texture.SetPixel(x, y, t);
+                noise.SetPixel(x, y, new Rgba((byte)random.Next(256), (byte)random.Next(256), (byte)random.Next(256), 255));
+                darker.SetPixel(x, y, new Rgba((byte)(t.R * 0.8 + 10), (byte)(t.G * 0.8 + 10), (byte)(t.B * 0.8 + 10), 255));
+                halfNoise.SetPixel(x, y, new Rgba((byte)(t.R * 0.8 + 10), (byte)(t.G * 0.8 + 10), (byte)random.Next(256), 255));
+            }
+        var probe = new Rgba(100, 150, 200, 255);
+        Assert.Equal(probe, MinimapStyle.Fit(noise, texture, (_, _) => false).Apply(probe, false), "another picture: the land as it is");
+        Assert.Equal(probe, MinimapStyle.Fit(halfNoise, texture, (_, _) => false).Apply(probe, false), "unlike in one channel: all three as they are (no colour cast)");
+        var fitted = MinimapStyle.Fit(darker, texture, (_, _) => false).Apply(probe, false);
+        Assert.True(Math.Abs(fitted.R - 90) <= 1 && Math.Abs(fitted.G - 130) <= 1 && Math.Abs(fitted.B - 170) <= 1, $"its own picture, darker: fitted ({fitted})");
     }
 
     [Test]

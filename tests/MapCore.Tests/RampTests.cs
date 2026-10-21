@@ -320,7 +320,9 @@ static class RampTests
 
     /// <summary>
     /// Straight ramps come out byte for byte as they did before ramps could bend (hashes taken from the code of
-    /// 2026-10-15, before paths): journals of straight ramps replay exactly.
+    /// 2026-10-15, before paths): journals of straight ramps replay exactly. The minimap's hashes are from 2026-10-21:
+    /// since then a session fits its minimap style before its first texture edit, so an unprimed session's minimap
+    /// is a primed one's (before, the style was fitted after the ramp had painted).
     /// </summary>
     [Test]
     public static void StraightRampsComeOutAsBefore()
@@ -330,8 +332,8 @@ static class RampTests
                                           Hash(s.Heights.Heights.SelectMany(BitConverter.GetBytes).ToArray()) + " " + Hash(s.Smf.Minimap);
         (string Op, string Expected)[] cases =
         [
-            ("ramp:3000,3000:3346.4,3200:100:10,90:48:1:0.4", "C34047A2F43E204A 8776A1F70F1C2049 AD460DC384D75732 AA1A3B363A6127D6"),
-            ("ramp:1380,900:2180,900:200:auto,auto:auto:2:0.6:auto:auto", "85244CE078BA3E71 C8D1EABE4F4AA462 F6F1CE51A90780AE 9A5097D473AB72B8"),
+            ("ramp:3000,3000:3346.4,3200:100:10,90:48:1:0.4", "C34047A2F43E204A 8776A1F70F1C2049 AD460DC384D75732 2AB7E530D1CD95B9"),
+            ("ramp:1380,900:2180,900:200:auto,auto:auto:2:0.6:auto:auto", "85244CE078BA3E71 C8D1EABE4F4AA462 F6F1CE51A90780AE A3309971163DB8C5"),
         ];
         foreach (var (op, expected) in cases)
         {
@@ -340,6 +342,10 @@ static class RampTests
             string state = State(s);
             Report.Info($"{op}: {state}");
             Assert.Equal(expected, state, $"{op}: texture, splat map, heights and minimap");
+            var primed = Fresh("ramp-straight-primed-" + Math.Abs(op.GetHashCode()));
+            primed.Prime();
+            primed.Apply(op);
+            Assert.Equal(state, State(primed), $"{op}: as a primed session makes it");
         }
     }
 

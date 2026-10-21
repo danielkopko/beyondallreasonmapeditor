@@ -344,8 +344,8 @@ public sealed partial class MapEditSession
         var (update, changed) = Texture.UpdateFrom(image);
         if (!changed.IsEmpty)
         {
+            RefreshTexture(changed); // the decoded texture first: the minimap is drawn from it
             RebuildMinimap(changed);
-            RefreshTexture(changed);
             textureChanged = true;
         }
         string size = source.Width == current.Width && source.Height == current.Height ? $"{current.Width}x{current.Height}" : $"{source.Width}x{source.Height} resampled to {current.Width}x{current.Height}";
