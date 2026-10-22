@@ -1,0 +1,18 @@
+2096 blocking features, 13.5% of the map with the room round them.
+Vehicles (TANK3: 27 degrees, 20 deep) and bots (BOT3: 54 degrees), round the features:
+  ok   from the north-west start, vehicles reach all four starts (78.6% of the map)
+  ok   by west, across the marsh alone, vehicles cross from north to south
+  ok   by west, across the marsh alone, bots cross from north to south
+  ok   by the breach alone, vehicles cross from north to south
+  ok   by the breach alone, bots cross from north to south
+  ok   by east, over and round the mound alone, vehicles cross from north to south
+  ok   by east, over and round the mound alone, bots cross from north to south
+  ok   with the three lanes shut, the ship walls the north off from the south
+Metal spots and starts:
+  ok   no blocking feature within 40 of any of the 24 metal spots (0 crowded)
+  ok   bots reach every metal spot and vent
+  ok   vehicles reach every metal spot
+  ok   every spot and vent is level enough to build on (the most any rises over its 32-unit footprint: 0.0)
+  ok   every start is on dry, nearly level ground
+Halves alike (200000 points against their mirror image): median 0.00, 99% within 0.00, worst 0.00
+0 check(s) failed

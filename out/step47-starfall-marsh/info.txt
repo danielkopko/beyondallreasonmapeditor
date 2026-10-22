@@ -1,0 +1,25 @@
+Name         : Starfall Marsh 1.0
+Author       : Daniel Kopko
+Heights      : -100 to 620 (mapinfo.lua smf.minheight/maxheight, replacing the SMF header's)
+Metal        : maxMetal 4, extractorRadius 50
+Start points : team 0 (1250, 1150)  team 1 (6700, 1150)  team 2 (1250, 7042)  team 3 (6700, 7042)
+Map file     : maps/StarfallMarsh.smf
+Size         : 1024x1024 squares = 8192x8192 game units (16x16 map units)
+Height range : -100 to 620 (SMF header; mapinfo.lua may override)
+Map id       : 20261101
+Tile files   : StarfallMarsh.smt (65536 tiles)
+Tile index   : 256x256, 65536 distinct tiles used
+Metal map    : 198 non-zero cells, highest value 78
+Grass map    : 16981 non-zero cells
+Minimap      : 1024x1024 DXT1, 0 transparent pixels
+Features     : 2 placed, 1 types defined
+    geovent: 2
+Layout       :
+    Grass      offset         92   length     65,536
+    Heightmap  offset     65,628   length  2,101,250
+    TypeMap    offset  2,166,878   length    262,144
+    Minimap    offset  2,429,022   length    699,048
+    MetalMap   offset  3,128,070   length    262,144
+    Tiles      offset  3,390,214   length    262,174
+    Features   offset  3,652,388   length         64
+Texture      : 8192x8192 from maps/StarfallMarsh.smt, 0 transparent pixels
