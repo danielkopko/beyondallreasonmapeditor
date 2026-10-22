@@ -54,7 +54,7 @@ static class Features
         sb.Append($"\tfootprintx = {fx},\n");
         sb.Append($"\tfootprintz = {fz},\n");
         if (d.Landmark)
-            sb.Append("\tdamage = 1000000000,\n\tindestructible = true,\n\treclaimable = false,\n\tautoreclaimable = false,\n\tmetal = 0,\n\tenergy = 0,\n");
+            sb.Append("\tdamage = 1000000000,\n\tindestructible = true,\n\tcrushresistance = 1000000,\n\treclaimable = false,\n\tautoreclaimable = false,\n\tmetal = 0,\n\tenergy = 0,\n");
         else
             sb.Append($"\tdamage = {Math.Max(2000, d.Metal * 12)},\n\treclaimable = true,\n\tautoreclaimable = false,\n\tmetal = {d.Metal},\n\tenergy = {d.Energy},\n\treclaimtime = {Math.Max(400, d.Metal * 6)},\n");
         sb.Append("\tflammable = false,\n");

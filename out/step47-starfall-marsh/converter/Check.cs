@@ -93,6 +93,12 @@ static class Check
             log($"       crossing the middle line at x = {string.Join(", ", open.Take(12))}{(open.Count > 12 ? " …" : "")}");
         }
 
+        // The hull's sections butt together with no end caps: they must all sit at one height.
+        var sections = ops.Where(l => l.StartsWith("item-add:placer:sf_ship_", StringComparison.Ordinal) && !l.Contains("sf_ship_prow"))
+            .Select(l => l.Split(':')[3].Split(',')).Select(xz => heights.HeightAt(double.Parse(xz[0], CultureInfo.InvariantCulture), double.Parse(xz[1], CultureInfo.InvariantCulture))).ToList();
+        Expect(sections.Count == 5 && sections.Max() - sections.Min() < 0.05,
+            $"the ship's five hull sections sit at one height, so they meet without a step ({string.Join(", ", sections.Select(v => v.ToString("0.00", CultureInfo.InvariantCulture)))})");
+
         log("Metal spots and starts:");
         var spots = Layout.Spots.Select(s => s.At).Concat(Layout.Vents).SelectMany(s => new[] { s, new P(s.X, Layout.Size - s.Z) }).ToList();
         int crowded = spots.Count(s => Enumerable.Range(-5, 11).Any(dz => Enumerable.Range(-5, 11).Any(dx =>

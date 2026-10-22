@@ -14,7 +14,7 @@
 | The jungle floor | At 40, in low hummocks, nearly level in the four bases (cleared ground) |
 | The furrow | Ploughed along the middle line from beyond the west edge to the mound: a floor 14 under water (wadeable: land units go to 20), banks, and berms of thrown-up dirt along both sides |
 | The marsh | Two streams on each side draining into the furrow (beds 10 deep), ragged pools (most 9-12 deep, two 26 deep that only amphibious units cross), and round the streams and furrow a mosaic of mud and shallow puddles at the water's level |
-| The ship | Six features on the middle line, all indestructible and with no reclaim. The engines (six bells in the stern, a pod with its own bell either side, a great dorsal fin and canted pod fins, vent banks), the aft hull (the bridge tower stepped in layers, dark windows, antennas, the ship's crest on the tower and the hull), the aft section's torn end, the fore section's torn end (the two torn ends spill decks, ribs, cables and the reactor's glow), the fore hull, pitched 4° nose-down into the mound and caked in earth towards it, and the prow blade with two broken spires on the mound's crest. Moss on everything that faces up, earth on the lower hull, vines down the sides, ferns and saplings on the decks |
+| The ship | Six features on the middle line, all indestructible, uncrushable and with no reclaim. The engines (six bells in the stern, a pod with its own bell either side, a great dorsal fin and canted pod fins, vent banks), the aft hull (the bridge tower stepped in layers, dark windows, antennas, the ship's crest on the tower and the hull), the aft section's torn end, the fore section's torn end (the two torn ends spill decks, ribs, cables and the reactor's glow), the fore hull, pitched 4° nose-down into the mound and caked in earth towards it, and the prow blade with two broken spires on the mound's crest. Moss on everything that faces up, earth on the lower hull, vines down the sides, ferns and saplings on the decks |
 | The mound | Pushed-up dirt over the buried nose: 520 above the jungle at its crest, its west face steep (raw red earth in slumped layers, creepers hanging down it: bots only), long and gentler to the east, gullied by rain. A tongue of spilled dirt rises over the fore hull so it dives into the ground. A track graded for vehicles climbs its north-east flank to the crest |
 | Lanes | West of the engines across the marsh; the breach between the ship's two halves (about 320 wide between the torn ends); east, over the mound or round it. The ship walls the halves apart everywhere else |
 | Metal | 22 spots, 49.1 metal/s with an extractor on each: four round each start (2.0 each, 8.0 a player), and six on the wreck (2.8 each): by the engines, at the breach and on the mound's crest, one each side. `maxMetal` 4 |
@@ -44,7 +44,7 @@ Each wreckage piece has a mirror-image twin (`name_m`) for the south half, place
 
 ## Checked (`check.txt`, on the built map's own heights, round every blocking feature)
 
-The features block 13.5% of the map, each blocking one counting its footprint (16-unit footprint units, turned to its facing) and 8 more round it. 13 checks, all passed:
+The features block 13.5% of the map, each blocking one counting its footprint (16-unit footprint units, turned to its facing) and 8 more round it. 14 checks, all passed:
 - **Starts:**
   - From the north-west start, vehicles reach all four starts; 78.6% of the map is open to them.
   - Every start is on dry, nearly level ground.
@@ -55,10 +55,11 @@ The features block 13.5% of the map, each blocking one counting its footprint (1
   - No blocking feature is within 40 of a spot.
   - Every spot and vent is level: a 0.0 rise over its footprint.
   - Bots and vehicles reach every spot and vent, including those on the mound's crest, by its track.
+- **The ship:** its five hull sections, which butt together with no end caps, all sit at one height (−14.00). The furrow floor is dead level under the ship, so the joins don't step; a close render of a join (`3d_hull_join.png`) shows one continuous hull.
 - **Halves:** alike to 0.00 at 200,000 points.
 
 Also checked:
-- **Model orientation and scale**, on a test map before any detail (`slice`): the textures are the right way up, a heading of 16384 turns a model a quarter (local +x north), and the models sit on the ground.
+- **Model orientation and scale**, on a test map before any detail (`slice`), in MapTool's renderer: the textures are the right way up, a heading of 16384 turns a model a quarter (local +x north), and the models sit on the ground. The texture and UV path is the editor's structure models', which haven't been tried in BAR either.
 - **Feature names:** every name placed is defined by the map. MapTool reports none undefined.
 - **Rotations:** written in the engine's units (65536 a turn).
 
@@ -92,11 +93,12 @@ Also checked:
   - `3d_nose_dive.png` (the fore hull into the dirt)
   - `3d_base.png` and `3d_marsh.png`
 - **Movement:** `3d_passability_vehicles.png`
+- **A hull join up close:** `3d_hull_join.png`
 - **The models alone, on flat ground:** `models_ship.png`, `models_breach.png`, `models_prow.png`, `models_wreckage.png`
 
 ## To try in BAR
 
-- **The models in the engine:** whether BAR's shader shows them as MapTool's renderer does, how the cyan seams glow at night, and how 2048 textures and up to 8,000 triangles a section perform. The ship's collision boxes are its sections' solid boxes, so shots may stop at their corners.
+- **The models in the engine, first of all:** the crest (on the bridge tower and the hull) should show its gold blade pointing up and its chevron down; if it is upside down, the atlas is. Then whether BAR's shader shows them as MapTool's renderer does, how the cyan seams glow at night, and how 2048 textures and up to 8,000 triangles a section perform. The ship's collision boxes are its sections' solid boxes, so shots may stop at their corners.
 - **Reclaim:** whether 7,190 metal a team in wreckage is too much early on. The metal is set in each feature's `.lua` and `Models.cs`.
 - **The breach and the marsh:** whether 320 between the torn ends and the wadeable furrow make good fights.
 - **Players:** 4 (2v2). The map has no start boxes, so draw them in the lobby or play with the fixed starts (0 and 1 north, 2 and 3 south).

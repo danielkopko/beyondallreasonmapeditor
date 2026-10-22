@@ -90,7 +90,9 @@ static class Terrain
         double berm = Layout.BermHeight * (0.7 + 0.5 * mir.Value(p, a => Berm.Fbm(a.X / 500, 7.3, 2))) *
                       (1 - Geo.S(Math.Abs(d - Layout.BermCrest) / Layout.BermHalf)) * (1 - Geo.S((q.X - (Layout.FurrowEast - 300)) / 400));
         h += Math.Max(0, berm);
-        double floor = Layout.FurrowFloor + 3 * mir.Value(p, a => Floor.Fbm(a.X / 120, a.Z / 120, 2));
+        // Dead level under the ship, so its sections (each set at the ground under its own centre) meet without a step.
+        double underShip = (1 - Geo.S((d - 380) / 120)) * Geo.S((q.X - (Layout.Tail - 260)) / 120) * (1 - Geo.S((q.X - 4560) / 80));
+        double floor = Layout.FurrowFloor + 3 * mir.Value(p, a => Floor.Fbm(a.X / 120, a.Z / 120, 2)) * (1 - underShip);
         double across = Math.Max(Geo.S((d - Layout.FurrowHalf) / Layout.FurrowBank), Geo.S((q.X - Layout.FurrowEast) / 260));
         double furrow = floor + (h - floor) * across;
         h = Math.Min(h, furrow);

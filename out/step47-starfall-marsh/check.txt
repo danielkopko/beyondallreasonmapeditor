@@ -8,6 +8,7 @@ Vehicles (TANK3: 27 degrees, 20 deep) and bots (BOT3: 54 degrees), round the fea
   ok   by east, over and round the mound alone, vehicles cross from north to south
   ok   by east, over and round the mound alone, bots cross from north to south
   ok   with the three lanes shut, the ship walls the north off from the south
+  ok   the ship's five hull sections sit at one height, so they meet without a step (-14.00, -14.00, -14.00, -14.00, -14.00)
 Metal spots and starts:
   ok   no blocking feature within 40 of any of the 24 metal spots (0 crowded)
   ok   bots reach every metal spot and vent
