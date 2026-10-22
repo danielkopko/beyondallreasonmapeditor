@@ -36,7 +36,7 @@ $ErrorActionPreference = 'Stop'
 $title = (Get-Culture).TextInfo.ToTitleCase($Map.Replace('_', ' '))
 $here = Join-Path $PSScriptRoot $Map
 $mapName = "${Map}_$Version.sd7"
-$map = Join-Path $here $mapName
+$archive = Join-Path $here $mapName
 $picture = Join-Path $here "bar-data\LuaMenu\Images\Minimaps\$($title.Replace(' ', '_'))_$Version.jpg"
 $tag = "$($Map.Replace('_', '-'))-$Version"
 if (-not $Message) { $Message = "${title}: notes updated" }
@@ -63,7 +63,7 @@ function Test-Native([string]$Exe) {
 }
 
 function Publish-Map {
-    if (-not (Test-Path -LiteralPath $map)) { throw "$mapName isn't in ${here}: build it first." }
+    if (-not (Test-Path -LiteralPath $archive)) { throw "$mapName isn't in ${here}: build it first." }
     $root = (& git -C $PSScriptRoot rev-parse --show-toplevel).Trim()
     $url = (& git -C $root remote get-url origin).Trim()
     if ($url -notmatch 'github\.com[/:]([^/]+)/([^/]+?)(\.git)?$') { throw "origin ($url) isn't a GitHub repository." }
@@ -80,7 +80,7 @@ function Publish-Map {
     Invoke-Native git -C $root -c 'credential.https://github.com.helper=' -c "credential.https://github.com.helper=$helper" push origin HEAD
 
     # The map itself, on the release in each repository (on its default branch when the release is new).
-    $files = @($map)
+    $files = @($archive)
     if (Test-Path -LiteralPath $picture) { $files += $picture }
     $notes = Join-Path $here 'release_notes.md'
     $env:GH_TOKEN = (& gh auth token --user $owner)
@@ -98,13 +98,13 @@ function Publish-Map {
 }
 
 function Install-Map {
-    if (-not (Test-Path -LiteralPath $map)) { throw "$mapName isn't in ${here}: download it from the release, or build it." }
+    if (-not (Test-Path -LiteralPath $archive)) { throw "$mapName isn't in ${here}: download it from the release, or build it." }
     $data = $BarData
     if (-not $data) { $data = Join-Path $env:LOCALAPPDATA 'Programs\Beyond-All-Reason\data' }
     if (-not (Test-Path -LiteralPath $data)) { throw "BAR's data folder isn't at $data; give it with -BarData <folder>." }
     $mapsDir = Join-Path $data 'maps'
     New-Item -ItemType Directory -Force $mapsDir | Out-Null
-    Copy-Item -LiteralPath $map $mapsDir -Force
+    Copy-Item -LiteralPath $archive $mapsDir -Force
     if (Test-Path -LiteralPath $picture) {
         $minimaps = Join-Path $data 'LuaMenu\Images\Minimaps'
         New-Item -ItemType Directory -Force $minimaps | Out-Null
