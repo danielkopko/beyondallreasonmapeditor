@@ -4,9 +4,10 @@
 
 .DESCRIPTION
     publish  Commits and pushes this folder's notes, the drawings (out\koth-maps), PLAN.md and .gitignore, then
-             puts five_rivers_<version>.sd7 and its lobby picture on the GitHub release five-rivers-<version>
-             (made if it isn't there, its files replaced if it is). Signs in as the repository's owner, from
-             origin's address. Prints the download link.
+             puts five_rivers_<version>.sd7 and its lobby picture on the GitHub release five-rivers-<version>,
+             in this repository and in each of -AlsoTo (danielkopko/BarMaps, public): made with release_notes.md
+             if it isn't there, its files replaced if it is. Signs in as the repository's owner, from origin's
+             address. Prints the download links.
     install  Copies five_rivers_<version>.sd7 (beside this script) into BAR's maps folder, and its lobby picture
              into BAR's LuaMenu\Images\Minimaps.
 
@@ -22,7 +23,9 @@ param(
     [string]$Version = '1.0',
     [string]$Message = 'Five Rivers: notes updated',
     # BAR's data folder, the one that holds maps\ (its usual place when not given).
-    [string]$BarData = ''
+    [string]$BarData = '',
+    # Other repositories (owner/name, the same owner) that get the release too.
+    [string[]]$AlsoTo = @('danielkopko/BarMaps')
 )
 
 $ErrorActionPreference = 'Stop'
@@ -70,26 +73,22 @@ function Publish-Map {
     $helper = "!f() { echo username=$owner; echo password=`$(gh auth token --user $owner); }; f"
     Invoke-Native git -C $root -c 'credential.https://github.com.helper=' -c "credential.https://github.com.helper=$helper" push origin HEAD
 
-    # The map itself, on the release.
+    # The map itself, on the release in each repository (on its default branch when the release is new).
+    $files = @($map)
+    if (Test-Path -LiteralPath $picture) { $files += $picture }
+    $notes = Join-Path $here 'release_notes.md'
     $env:GH_TOKEN = (& gh auth token --user $owner)
     try {
-        $files = @($map)
-        if (Test-Path -LiteralPath $picture) { $files += $picture }
-        if (Test-Native gh release view $tag -R $repo) {
-            Invoke-Native gh release upload $tag @files -R $repo --clobber
-        }
-        else {
-            $notes = "Five Rivers $Version for Beyond All Reason: 28 x 28, five kings and their peasants (20 players). " +
-                     "Put $mapName in BAR's maps folder (usually %LOCALAPPDATA%\Programs\Beyond-All-Reason\data\maps). " +
-                     "For its picture in the lobby, put Five_Rivers_$Version.jpg in data\LuaMenu\Images\Minimaps. " +
-                     "Notes: out/step44-five-rivers/CHECKLIST.md."
-            $branch = (& git -C $root rev-parse --abbrev-ref HEAD).Trim()
-            Invoke-Native gh release create $tag @files -R $repo --target $branch --title "Five Rivers $Version" --notes $notes
+        foreach ($r in @($repo) + $AlsoTo) {
+            if (Test-Native gh release view $tag -R $r) {
+                Invoke-Native gh release upload $tag @files -R $r --clobber
+                Invoke-Native gh release edit $tag -R $r --title "Five Rivers $Version" --notes-file $notes
+            }
+            else { Invoke-Native gh release create $tag @files -R $r --title "Five Rivers $Version" --notes-file $notes }
+            Write-Host "Published to $r. Download: https://github.com/$r/releases/download/$tag/$mapName"
         }
     }
     finally { Remove-Item Env:GH_TOKEN -ErrorAction SilentlyContinue }
-    Write-Host "Published. Download: https://github.com/$repo/releases/download/$tag/$mapName"
-    Write-Host "Release page: https://github.com/$repo/releases/tag/$tag"
 }
 
 function Install-Map {
