@@ -6,11 +6,10 @@ obj/
 testdata/
 workspace/
 out/*
-# Except the king of the hill drawings and Five Rivers, whose map goes in as parts (five_rivers.cmd join).
+# Except the king of the hill drawings and Five Rivers, whose map is on a GitHub release (five_rivers.cmd publish).
 !out/koth-maps/
 !out/step44-five-rivers/
 out/step44-five-rivers/*.sd7
-out/step44-five-rivers/*.joining
 __pycache__/
 
 # Third-party map archives kept beside the project (large; the tests use testdata/).

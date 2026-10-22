@@ -4,7 +4,7 @@
 
 **Not tried in BAR yet.** BAR isn't installed on this machine, so everything below was checked with MapCore's copy of the engine's rules, not in the game.
 
-**From git:** the map is in `parts/` (three pieces under GitHub's 50 MB warning, with its SHA-256). After a pull, run `five_rivers.cmd join -Install`: it joins the parts into `five_rivers_1.0.sd7`, checks the SHA-256, and copies the map and its lobby picture into BAR (`-BarData <folder>` if BAR's data folder isn't in its usual place). After rebuilding the map, `five_rivers.cmd push -Message "..."` splits it again, commits and pushes.
+**Download:** the map is on the GitHub release [five-rivers-1.0](https://github.com/danielkopko/beyondallreasonmapeditor/releases/tag/five-rivers-1.0), as one file: [five_rivers_1.0.sd7](https://github.com/danielkopko/beyondallreasonmapeditor/releases/download/five-rivers-1.0/five_rivers_1.0.sd7) (signed in to GitHub as danielkopko; the repository is private), with its lobby picture `Five_Rivers_1.0.jpg`. After rebuilding the map, `five_rivers.cmd publish -Message "..."` pushes the notes and replaces the release's files; `five_rivers.cmd install` copies the map beside it into BAR.
 
 Install by hand: copy `five_rivers_1.0.sd7` into BAR's `maps` folder, and `bar-data/LuaMenu` (beside this file) into BAR's data folder (the folder that holds `maps`, usually `%LOCALAPPDATA%\Programs\Beyond-All-Reason\data`) for the lobby picture; or `MapTool install five_rivers_1.0.sd7` on a machine with BAR.
 
