@@ -16,7 +16,7 @@
 | Walls: ramparts, no doors | Earth ramparts 90 above the yard (420) along the two inner sides, 173 wide (133 flat on top, to build on), with sheer faces. A tower stands either side of the gate |
 | A ramp for full access | One a fortress, through the gate, facing the middle: 422 wide at 12°, from the fields up to the yard |
 | Bots-only zigzags | Two a fortress, one through each inner rampart: 64 wide, flights of 38° with level landings |
-| Acid lakes | Four, at the middle of each edge between two fortresses, about 2150 × 1380 and 60 deep, with a crust round the shore. `water.damage` 60: they hurt anything in them, hovercraft too |
+| Acid lakes | Four, at the middle of each edge between two fortresses, about 2150 × 1380 and 60 deep, with a crust round the shore. `water.damage` 60: they hurt units in them |
 | Metal | 64 spots, 32.8 metal/s a team (131.3 in all). Each team has nine peasant spots (1.8), three in its fortress (2.0), two in its fields (2.2), one between two teams' fields (2.8) and one in the market (3.4). `maxMetal` 4 |
 | Geothermal vents | 9: one in each fortress yard, one in each team's fields, one in the middle of the market |
 
@@ -47,9 +47,9 @@ Every part is the same, turned a quarter round the centre. Checked on 200,000 po
 
 ## Checked (`check.txt`, on the built map's own heights)
 
-29 checks, all passed:
+29 checks, all passed. They're run round the features too (`converter-run/run.txt`). The features block 2.5% of the map: each blocking one blocks its footprint and 8 more round it, so any way through is at least 3 squares wide. The checks that something gets through are run round them; the checks that something doesn't are run on the heights alone.
 - **Vehicles:**
-  - From A's first peasant every start is reached (91.1% of the map is open to them).
+  - From A's first peasant every start is reached (88.6% of the map is open to them round the features, 91.1% on the heights alone).
   - Each fortress can't be reached with its ramp shut.
   - No zigzag takes them up.
 - **Hovercraft:** no zigzag takes them up; the ramp does.
@@ -83,7 +83,7 @@ Also checked:
 
 ## To try in BAR
 
-- **Acid:** whether `water.damage` 60 is right. Change it in `mapinfo.lua`.
+- **Acid:** whether `water.damage` 60 is right, and whether hovercraft crossing it take the damage. Change it in `mapinfo.lua`.
 - **Reclaim:** whether 9,000 metal a team in wrecks is too much early on. The factories and moho mines hold the most.
 - **Players:** a 16-player lobby (4 teams of 4). The map has no start boxes, so draw them in the lobby or play with fixed starts in the order above.
 - **Archive:** 89.6 MB. It's on the releases, like the other king maps, and not in git.

@@ -1,13 +1,15 @@
 // Where units can go on a built map's heights, by the engine's rules (MapCore.Movement: per 8-unit square, the
 // slope of its 16-unit cell, and the water depth): flood fills from the starts, with ramps or switchbacks shut off
-// to show what each one is the only way through.
+// to show what each one is the only way through. Given the map's features, the fills that must get through go round
+// them too (each blocking feature's footprint and 8 more round it); the fills that must not are left to the heights.
+using System.Globalization;
 using MapCore.Heights;
 using MapCore.Imaging;
 using MapCore.Movement;
 
 static class Access
 {
-    public static int Report(HeightMap heights, Design d, Terrain.Result t, Action<string> log)
+    public static int Report(HeightMap heights, Design d, Terrain.Result t, Action<string> log, IEnumerable<string>? features = null)
     {
         int failures = 0;
         void Expect(bool ok, string what)
@@ -19,6 +21,7 @@ static class Access
         var bot = new PassabilityMap(heights, BarMoveClasses.Bot);
         var hover = new PassabilityMap(heights, BarMoveClasses.Hover);
         int w = vehicle.Width, h = vehicle.Height;
+        var items = features == null ? null : Footprints(features, w, h);
         bool[] Mask(Func<P, bool> test)
         {
             var m = new bool[w * h];
@@ -26,6 +29,9 @@ static class Access
             return m;
         }
         bool[] Or(params bool[][] masks) { var m = new bool[w * h]; foreach (var k in masks) for (int i = 0; i < m.Length; i++) m[i] |= k[i]; return m; }
+        bool[]? With(bool[]? m) => items == null ? m : m == null ? items : Or(m, items);
+        if (items != null)
+            log($"Features block {items.Count(x => x) * 100.0 / items.Length:0.0}% of the map in the checks that units get through.");
         bool[] Ramp(int team) => Mask(p => t.Ramps.Where(r => r.Team == team).Any(r => Terrain.InRect(p, r.Foot, r.Top + r.Dir * 140, r.HalfWidth + 24, 0, out _)));
         var climbs = t.Paths.Where(p => !p.Pass).ToList();
         bool[] Switch(int team, Terrain.Path? except = null) =>
@@ -41,7 +47,7 @@ static class Access
         }));
 
         log("Vehicles (TANK3: 27 degrees, 20 deep):");
-        var all = Fill(vehicle, peasant[0], null);
+        var all = Fill(vehicle, peasant[0], With(null));
         Expect(d.Starts.All(s => Has(all, s.At)), $"from A's first peasant every start is reached ({all.Count(x => x) * 100.0 / all.Length:0.0}% of the map)");
         if (d.Land.Count > 0) Expect(Has(all, d.Centre + new P(0, 200)), "the isle is reached");
         for (int k = 0; k < d.Fold; k++)
@@ -53,14 +59,14 @@ static class Access
         for (int k = 0; k < d.Fold; k++)
         {
             Expect(climbs.Where(s => s.Team == k).All(s => !Has(Fill(hover, s.Line[^1], Ramp(k)), king[k])), $"{T(k)}: no zigzag takes hovercraft up");
-            Expect(Has(Fill(hover, peasant[k], null), king[k]), $"{T(k)}: the ramp takes them up");
+            Expect(Has(Fill(hover, peasant[k], With(null)), king[k]), $"{T(k)}: the ramp takes them up");
         }
         log("Bots (BOT3: 54 degrees, 20 deep):");
         for (int k = 0; k < d.Fold; k++)
         {
             var mine = climbs.Where(s => s.Team == k).ToList();
             for (int i = 0; i < mine.Count; i++)
-                Expect(Has(Fill(bot, mine[i].Line[^1], Or(Ramp(k), Switch(k, mine[i]))), king[k]), $"{T(k)}: zigzag {i + 1} alone takes bots up");
+                Expect(Has(Fill(bot, mine[i].Line[^1], With(Or(Ramp(k), Switch(k, mine[i])))), king[k]), $"{T(k)}: zigzag {i + 1} alone takes bots up");
             Expect(!Has(Fill(bot, peasant[k], Or(Ramp(k), Switch(k))), king[k]), $"{T(k)}: with the ramp and zigzags shut, bots can't climb the cliffs");
         }
         var passes = t.Paths.Where(p => p.Pass).ToList();
@@ -70,13 +76,45 @@ static class Access
             foreach (var p in passes)
             {
                 var near = Mask(q => Geo.ToPolyline(q, p.Line, out _) > 200);
-                bool bots = Has(Fill(bot, p.Line[0], near), p.Line[^1]);
+                bool bots = Has(Fill(bot, p.Line[0], With(near)), p.Line[^1]);
                 bool tanks = Has(Fill(vehicle, p.Line[0], near), p.Line[^1]);
                 Expect(bots && !tanks, $"{T(p.Team)}'s pass: bots cross it ({(bots ? "yes" : "no")}), vehicles don't ({(tanks ? "they do" : "right")})");
             }
         }
         return failures;
     }
+
+    /// <summary>The squares MapTool's features block, from run.txt's item-add lines: each one's footprint (a square of
+    /// twice its half-size: building wrecks by kind, crates and trucks 4 footprint units, rocks and cairns about
+    /// their models, trees one unit; ferns block nothing) and 8 more round it, so a way through is at least 3 squares
+    /// wide.</summary>
+    public static bool[] Footprints(IEnumerable<string> ops, int w, int h)
+    {
+        var m = new bool[w * h];
+        foreach (var line in ops.Where(l => l.StartsWith("item-add:placer:", StringComparison.Ordinal)))
+        {
+            var f = line.Split(':');
+            var xz = f[3].Split(',');
+            double x = double.Parse(xz[0], CultureInfo.InvariantCulture), z = double.Parse(xz[1], CultureInfo.InvariantCulture);
+            double half = Half(f[2]);
+            if (half <= 0) continue;
+            half += 8;
+            for (int sz = Math.Max(0, (int)((z - half) / 8)); sz <= Math.Min(h - 1, (int)((z + half) / 8)); sz++)
+                for (int sx = Math.Max(0, (int)((x - half) / 8)); sx <= Math.Min(w - 1, (int)((x + half) / 8)); sx++)
+                    if (Math.Abs(sx * 8 + 4 - x) <= half && Math.Abs(sz * 8 + 4 - z) <= half) m[sz * w + sx] = true;
+        }
+        return m;
+    }
+
+    static double Half(string name) => name switch
+    {
+        _ when name.StartsWith("cycas", StringComparison.Ordinal) => 0,
+        _ when name.EndsWith("vp_dead", StringComparison.Ordinal) || name.EndsWith("lab_dead", StringComparison.Ordinal) => 64,
+        _ when name.EndsWith("_dead", StringComparison.Ordinal) => 44,
+        _ when name.StartsWith("crate", StringComparison.Ordinal) || name.Contains("truck", StringComparison.Ordinal) => 32,
+        _ when name.StartsWith("rocks30", StringComparison.Ordinal) || name == "legstone" => 12,
+        _ => 8,
+    };
 
     /// <summary>Squares reachable from a point (4-connected), not entering <paramref name="blocked"/>.</summary>
     public static bool[] Fill(PassabilityMap pass, P from, bool[]? blocked)

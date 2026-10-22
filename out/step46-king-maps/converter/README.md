@@ -14,7 +14,7 @@ How the king maps (`star_fort_1.0.sd7`, `edge_keeps_1.0.sd7`, `corner_fortresses
    - **run.txt** for MapTool: the extra models the planet needs, metal spots, geothermal vents, plants, rocks and props (`Place.cs`); then `<key>_1.0_stage.sd7`.
    - All That Simmers' own layout is left out: its SMF and SMT, its detail maps, its grass and feature list, its sunrise sky, two unused textures, and its map options.
 4. `MapTool edit <key>_1.0_stage.sd7 <key>_1.0.sd7 @run.txt`.
-5. `KingMaps check <geometry.json> <final map, extracted>`: the access checks again on the built map's own heights, and how alike the parts are.
+5. `KingMaps check <geometry.json> <final map, extracted> <work>/run.txt`: the access checks again on the built map's own heights, the ones that units get through going round every blocking feature (its footprint and 8 more), and how alike the parts are.
 6. `MapTool install <key>_1.0.sd7 <scratch maps folder>`: the lobby picture, kept in `<key>/bar-data`.
 7. `king_maps.cmd publish <key>`: the map on the GitHub releases, here and in BarMaps (`../RELEASE.md`).
 
@@ -38,6 +38,16 @@ Flood fills by the engine's rules (MapCore's `PassabilityMap`: per 8-unit square
 - **Hovercraft:** no zigzag takes them up; the ramp does.
 - **Bots:** each zigzag on its own takes them up; with the ramp and zigzags shut, the cliffs and ramparts stop them.
 - **Passes:** bots cross each one; vehicles don't (within 200 units of it).
+
+Given MapTool's `run.txt`, the checks that something gets through (every start, the ramps, each zigzag alone, the passes) go round the features as well. Each blocking feature blocks a square of its footprint and 8 more round it, so a way through is at least 3 squares wide:
+- 64 for factory wrecks;
+- 44 for other wrecks;
+- 32 for crates and trucks;
+- 12 for rocks and cairns;
+- 8 for trees;
+- nothing for ferns.
+
+The checks that something doesn't get through stay on the heights alone.
 
 ## The planets (`Look.cs`, `Place.cs`)
 

@@ -1,8 +1,9 @@
 // What MapTool adds: metal, vents, and each planet's features, placed in Team A's part and turned into the others,
-// clear of roads, stairs, bridges, ramparts, bases, thrones, spots and vents (and off the kings' level ground,
-// which is for building). Names are BAR's own (rocks, crystals, wrecks, tombstones), All That Simmers' (palms,
-// ferns: in the template), or the editor's library's (firs and birches from Crimson Bay; crates and trucks from
-// Industrial Revolution), copied in with asset-add.
+// clear of roads, stairs, bridges, ramparts, bases, thrones, spots and vents. The kings' level ground is kept for
+// building, but for cairns along a keep's rim and crates stacked well back from a fortress's king (900 or more);
+// `KingMaps check <geometry> <map> run.txt` tests the access round them all. Names are BAR's own (rocks, crystals,
+// wrecks, tombstones), All That Simmers' (palms, ferns: in the template), or the editor's library's (firs and birches
+// from Crimson Bay; crates and trucks from Industrial Revolution), copied in with asset-add.
 using System.Globalization;
 using System.Text;
 

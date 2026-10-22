@@ -45,9 +45,9 @@ Every part is the same, turned a fifth round the centre. MapTool's symmetry only
 
 ## Checked (`check.txt`, on the built map's own heights)
 
-41 checks, all passed:
+41 checks, all passed. They're run round the features too (`converter-run/run.txt`). The features block 0.6% of the map: each blocking one blocks its footprint and 8 more round it. The checks that something gets through are run round them; the checks that something doesn't are run on the heights alone.
 - **Vehicles:**
-  - From A's first peasant every start is reached (66.8% of the map is open to them).
+  - From A's first peasant every start is reached (66.2% of the map is open to them round the features, 66.8% on the heights alone).
   - Each bastion can't be reached with its ramp shut.
   - No zigzag takes them up.
 - **Hovercraft:** no zigzag takes them up; the ramp does.

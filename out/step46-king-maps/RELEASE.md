@@ -17,7 +17,7 @@ Each release has the map and its lobby picture (`Star_Fort_1.0.jpg` and so on) a
 - **"No doors for the moment":** none of the three has a door.
 - **"Walls are terrain":** the ramparts are heights, 90 above the ground beneath, flat on top (you can build on them), with sheer faces. Towers are 110.
 - **"Kings areas elevated":** every king's ground is a cliff-top (Star Fort's bastions at 300 over realms at 200, Edge Keeps' keeps at 360 over 240, Corner Fortresses' yards at 330 over 240) on cliffs over 54°.
-- **"Both ramp for full access and side zig zags for bot access":** each king has one 12° ramp that everything climbs, and two bots-only zigzags (flights of 38° with landings) cut through the ramparts. The access checks prove it on each built map: the ramp is the only way up for vehicles, and the zigzags take bots and nothing else.
+- **"Both ramp for full access and side zig zags for bot access":** each king has one 12° ramp that everything climbs, and two bots-only zigzags (flights of 38° with landings) cut through the ramparts. The access checks on each built map show it: the ramp is the only way up for vehicles, and the zigzags take bots and nothing else. They read the map's own heights, and the features as well (`KingMaps check … run.txt`): the trees, wrecks, crates and rocks block no ramp, zigzag, pass or start.
 - **"Geo vents":** 10, 9 and 9.
 - **"Rocks/tree features making maps look like real locations, with interest":** each planet's look paints the ground and places features to suit:
   - Star Fort: dunes, a sandstone fort, palm oases, desert rocks and wrecks.
@@ -36,7 +36,7 @@ The steps are in `converter/README.md`. In short, for each map:
    - `mapinfo.lua`;
    - MapTool's `run.txt`.
 3. `MapTool edit … @run.txt` adds the metal, vents and features.
-4. `KingMaps check` runs the access checks again on the built map's own heights, and compares the parts.
+4. `KingMaps check <geometry> <map> <run.txt>` runs the access checks again. It reads the built map's own heights, and goes round each blocking feature's footprint in the checks that units get through. It also compares the parts.
 5. `MapTool install` into a scratch maps folder makes the lobby picture.
 6. The pictures (`MapTool render` and `render3d`), `info.txt` and `metal.txt` are written beside the map.
 
@@ -49,7 +49,9 @@ All three passed their checks first time (41, 30 and 29). Passing them wasn't en
   - The Forge look now has an estate's paved lots on waste ground, worn asphalt and brick paving. BAR's building wrecks make ruined works, and the pipes and mushrooms are gone.
 - **Star Fort:** the first pass over each ridge climbed the cliff face, so bots couldn't cross. The pass is now the ground lowered along its line, at most 60 above the realms and 38° anywhere.
 
-The later changes (the swell, the new Heath and Forge looks, a feature's room by kind) leave Star Fort's build as it was released. The swell is Heath's alone, and dry ground was never below the new puddle floor there.
+The later changes (the swell, the new Heath and Forge looks, a feature's room by kind) leave Star Fort's build as it was released. A rebuild after them gives the same SMF, SMT, detail maps, `mapinfo.lua` and `run.txt`, byte for byte.
+
+After all three were out, the checks were extended to the features. Re-run on all three maps, every check passed: the features block 0.6%, 1.9% and 2.5% of the ground, and none cuts off a ramp, zigzag, pass or start.
 
 ## The release
 

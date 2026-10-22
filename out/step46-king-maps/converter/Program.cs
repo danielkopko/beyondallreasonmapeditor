@@ -2,7 +2,8 @@
 // That Simmers' detail textures, plants and gadgets. Every height and colour is made here, the same in every team's
 // part; MapTool then adds the metal, vents and features. (Five Rivers, K7, has its own converter in step 44.)
 //   build <geometry.json> <template folder> <work folder>   the map folder, five.._stage.sd7 and run.txt in work
-//   check <geometry.json> <map folder>                      the access checks on a built map's own heights
+//   check <geometry.json> <map folder> [run.txt]            the access checks on a built map's own heights (and
+//                                                           round its features, given MapTool's run.txt)
 using System.Diagnostics;
 using System.Globalization;
 using MapCore.Heights;
@@ -54,7 +55,7 @@ switch (args[0])
         var t = Terrain.Build(d, cfg.Look, new Masks(d));
         var session = MapCore.Editing.MapEditSession.Open(MapCore.MapPackage.OpenFolder(args[2]));
         var h = session.Heights;
-        int failures = Access.Report(h, d, t, Console.WriteLine);
+        int failures = Access.Report(h, d, t, Console.WriteLine, args.Length > 3 ? File.ReadAllLines(args[3]) : null);
         var rnd = new Random(1);
         var diffs = new List<double>();
         while (diffs.Count < 200000)

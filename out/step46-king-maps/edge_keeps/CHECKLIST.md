@@ -11,7 +11,7 @@
 | From the drawing | On the map |
 |---|---|
 | Four teams, each a king and three peasants | 16 start positions in `mapinfo.lua`: team 0 is A's king, 1-3 are A's peasants, 4 is B's king, and so on clockwise (A north) |
-| Fields and the basin | A moor at 240, falling to 220 in the basin round the loch. Broad rolling hills of about ±40 on top, gentle enough for vehicles everywhere (95% of the map is open to them). Roads and bases follow the hills |
+| Fields and the basin | A moor at 240, falling to 220 in the basin round the loch. Broad rolling hills of about ±40 on top, gentle enough for vehicles everywhere (93% of the map is open to them round the features, 95% on the heights alone). Roads and bases follow the hills |
 | Keeps: raised kings' ground | Four D-shaped cliff-tops at 360 in the middle of each edge, about 3100 across and reaching 2000 in from the edge, on granite cliffs 40 across (over 54°): nothing but spiders climbs them |
 | A ramp for full access | One a keep, facing the loch: 461 wide at 12°, from the moor up to the keep |
 | Bots-only zigzags | Two a keep, one up each flank: 64 wide, flights of 38° with level landings |
@@ -48,7 +48,7 @@ Every part is the same, turned a quarter round the centre. Checked on 200,000 po
 
 ## Checked (`check.txt`, on the built map's own heights)
 
-30 checks, all passed:
+30 checks, all passed. They're run round the features too (`converter-run/run.txt`). The features block 1.9% of the map: each blocking one blocks its footprint and 8 more round it, so the pinewoods must leave ways at least 3 squares wide. The checks that something gets through are run round them; the checks that something doesn't are run on the heights alone.
 - **Vehicles:**
   - From A's first peasant every start is reached, and the isle.
   - Each keep can't be reached with its ramp shut.

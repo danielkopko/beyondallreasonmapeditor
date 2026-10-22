@@ -1,5 +1,6 @@
+Features block 1.9% of the map in the checks that units get through.
 Vehicles (TANK3: 27 degrees, 20 deep):
-  ok   from A's first peasant every start is reached (95.0% of the map)
+  ok   from A's first peasant every start is reached (93.2% of the map)
   ok   the isle is reached
   ok   team A: with its ramp shut, its king's ground can't be reached
   ok   team A: no zigzag takes vehicles up
