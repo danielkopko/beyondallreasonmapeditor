@@ -11,6 +11,7 @@ import sys
 import make_kings_maps
 import make_koth_maps
 from make_koth_maps import CX, CY, ab, rot
+from planets import THEMES
 
 
 def turned(value, t):
@@ -34,9 +35,10 @@ def export(d):
     kings = [dict(x=q[0], y=q[1], team=i) for p in d.kings for i, t in enumerate(teams) for q in [turned(p, t)]]
     peasants = [dict(x=q[0], y=q[1], team=i, n=j + 1) for j, p in enumerate(d.peasants) for i, t in enumerate(teams)
                 for q in [turned(p, t)]]
-    return dict(name=d.name, key=d.key, size=d.size, fold=d.fold, centre=[CX, CY], play_radius=make_koth_maps.R_PLAY,
+    return dict(name=d.name, key=d.key, size=d.size, fold=d.fold, axis=d.axis, square=not d.play_disc,
+                ground=d.ground_h, centre=[CX, CY], play_radius=make_koth_maps.R_PLAY,
                 units_per_pixel=d.size * 512 / 640, origin=20, heights=d.heights, parts=parts, spots=spots,
-                vents=vents, kings=kings, peasants=peasants)
+                vents=vents, kings=kings, peasants=peasants, theme=THEMES.get(d.key))
 
 
 def main():

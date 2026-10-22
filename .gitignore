@@ -6,10 +6,13 @@ obj/
 testdata/
 workspace/
 out/*
-# Except the king of the hill drawings and Five Rivers, whose map is on a GitHub release (five_rivers.cmd publish).
+# Except the king of the hill drawings, Five Rivers and the king maps, whose maps are on GitHub releases
+# (five_rivers.cmd publish, king_maps.cmd publish <map>).
 !out/koth-maps/
 !out/step44-five-rivers/
 out/step44-five-rivers/*.sd7
+!out/step46-king-maps/
+out/step46-king-maps/*/*.sd7
 __pycache__/
 
 # Third-party map archives kept beside the project (large; the tests use testdata/).

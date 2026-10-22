@@ -325,6 +325,10 @@ class Design:
     def band(self, shape, color, h, smooth=False, contour=True, layer="bands"):
         """A height band: a circle radius (about the hill) or a whole C3-symmetric outline."""
         if isinstance(shape, (int, float)):
+            self._rec("band", True, pts=circle_pts((0, 0), shape, 120), h=h, layer=layer)
+        else:
+            self._rec("band", True, pts=smooth_samples(shape, True) if smooth else shape, h=h, layer=layer)
+        if isinstance(shape, (int, float)):
             self.L[layer].append(f'<circle cx="{fmt(CX)}" cy="{fmt(CY)}" r="{fmt(shape)}" fill="{color}" data-height="{h}"/>')
             if contour:
                 self.L["contours" if layer == "bands" else "islandcontours"].append(
@@ -441,6 +445,7 @@ class Design:
         self.use("track")
 
     def wall(self, a, b, hw=4.5, whole=False):
+        self._rec("wall", whole, a=a, b=b, hw=hw)
         pts = rect_pts(a, b, hw)
         self._shape("walls", pts, 'fill="#888780" stroke="#2C2C2A" stroke-width="1"', False, whole, self.wall_polys)
         (ux, uy), L = unit(a, b)
@@ -454,6 +459,7 @@ class Design:
         self.use("wall")
 
     def tower(self, p, r=7, whole=False):
+        self._rec("tower", whole, c=p, r=r)
         for t in self.turns(whole):
             q = ab(rot(p, t))
             self.L["walls"].append(f'<circle cx="{fmt(q[0])}" cy="{fmt(q[1])}" r="{r}" fill="#888780" stroke="#2C2C2A" stroke-width="1"/>')

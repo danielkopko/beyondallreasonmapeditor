@@ -1,0 +1,24 @@
+Name         : Star Fort 1.0
+Author       : Daniel Kopko
+Heights      : -100 to 760 (mapinfo.lua smf.minheight/maxheight, replacing the SMF header's)
+Metal        : maxMetal 4, extractorRadius 50
+Start points : team 0 (7168, 4928)  team 1 (5054, 2420)  team 2 (7168, 1299)  team 3 (9282, 2420)  team 4 (9298, 6476)  team 5 (11030, 3691)  team 6 (12750, 5354)  team 7 (12336, 7711)  team 8 (8485, 8980)  team 9 (11669, 9766)  team 10 (10618, 11916)  team 11 (8248, 12251)  team 12 (5851, 8980)  team 13 (6088, 12251)  team 14 (3718, 11916)  team 15 (2667, 9766)  team 16 (5038, 6476)  team 17 (2000, 7711)  team 18 (1586, 5354)  team 19 (3306, 3691)
+Map file     : maps/StarFort.smf
+Size         : 1792x1792 squares = 14336x14336 game units (28x28 map units)
+Height range : -100 to 760 (SMF header; mapinfo.lua may override)
+Map id       : 20261026
+Tile files   : StarFort.smt (200704 tiles)
+Tile index   : 448x448, 200704 distinct tiles used
+Metal map    : 630 non-zero cells, highest value 72
+Grass map    : none
+Minimap      : 1024x1024 DXT1, 0 transparent pixels
+Features     : 10 placed, 1 types defined
+    geovent: 10
+Layout       :
+    Heightmap  offset         80   length  6,429,698
+    TypeMap    offset  6,429,778   length    802,816
+    Minimap    offset  7,232,594   length    699,048
+    MetalMap   offset  7,931,642   length    802,816
+    Tiles      offset  8,734,458   length    802,841
+    Features   offset  9,537,299   length        256
+Texture      : 14336x14336 from maps/StarFort.smt, 0 transparent pixels

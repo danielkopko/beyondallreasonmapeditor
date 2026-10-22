@@ -39,6 +39,7 @@ class KingDesign(Design):
 
     def area(self, pts, color, h, smooth=False):
         """Ground at its own height in Team A's part (turned for the others)."""
+        self._rec("band", False, pts=pts, h=h, layer="bands")
         self._shape("bands", pts, f'fill="{color}" data-height="{h}"', smooth, False)
 
     def king(self, p):
@@ -234,22 +235,26 @@ def triad_court():
 
 def corner_fortresses():
     d = KingDesign(3, "corner_fortresses", "Corner Fortresses", 24, 4, "#CFE0B2", 240, [
-        "Four kings, each in a walled fortress in a corner with one door facing the middle. All twelve",
-        "peasants live in the middle, in a ring round the market: each team's three nearest its own king, with",
-        "an enemy's next door. Lakes in the middle of each edge keep the fortresses from reaching each other.",
+        "Four kings, each on a raised fortress yard in a corner behind earth ramparts, reached by a ramp through",
+        "the gate facing the middle and by bots-only zigzags up the two walls. All twelve peasants live in the",
+        "middle, round the market, each team's three nearest its king. Acid lakes part the fortresses.",
     ], axis=-45, square=True)
-    d.heights = "fields 240 · the middle 210 to 180 · the market 220 · fortress yards 260, walls 120 high"
+    d.heights = "fields 240 · the middle 210 to 180 · the market 220 · fortress yards 330, ramparts 90 higher · acid lakes 60 deep"
+    d.legend_text["wall"] = "Rampart (earth; build on it)"
     for r, col, h in [(230, "#C4D89F", 210), (128, "#B6CF8E", 180)]:
         d.band(r, col, h)
     d.band(56, "#E4ECD2", 220)
-    d.area([(-330, -330), (-170, -330), (-170, -210), (-210, -170), (-330, -170)], "#D9E6C0", 260)
+    d.clifftop([(-330, -330), (-170, -330), (-170, -210), (-210, -170), (-330, -170)], "#E2EBCF", 330, smooth=False)
     d.water(eblob(292, 0, 56, 36, seed=3), smooth=True)
-    d.wall((-330, -170), (-210, -170))
-    d.wall_with_door((-210, -170), (-170, -210), 24)
-    d.ramp(pol(248, -45), pol(290, -45), 11, 20)
-    d.wall((-170, -210), (-170, -330))
-    d.tower((-210, -170))
-    d.tower((-170, -210))
+    gate0, gate1 = (-210, -170), (-170, -210)
+    d.wall((-330, -170), gate0)
+    d.wall(gate0, (-200.8, -179.2))
+    d.wall((-179.2, -200.8), gate1)
+    d.wall(gate1, (-170, -330))
+    d.tower(gate0)
+    d.tower(gate1)
+    d.ramp(pol(236, -45), pol(290, -45), 11, 90)
+    d.track((-265, -186), (-265, -140), 4, 6, both=True)
     d.path([(-190, -190), pol(215, -45), pol(165, -45)])
     d.path([pol(236, -45), pol(196, -60), pol(150, -73)], both=True)
     d.path(arc(116, -90, 0, 6))
@@ -264,22 +269,25 @@ def corner_fortresses():
     d.metal(pol(150, 0), 2.8, "shared")
     d.metal(pol(252, -27), 2.2, both=True)
     d.metal(pol(36, 0), 3.4, "centre")
-    d.label((0, 4), "Market")
+    d.geo((-300, -240))
+    d.geo(pol(240, -70))
+    d.geo((0, 0), whole=True)
     return d
 
 
 def edge_keeps():
     d = KingDesign(4, "edge_keeps", "Edge Keeps", 24, 4, "#CFE0B2", 240, [
-        "Each king's keep stands on a cliff jutting from the middle of an edge, its ramp facing the loch in the",
-        "centre. Its peasants live in the corner beside it, clockwise, under the next king's walls: every corner",
-        "holds one team's peasants and two kings look down on it. A bridge from each keep crosses to the isle.",
+        "Each king's keep stands on a cliff jutting from the middle of an edge, with a ramp facing the loch in the",
+        "centre and bots-only zigzags up both sides. Its peasants live in the corner beside it, clockwise, under the",
+        "next king's cliff: two kings look down on every corner. A bridge from each keep crosses to the isle.",
     ], square=True)
-    d.heights = "fields 240 · the basin 220 · keeps 360 · the loch 60 deep · its isle 200"
+    d.heights = "fields 240 · the basin 220 · keeps 360 · the loch 60 deep · its isle 60"
     d.band(200, "#C4D89F", 220)
     d.clifftop([(-80, -335), (80, -335), (82, -270), (55, -232), (0, -216), (-55, -232), (-82, -270)], "#EEF2E3", 360)
     d.ramp(pol(186, 0), pol(228, 0), 12, 120)
+    d.track((62, -268), (104, -268), 4, 6, both=True)
     d.water(72)
-    d.land(circle_pts((0, 0), 38, 72), "#DDE8C8", 200, whole=True, smooth=False)
+    d.land(circle_pts((0, 0), 38, 72), "#DDE8C8", 60, whole=True, smooth=False)
     d.bridge(pol(80, 0), pol(32, 0), 9)
     d.cliff(eblob(176, 45, 26, 16, seed=4), 300)
     d.path([pol(186, 0), pol(130, 0), pol(80, 0)])
@@ -294,6 +302,9 @@ def edge_keeps():
     d.metal(pol(132, 45), 2.6)
     d.metal(pol(200, -22), 2.2)
     d.metal(pol(20, 45), 3.4, "centre")
+    d.geo((-46, -306))
+    d.geo(pol(296, 28))
+    d.geo((0, 0), whole=True)
     d.label(pol(100, -26), "Loch")
     return d
 
@@ -327,31 +338,36 @@ def moat_court():
 
 def star_fort():
     d = KingDesign(6, "star_fort", "Star Fort", 28, 5, "#C4D89F", 200, [
-        "One star fort holds all five kings, a bastion each, walled off from one another round the central",
-        "spire, with a door at each bastion's point facing its peasants. The peasants hold the five realms",
-        "outside, divided by ridges; a ring road under the walls links them, and a bots-only pass crosses each ridge.",
+        "One star fort holds all five kings, each on a raised bastion behind earth ramparts round the central",
+        "spire: a ramp climbs in at the bastion's point, facing its peasants, and bots-only zigzags climb both its",
+        "flanks. The peasants hold the five realms outside, parted by ridges with a bots-only pass over each.",
     ])
-    d.heights = "realms 200 · inside the fort 260, walls 120 high · ridges 380 · the spire 420"
-    star = []
-    for k in range(5):
-        b = 72 * k
-        star += [pol(96, b - 36), pol(160, b - 6), pol(160, b + 6)]
-    d.band(star, "#D9E6C0", 260)
+    d.heights = "realms 200 · bastions 300, ramparts 90 higher · ridges 380 · the spire 520"
+    d.legend_text["wall"] = "Rampart (earth; build on it)"
+    d.clifftop([pol(26, -36), pol(96, -36), pol(160, -6), pol(160, 6), pol(96, 36), pol(26, 36)], "#E2EBCF", 300, smooth=False)
+    d.cliff(circle_pts((0, 0), 24, 48), 520, smooth=False, whole=True)
     d.cliff(strip([pol(r, 36) for r in range(222, 340, 12)], 13), 380)
     d.track(pol(276, 29), pol(276, 43), 3, 5)
     d.path(arc(184, -36, 36, 6))
-    d.path([pol(160, 0), pol(205, 0), pol(247, 0)])
+    d.path([pol(181, 0), pol(205, 0), pol(247, 0)])
     d.path([pol(205, 0), pol(220, -12), pol(232, -24)], both=True)
     d.path([pol(130, 0), pol(160, 0)])
     d.wall(pol(96, -36), pol(160, -6))
-    d.wall_with_door(pol(160, -6), pol(160, 6), 20)
-    d.ramp(pol(182, 0), pol(140, 0), 10, 60)
     d.wall(pol(160, 6), pol(96, 36))
     d.wall(pol(26, 36), pol(96, 36))
     d.tower(pol(96, 36))
     d.tower(pol(160, -6), r=5)
     d.tower(pol(160, 6), r=5)
-    d.tower((0, 0), r=24, whole=True)
+    d.ramp(pol(212, 0), pol(146, 0), 10, 100)
+    # A zigzag up the middle of each flank, from just inside the rampart out to the realm.
+    a, b = pol(96, -36), pol(160, -6)
+    m = ((a[0] + b[0]) / 2, (a[1] + b[1]) / 2)
+    L = math.hypot(b[0] - a[0], b[1] - a[1])
+    n = (-(b[1] - a[1]) / L, (b[0] - a[0]) / L)
+    keep = pol(100, 0)
+    if (m[0] - keep[0]) * n[0] + (m[1] - keep[1]) * n[1] < 0:
+        n = (-n[0], -n[1])
+    d.track((m[0] - n[0] * 6, m[1] - n[1] * 6), (m[0] + n[0] * 26, m[1] + n[1] * 26), 4, 6, both=True)
     d.king(pol(100, 0))
     d.metal(pol(70, 22), 2.0, "king", both=True)
     d.peasant(pol(232, -24), rel=(120, 210, 300))
@@ -359,6 +375,8 @@ def star_fort():
     d.peasant(pol(232, 24), rel=(60, 150, 240))
     d.metal(pol(204, 36), 2.6, "shared")
     d.metal(pol(298, 14), 2.2, both=True)
+    d.geo(pol(122, 22))
+    d.geo(pol(290, -28))
     d.label((0, 4), "Spire", italic=False, color="#2C2C2A")
     return d
 
