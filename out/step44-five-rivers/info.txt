@@ -1,0 +1,25 @@
+Name         : Five Rivers 1.0
+Author       : Daniel Kopko
+Heights      : -100 to 760 (mapinfo.lua smf.minheight/maxheight, replacing the SMF header's)
+Metal        : maxMetal 4, extractorRadius 50
+Start points : team 0 (7168, 1882)  team 1 (5977, 3504)  team 2 (7168, 3763)  team 3 (8359, 3504)  team 4 (12196, 5534)  team 5 (10285, 4903)  team 6 (10406, 6116)  team 7 (11021, 7168)  team 8 (10275, 11445)  team 9 (10285, 9433)  team 10 (9169, 9923)  team 11 (8359, 10832)  team 12 (4061, 11445)  team 13 (5977, 10832)  team 14 (5167, 9923)  team 15 (4051, 9433)  team 16 (2140, 5534)  team 17 (3315, 7168)  team 18 (3930, 6116)  team 19 (4051, 4903)
+Map file     : maps/FiveRivers.smf
+Size         : 1792x1792 squares = 14336x14336 game units (28x28 map units)
+Height range : -100 to 760 (SMF header; mapinfo.lua may override)
+Map id       : 20261023
+Tile files   : FiveRivers.smt (200704 tiles)
+Tile index   : 448x448, 200704 distinct tiles used
+Metal map    : 675 non-zero cells, highest value 94
+Grass map    : 16407 non-zero cells
+Minimap      : 1024x1024 DXT1, 0 transparent pixels
+Features     : 11 placed, 1 types defined
+    geovent: 11
+Layout       :
+    Grass      offset         92   length    200,704
+    Heightmap  offset    200,796   length  6,429,698
+    TypeMap    offset  6,630,494   length    802,816
+    Minimap    offset  7,433,310   length    699,048
+    MetalMap   offset  8,132,358   length    802,816
+    Tiles      offset  8,935,174   length    802,843
+    Features   offset  9,738,017   length        280
+Texture      : 14336x14336 from maps/FiveRivers.smt, 0 transparent pixels

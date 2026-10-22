@@ -1,0 +1,67 @@
+Vehicles (TANK3: 27 degrees, 20 deep):
+  ok   from A's first peasant every start is reached (64.1% of the map)
+  ok   the isle is reached
+  ok   team A: with its ramp shut, its hall can't be reached
+  ok   team A: with the bridges and fords shut, no neighbour and not the isle
+  ok   team A: by the fords alone, the next team's land
+  ok   team A: by the river bridges alone, the next team's land
+  ok   team A: no switchback takes vehicles up
+  ok   team B: with its ramp shut, its hall can't be reached
+  ok   team B: with the bridges and fords shut, no neighbour and not the isle
+  ok   team B: by the fords alone, the next team's land
+  ok   team B: by the river bridges alone, the next team's land
+  ok   team B: no switchback takes vehicles up
+  ok   team C: with its ramp shut, its hall can't be reached
+  ok   team C: with the bridges and fords shut, no neighbour and not the isle
+  ok   team C: by the fords alone, the next team's land
+  ok   team C: by the river bridges alone, the next team's land
+  ok   team C: no switchback takes vehicles up
+  ok   team D: with its ramp shut, its hall can't be reached
+  ok   team D: with the bridges and fords shut, no neighbour and not the isle
+  ok   team D: by the fords alone, the next team's land
+  ok   team D: by the river bridges alone, the next team's land
+  ok   team D: no switchback takes vehicles up
+  ok   team E: with its ramp shut, its hall can't be reached
+  ok   team E: with the bridges and fords shut, no neighbour and not the isle
+  ok   team E: by the fords alone, the next team's land
+  ok   team E: by the river bridges alone, the next team's land
+  ok   team E: no switchback takes vehicles up
+Hovercraft (HOVER3: 33 degrees, over water):
+  ok   team A: no switchback takes hovercraft up
+  ok   team A: the ramp takes them up
+  ok   team B: no switchback takes hovercraft up
+  ok   team B: the ramp takes them up
+  ok   team C: no switchback takes hovercraft up
+  ok   team C: the ramp takes them up
+  ok   team D: no switchback takes hovercraft up
+  ok   team D: the ramp takes them up
+  ok   team E: no switchback takes hovercraft up
+  ok   team E: the ramp takes them up
+Bots (BOT3: 54 degrees, 20 deep):
+  ok   team A: switchback 1 alone takes bots up
+  ok   team A: switchback 2 alone takes bots up
+  ok   team A: switchback 3 alone takes bots up
+  ok   team A: with the ramp and switchbacks shut, bots can't climb the cliffs
+  ok   team A: with the bridges and fords shut, the rivers stop bots
+  ok   team B: switchback 1 alone takes bots up
+  ok   team B: switchback 2 alone takes bots up
+  ok   team B: switchback 3 alone takes bots up
+  ok   team B: with the ramp and switchbacks shut, bots can't climb the cliffs
+  ok   team B: with the bridges and fords shut, the rivers stop bots
+  ok   team C: switchback 1 alone takes bots up
+  ok   team C: switchback 2 alone takes bots up
+  ok   team C: switchback 3 alone takes bots up
+  ok   team C: with the ramp and switchbacks shut, bots can't climb the cliffs
+  ok   team C: with the bridges and fords shut, the rivers stop bots
+  ok   team D: switchback 1 alone takes bots up
+  ok   team D: switchback 2 alone takes bots up
+  ok   team D: switchback 3 alone takes bots up
+  ok   team D: with the ramp and switchbacks shut, bots can't climb the cliffs
+  ok   team D: with the bridges and fords shut, the rivers stop bots
+  ok   team E: switchback 1 alone takes bots up
+  ok   team E: switchback 2 alone takes bots up
+  ok   team E: switchback 3 alone takes bots up
+  ok   team E: with the ramp and switchbacks shut, bots can't climb the cliffs
+  ok   team E: with the bridges and fords shut, the rivers stop bots
+Fifths alike (200000 points, each against the same point a fifth of a turn round): median 0.00, 95% within 0.01, 99% within 0.1 (the rest on cliff edges, where a fraction of a square shifts the edge)
+0 access check(s) failed
