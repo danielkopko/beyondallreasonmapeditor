@@ -3,7 +3,8 @@
 //   1. bands: the drawing's level ground, blurred into gentle slopes;
 //   2. water (lakes, rivers, moats, acid pools) 60 deep under a water level of 0, in valleys falling to the shore,
 //      and land standing out of it (isles: 8 at the shore, a low dome);
-//   3. the planet's relief (dunes, hummocks, a worked-flat yard), kept off roads, bases, spots and stairs;
+//   3. the planet's relief (dunes, hummocks, a worked-flat yard), kept off roads, bases, spots and stairs, over
+//      its broad swell (a moor's rolling hills), which roads and bases follow;
 //   4. fords 10 deep; bridges, causeways with decks at 16;
 //   5. cliffs: impassable rock, rough on top, its faces 40 across (steeper than 54 degrees);
 //   6. plateaus, the kings' raised areas: level tops on the same cliffs;
@@ -67,15 +68,16 @@ static class Terrain
             g[i] = (float)h;
         });
 
-        // 3. The planet's relief, on dry land away from what is made.
+        // 3. The planet's relief, on dry land away from what is made, over its broad swell (not on isles); never
+        //    down into puddles.
         Parallel.For(0, n * n, i =>
         {
             var p = V(i);
             double h = g[i];
             if (h <= Shore + 2) return;
-            double keep = m.Flat(p.X, p.Z);
-            h += look.Relief(d, sym, p, h) * (1 - keep) * Geo.S((h - Shore - 2) / 30);
-            g[i] = (float)h;
+            double keep = m.Flat(p.X, p.Z), swell = land[i] ? 0 : look.Swell(d, sym, p);
+            h += (swell + look.Relief(d, sym, p, h) * (1 - keep)) * Geo.S((h - Shore - 2) / 30);
+            g[i] = (float)Math.Max(h, Shore + 2);
         });
 
         // 4. Fords and bridges.

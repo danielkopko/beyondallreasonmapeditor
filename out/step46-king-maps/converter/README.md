@@ -26,6 +26,7 @@ How the king maps (`star_fort_1.0.sd7`, `edge_keeps_1.0.sd7`, `corner_fortresses
 - **A ramp for everyone**: 12°, from its foot in the realm up through the gap in the ramparts. Vehicles (27°), hovercraft and the Thor (33°) and bots all climb it.
 - **Zigzags for bots**: switchbacks 64 wide, flights of 38° (dropping 65 at most) with level landings of 48, cut through the ramparts where they cross them. Bots (54°) climb them; vehicles and hovercraft don't.
 - **Passes**: where a ridge parts two realms, a bots-only way over it: the ground along its line is lowered to at most 60 above the higher side and no steeper than 38° anywhere.
+- **The planet's ground:** its relief (dunes, hummocks, cracked yards) is kept off roads, bases, spots and stairs; under it, a look may lay a broad swell (the moor's rolling hills, ±40 at most a few degrees steep) that roads and bases follow. Dry ground never dips below the shore into puddles.
 - **Water** 60 deep with gently shelving banks; isles at most 60; bridges are causeways with decks at 16; fords 10 deep.
 - **Disc maps** (Star Fort): beyond the play circle, mountains on a cliff.
 
@@ -43,5 +44,5 @@ Flood fills by the engine's rules (MapCore's `PassabilityMap`: per 8-unit square
 | Map | Planet | Ground | Features |
 |---|---|---|---|
 | Star Fort | Dune | Rippled dunes, sandstone strata on the cliffs, flagstone courts in the bastions, block ramparts | Oases of palms and ferns at each ramp's foot; desert rocks on the ridges and passes and as scree under the cliffs; half-buried solar and wind wrecks |
-| Edge Keeps | Heath | Heather, peat and bracken, granite and lichen on the cliffs, turf on the keeps, flag plazas | Shelterbelts of firs, birch copses, bracken; granite tors; cairns on the rims; mossy rocks on the isle |
+| Edge Keeps | Heath | Rolling hills (`Swell`): heather on the rises, moor grass and green flushes in the hollows, small peat hags, bracken on the slopes, granite and lichen on the cliffs, turf on the keeps with heather at the rims, flag plazas, granite-sett causeways | Pinewoods thinning to lone firs, birch copses by the loch and in the hollows, bracken; granite tors on the crests, scree, boulders; cairns on the rims; mossy rocks on the isle |
 | Corner Fortresses | Forge | Concrete slabs and cracks, rust and oil, hazard stripes in the yards, a chequered market, acid crust round the lakes, panel ramparts, asphalt roads | Pipes along the ramparts, crate yards, trucks by the roads, a crane truck, wreck fields and rubble, mushrooms in the yards' corners |

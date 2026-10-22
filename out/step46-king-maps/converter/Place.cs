@@ -115,48 +115,56 @@ static class Place
         string Fir() => g.Rnd.NextDouble() < 0.7
             ? $"fir_tree_tall_{g.Rnd.Next(1, 9)}__tree_fir_tall_{g.Rnd.Next(1, 6)}"
             : $"fir_tree_small_{g.Rnd.Next(1, 4)}__tree_fir_tall_{g.Rnd.Next(1, 6)}";
-        // Pine shelterbelts: double rows along gentle curves across the fields.
-        int belts = 0;
-        foreach (var c in g.GridA(1100))
+        string Birch() => $"euro_birch_tree_0{g.Rnd.Next(1, 9)}_{g.Rnd.Next(1, 5)}";
+        double Rise(P p) => g.H(p) - d.GroundH;
+        bool Open(P p, double starts = 380) => g.Clear(p, starts: starts) && !g.Top(p) && !g.CliffRock(p);
+        // Pinewoods: old stands of pine on the gentler ground, thick in the middle and thinning out at the edges.
+        foreach (var c in g.GridA(1300))
         {
-            if (belts >= 3 || g.Rnd.NextDouble() > 0.5 || !g.Clear(c, starts: 500) || g.Top(c)) continue;
-            belts++;
-            double a = g.Rnd.NextDouble() * Math.PI, bend = (g.Rnd.NextDouble() - 0.5) * 0.0012, len = 900 + g.Rnd.NextDouble() * 600;
-            for (double s = -len / 2; s <= len / 2; s += 52)
+            if (g.Rnd.NextDouble() > 0.55 || !Open(c, 600) || g.Slope(c) > 14) continue;
+            double r = 260 + g.Rnd.NextDouble() * 220;
+            for (int k = 0; k < 160; k++)
             {
-                double ang = a + bend * s;
-                var along = c + new P(Math.Cos(ang), Math.Sin(ang)) * s;
-                var side = new P(-Math.Sin(ang), Math.Cos(ang));
-                foreach (double row in new[] { -24.0, 24.0 })
-                {
-                    var p = along + side * (row + (g.Rnd.NextDouble() - 0.5) * 14);
-                    if (g.Clear(p, starts: 420) && g.Slope(p) < 20 && !g.Top(p)) items.Add(new Item(Fir(), p, g.Heading(), "pines"));
-                }
+                var p = g.Around(c, 0, r * 1.25);
+                if (g.Rnd.NextDouble() > 1.1 - 0.8 * (p - c).Length / r) continue;
+                if (Open(p, 420) && g.Slope(p) < 20) items.Add(new Item(Fir(), p, g.Heading(), "pines"));
             }
         }
-        // Birches by the loch, and scattered pines on the slopes.
-        foreach (var p in g.GridA(85))
+        // Birch copses along the loch and in the wet hollows.
+        foreach (var c in g.GridA(700))
         {
-            double h = g.H(p);
-            if (!g.Clear(p) || g.Top(p)) continue;
-            if (h is > 10 and < 150 && Wet(d, p, 700) && g.Rnd.NextDouble() < 0.4)
-                items.Add(new Item($"euro_birch_tree_0{g.Rnd.Next(1, 9)}_{g.Rnd.Next(1, 5)}", p, g.Heading(), "birches"));
-            else if (g.Slope(p) is > 5 and < 22 && g.Rnd.NextDouble() < 0.05)
-                items.Add(new Item(Fir(), p, g.Heading(), "pines"));
-            else if (g.Slope(p) is > 4 and < 24 && g.Rnd.NextDouble() < 0.16)
-                items.Add(new Item($"cycas{g.Rnd.Next(1, 9)}", p, g.Heading(), "bracken"));
-        }
-        // Granite tors on the high ground, and boulders.
-        foreach (var c in g.GridA(800))
-        {
-            if (g.Rnd.NextDouble() > 0.5 || !g.Clear(c) || g.Top(c)) continue;
-            int count = g.Rnd.Next(5, 10);
+            bool shore = Wet(d, c, 600) && g.H(c) > 10;
+            if (!(shore || Rise(c) < -18) || g.Rnd.NextDouble() > (shore ? 0.9 : 0.5) || !Open(c)) continue;
+            int count = g.Rnd.Next(8, 18);
             for (int k = 0; k < count; k++)
             {
-                var p = g.Around(c, 0, 150);
-                if (g.Clear(p) && !g.Top(p)) items.Add(new Item(Rock(g, "def"), p, g.Heading(), "tors"));
+                var p = g.Around(c, 0, 200);
+                if (Open(p) && g.H(p) > 10 && g.Slope(p) < 22) items.Add(new Item(Birch(), p, g.Heading(), "birches"));
             }
         }
+        // Lone pines over the open moor, bracken on its slopes.
+        foreach (var p in g.GridA(110))
+        {
+            if (!Open(p)) continue;
+            if (g.Rnd.NextDouble() < 0.025 && g.Slope(p) < 18) items.Add(new Item(Fir(), p, g.Heading(), "pines"));
+            else if (g.Slope(p) is > 5 and < 24 && g.Rnd.NextDouble() < 0.14) items.Add(new Item($"cycas{g.Rnd.Next(1, 9)}", p, g.Heading(), "bracken"));
+        }
+        // Granite tors on the crests: a stack of rocks with boulders strewn round it.
+        foreach (var c in g.GridA(900))
+        {
+            if (Rise(c) < 12 || g.Rnd.NextDouble() > 0.7 || !Open(c)) continue;
+            int count = g.Rnd.Next(6, 12);
+            for (int k = 0; k < count; k++)
+            {
+                var p = g.Around(c, 0, k < 4 ? 50 : 170);
+                if (Open(p)) items.Add(new Item(Rock(g, "def"), p, g.Heading(), "tors"));
+            }
+        }
+        // Scree under the crags and down the loch's banks, and boulders the ice left across the moor.
+        foreach (var p in g.GridA(70))
+            if (Open(p) && g.Slope(p) is > 12 and < 30 && g.Rnd.NextDouble() < 0.25) items.Add(new Item(Rock(g, "def"), p, g.Heading(), "scree"));
+        foreach (var p in g.GridA(600))
+            if (Open(p) && g.Rnd.NextDouble() < 0.35) items.Add(new Item(Rock(g, "def"), p, g.Heading(), "boulders"));
         // Cairns on the keeps' rims, mossy rocks round the isle.
         foreach (var p in g.GridA(140))
         {

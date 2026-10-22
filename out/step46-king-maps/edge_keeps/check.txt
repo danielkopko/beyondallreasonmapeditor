@@ -1,0 +1,35 @@
+Vehicles (TANK3: 27 degrees, 20 deep):
+  ok   from A's first peasant every start is reached (95.0% of the map)
+  ok   the isle is reached
+  ok   team A: with its ramp shut, its king's ground can't be reached
+  ok   team A: no zigzag takes vehicles up
+  ok   team B: with its ramp shut, its king's ground can't be reached
+  ok   team B: no zigzag takes vehicles up
+  ok   team C: with its ramp shut, its king's ground can't be reached
+  ok   team C: no zigzag takes vehicles up
+  ok   team D: with its ramp shut, its king's ground can't be reached
+  ok   team D: no zigzag takes vehicles up
+Hovercraft (HOVER3: 33 degrees, over water):
+  ok   team A: no zigzag takes hovercraft up
+  ok   team A: the ramp takes them up
+  ok   team B: no zigzag takes hovercraft up
+  ok   team B: the ramp takes them up
+  ok   team C: no zigzag takes hovercraft up
+  ok   team C: the ramp takes them up
+  ok   team D: no zigzag takes hovercraft up
+  ok   team D: the ramp takes them up
+Bots (BOT3: 54 degrees, 20 deep):
+  ok   team A: zigzag 1 alone takes bots up
+  ok   team A: zigzag 2 alone takes bots up
+  ok   team A: with the ramp and zigzags shut, bots can't climb the cliffs
+  ok   team B: zigzag 1 alone takes bots up
+  ok   team B: zigzag 2 alone takes bots up
+  ok   team B: with the ramp and zigzags shut, bots can't climb the cliffs
+  ok   team C: zigzag 1 alone takes bots up
+  ok   team C: zigzag 2 alone takes bots up
+  ok   team C: with the ramp and zigzags shut, bots can't climb the cliffs
+  ok   team D: zigzag 1 alone takes bots up
+  ok   team D: zigzag 2 alone takes bots up
+  ok   team D: with the ramp and zigzags shut, bots can't climb the cliffs
+Parts alike (200000 points, each against the same point a part's turn round): median 0.00, 95% within 0.00, 99% within 0.2
+0 access check(s) failed

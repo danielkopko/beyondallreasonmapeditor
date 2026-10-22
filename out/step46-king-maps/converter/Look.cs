@@ -23,6 +23,8 @@ struct Ctx
 abstract class Look
 {
     public abstract double Relief(Design d, Sym sym, P p, double h);
+    /// <summary>Broad hills and hollows under everything on dry land, roads and bases included (none by default).</summary>
+    public virtual double Swell(Design d, Sym sym, P p) => 0;
     public abstract C Colour(Design d, ref Ctx c);
     public virtual double MountainTop => 560;
     public virtual bool Grass => false;
@@ -139,9 +141,11 @@ sealed class Dune : Look
     }
 }
 
-/// <summary>Heath: a highland moor. Heather and peat, granite tors and keep cliffs, a black-peat loch.</summary>
+/// <summary>Heath: a highland moor. Rolling hills of heather and moor grass, peat and green flushes in the hollows,
+/// bracken on the slopes, granite tors and keep cliffs, a black-peat loch crossed by stone causeways.</summary>
 sealed class Heath : Look
 {
+    public override double Swell(Design d, Sym sym, P p) => sym.Value(p, q => 80 * A4.Fbm(q.X / 2200, q.Z / 2200, 3));
     public override double Relief(Design d, Sym sym, P p, double h) =>
         sym.Value(p, q => 9 * A1.Fbm(q.X / 520, q.Z / 520, 3) + 3 * A2.Fbm(q.X / 140, q.Z / 140, 2));
     public override bool Grass => true;
@@ -156,10 +160,11 @@ sealed class Heath : Look
         ["water.absorb"] = "0.02,0.015,0.01", ["water.specularColor"] = "0.6,0.65,0.7",
     };
 
-    static readonly C GrassG = new(98, 116, 62), HeatherC = new(118, 84, 112), Peat = new(80, 64, 52), Bracken = new(138, 96, 56);
-    static readonly C Granite = new(112, 112, 108), Lichen = new(150, 150, 96), Turf = new(106, 124, 74), Flags = new(128, 126, 120);
+    static readonly C GrassG = new(96, 114, 60), MoorGrass = new(134, 124, 82), HeatherC = new(88, 64, 74), Bloom = new(130, 88, 124);
+    static readonly C Peat = new(68, 54, 42), Bracken = new(146, 98, 56);
+    static readonly C Granite = new(116, 114, 108), Lichen = new(150, 150, 96), Turf = new(104, 122, 70), Flags = new(128, 126, 120);
     static readonly C ShorePeat = new(46, 40, 34), Under = new(34, 40, 40), Deep = new(22, 28, 30), Track = new(124, 104, 80), Stair = new(134, 132, 126);
-    static readonly C Trodden = new(110, 106, 76);
+    static readonly C Trodden = new(110, 106, 76), Sett = new(118, 116, 110);
 
     public override C Colour(Design d, ref Ctx x)
     {
@@ -168,17 +173,28 @@ sealed class Heath : Look
             c = Under.Mix(Deep, Geo.S(-x.H / 40));
         else
         {
-            c = GrassG * (0.92 + 0.1 * x.N1);
+            // How high the moor stands here: heather on the dry rises, grass, peat and green flushes in the hollows.
+            double rise = Math.Clamp((x.H - d.GroundH) / 40, -1.5, 1.5);
             double steep = Geo.S((x.Slope - 22) / 8);
-            c = c.Mix(HeatherC * (0.9 + 0.1 * x.Fine), Geo.S(x.N2 / 0.25) * (1 - steep) * 0.85);
-            c = c.Mix(Peat, Geo.S((-x.N1 - 0.25) / 0.2) * 0.8);
-            c = c.Mix(Bracken, Geo.S((x.Slope - 7) / 5) * (1 - Geo.S((x.Slope - 22) / 6)) * Geo.S(x.N3 / 0.3) * 0.7);
-            c *= 1 + 0.07 * x.Fine;
+            c = MoorGrass.Mix(GrassG, Geo.S((-rise * 0.6 + x.N3 * 0.8 + 0.1) / 0.5)) * (0.93 + 0.08 * x.N1);
+            var canopy = HeatherC.Mix(Bloom, Geo.S((x.N3 - 0.05) / 0.25) * 0.7) * (0.86 + 0.16 * x.Fine + 0.05 * x.Grain);
+            double heather = Geo.S((x.N2 * 0.9 + x.N1 * 0.4 + rise * 0.3 + 0.12 * x.Fine + 0.05) / 0.22) * (1 - steep);
+            c = c.Mix(canopy, heather * 0.9);
+            c = c.Mix(Peat * (0.86 + 0.16 * x.Fine), Geo.S((-x.N1 * 0.5 - x.N3 * 0.9 - rise * 0.2 - 0.36) / 0.08) * 0.85);
+            c = c.Mix(Bracken * (0.9 + 0.12 * x.Fine), Geo.S((x.Slope - 6) / 4) * (1 - Geo.S((x.Slope - 22) / 6)) * Geo.S((x.N3 - 0.08) / 0.14) * 0.7);
+            c *= 1 + 0.05 * x.Fine;
             double wr = Geo.S((x.Slope - 32) / 10);
-            var rock = Granite * (0.9 + 0.12 * x.Fine);
+            var rock = Granite * (0.9 + 0.12 * x.Fine) * (1 + 0.07 * Math.Sin(x.H / 14 + x.N1 * 3));
             if (x.Fine > 0.55) rock = rock.Mix(Lichen, 0.4);
             c = c.Mix(rock, Math.Max(wr, x.Cliff * Geo.S((x.Slope - 18) / 10)));
-            c = c.Mix(Turf * (0.95 + 0.06 * x.N2), x.Top * (1 - wr) * 0.7);
+            // The keeps: short turf, heather at the rims, granite breaking through.
+            if (x.Top > 0)
+            {
+                var turf = Turf * (0.93 + 0.08 * x.N2 + 0.04 * x.Fine);
+                turf = turf.Mix(canopy, Geo.S((220 - x.EdgeD) / 120) * Geo.S((x.N2 + 0.15) / 0.2) * 0.85);
+                turf = turf.Mix(Granite * (0.9 + 0.12 * x.Fine), Geo.S((x.N3 - 0.22) / 0.07) * 0.8);
+                c = c.Mix(turf, x.Top * (1 - wr));
+            }
             double joint = x.Own(q => Frac(q.X / 40) < 0.06 || Frac(q.Z / 40) < 0.06 ? 0.82 : 1);
             c = c.Mix(Flags * joint, x.KingPlaza * (1 - wr) * 0.8);
             if (x.H < 14) c = c.Mix(ShorePeat, (1 - Geo.S((x.H - 3) / 11)) * (1 - wr));
@@ -187,8 +203,13 @@ sealed class Heath : Look
             c = c.Mix(Track * (0.94 + 0.06 * x.Grain), x.Road * (1 - wr));
             if (x.Stair > 0) c = c.Mix(Stair * (x.Slope > 6 && x.H % 6 < 1.1 ? 0.8 : 1), x.Stair);
         }
+        // Causeways of granite setts.
         if (x.Deck > 0 && x.H >= Terrain.Deck - 1)
-            c = c.Mix(new C(122, 122, 122) * (Frac(x.X / 40) < 0.05 || Frac(x.Z / 40) < 0.05 ? 0.82 : 1), x.Deck);
+        {
+            double sett = x.Own(q => Frac(q.X / 28) < 0.08 || Frac(q.Z / 20) < 0.1 ? 0.76
+                : 0.9 + 0.18 * Hash((long)Math.Floor(q.X / 28), (long)Math.Floor(q.Z / 20)));
+            c = c.Mix(Sett * sett * (0.96 + 0.05 * x.Grain), x.Deck);
+        }
         return Finish(c, x, new C(52, 52, 56), new C(96, 96, 100), new C(40, 40, 44), new C(200, 200, 192));
     }
 }
