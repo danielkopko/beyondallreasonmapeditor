@@ -179,15 +179,16 @@ THEMES = {
         "corstone and legstone tombstones in the citadel; rocks30_map along the ridges.",
         "overcast grey sky, dust haze", (6, 16), 0, liquid_short="none"),
     "corner_fortresses": planet(
-        "Forge", "an industrial wasteland",
+        "Forge", "a derelict industrial estate",
         draw(["#9A9284", "#C4BDAE", "#E9E5DA"], "#857E74", "#B5C95A", "#D6CDB6", "#B5A47E"),
         colours((96, 90, 84), (110, 96, 78), (160, 150, 130), (70, 64, 54), (70, 80, 40), (124, 116, 100)),
         (0.56, 0.52, 0.44), (0.62, 0.56, 0.42), (1.0, 0.88, 0.70), "Acid (hurts units)", (0.55, 0.70, 0.15),
-        "cracked concrete and rust-stained gravel, oil-dark ground round the fortresses, a paved market square "
-        "in the middle.",
-        "none, apart from orangemushrooms in damp corners of the fortress yards.",
-        "pipesarray1, pipesarray2 and pipeslong1 to pipeslong3 along the fortress walls; crateblue, crateorange, "
-        "cratered, cranetruck1, minitruck1 and minitruck2 in the market; armnanotc_dead and armestor_dead wrecks.",
+        "lots of cracked, broken concrete between gravel waste ground gone to weeds, rust and oil stains, worn "
+        "asphalt roads, paved fortress yards with hazard stripes, a brick market square in the middle.",
+        "weeds (cycas ferns) in the waste ground.",
+        "ruined works: armvp, corvp, armlab, corlab and moho wrecks with storage tanks and metal makers round "
+        "them and rocks30_map rubble; smaller wrecks; crateblue, crateorange, cratered and crateyellow in yards "
+        "and in the fortresses; minitruck1 and minitruck2 by the roads, cranetruck1 by the market.",
         "brown smog sky, yellow haze", (4, 14), 10, wet=True, liquid_short="acid",
         extra={"water.damage": 60}, note="the acid lakes hurt anything in them (water.damage 60, to tune in play)"),
     "edge_keeps": planet(
@@ -195,11 +196,12 @@ THEMES = {
         draw(["#8C7F86", "#B8AC9F", "#E5DED2"], "#8E918F", "#5E7FA0", "#D9CFB8", "#B5A585"),
         colours((104, 106, 104), (98, 82, 66), (170, 158, 130), (64, 54, 46), (30, 40, 50), (112, 92, 104)),
         (0.58, 0.64, 0.72), (0.72, 0.76, 0.80), (0.96, 0.94, 0.88), "Loch, 60 deep", (0.12, 0.20, 0.28),
-        "purple heather and brown peat on the fields, grey granite tors and keep cliffs, black peat round the "
-        "loch.",
-        "ad0_fir and treetype pines in shelterbelts round the corners, birchtree by the loch, ferns as bracken "
-        "on the slopes.",
-        "rocks30_def granite tors for the corner rocks, legstone cairns on the keeps, rocks30_moss on the isle.",
+        "rolling hills of heather and moor grass, peat hags and green flushes in the hollows, bracken on the "
+        "slopes, grey granite tors and keep cliffs, black peat round the loch, granite-sett causeways.",
+        "ad0_fir pinewoods thinning to lone pines, birchtree copses by the loch and in the hollows, ferns as "
+        "bracken on the slopes.",
+        "rocks30_def granite tors on the crests, scree under the crags and boulders on the moor, legstone cairns "
+        "on the keeps, rocks30_moss on the isle.",
         "grey sky, drifting mist", (10, 25), 12, wet=True, liquid_short="loch"),
     "moat_court": planet(
         "Bayou", "a fog-bound swamp world",

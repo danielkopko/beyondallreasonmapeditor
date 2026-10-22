@@ -65,12 +65,12 @@
 <rect x="460" y="966" width="52" height="16" rx="2" fill="#b8c2cc" stroke="#5F5E5A" stroke-width="0.5"/><text x="486" y="995" text-anchor="middle" font-size="10" fill="#5F5E5A">fog</text>
 <rect x="520" y="966" width="52" height="16" rx="2" fill="#f5f0e0" stroke="#5F5E5A" stroke-width="0.5"/><text x="546" y="995" text-anchor="middle" font-size="10" fill="#5F5E5A">sun</text>
 <rect x="580" y="966" width="52" height="16" rx="2" fill="#1f3347" stroke="#5F5E5A" stroke-width="0.5"/><text x="606" y="995" text-anchor="middle" font-size="10" fill="#5F5E5A">loch</text>
-<text x="40" y="1017" font-size="12"><tspan font-weight="600">Ground:</tspan> purple heather and brown peat on the fields, grey granite tors and keep cliffs, black peat</text>
-<text x="40" y="1034" font-size="12">round the loch.</text>
-<text x="40" y="1051" font-size="12"><tspan font-weight="600">Plants:</tspan> ad0_fir and treetype pines in shelterbelts round the corners, birchtree by the loch, ferns</text>
-<text x="40" y="1068" font-size="12">as bracken on the slopes.</text>
-<text x="40" y="1085" font-size="12"><tspan font-weight="600">Features:</tspan> rocks30_def granite tors for the corner rocks, legstone cairns on the keeps, rocks30_moss</text>
-<text x="40" y="1102" font-size="12">on the isle.</text>
+<text x="40" y="1017" font-size="12"><tspan font-weight="600">Ground:</tspan> rolling hills of heather and moor grass, peat hags and green flushes in the hollows, bracken</text>
+<text x="40" y="1034" font-size="12">on the slopes, grey granite tors and keep cliffs, black peat round the loch, granite-sett causeways.</text>
+<text x="40" y="1051" font-size="12"><tspan font-weight="600">Plants:</tspan> ad0_fir pinewoods thinning to lone pines, birchtree copses by the loch and in the hollows,</text>
+<text x="40" y="1068" font-size="12">ferns as bracken on the slopes.</text>
+<text x="40" y="1085" font-size="12"><tspan font-weight="600">Features:</tspan> rocks30_def granite tors on the crests, scree under the crags and boulders on the moor,</text>
+<text x="40" y="1102" font-size="12">legstone cairns on the keeps, rocks30_moss on the isle.</text>
 <text x="40" y="1119" font-size="12"><tspan font-weight="600">Sky and weather:</tspan> grey sky, drifting mist; wind 10 to 25; tidal 12.</text>
 <text x="340" y="1145" text-anchor="middle" font-size="11" fill="#5F5E5A">Each quarter is the same, turned 90° about the centre. Heights in game units; lighter ground stands higher.</text>
 </svg>

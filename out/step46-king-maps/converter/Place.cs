@@ -1,8 +1,8 @@
 // What MapTool adds: metal, vents, and each planet's features, placed in Team A's part and turned into the others,
 // clear of roads, stairs, bridges, ramparts, bases, thrones, spots and vents (and off the kings' level ground,
 // which is for building). Names are BAR's own (rocks, crystals, wrecks, tombstones), All That Simmers' (palms,
-// ferns, mushrooms: in the template), or the editor's library's (firs and birches from Crimson Bay; pipes, crates
-// and trucks from Industrial Revolution), copied in with asset-add.
+// ferns: in the template), or the editor's library's (firs and birches from Crimson Bay; crates and trucks from
+// Industrial Revolution), copied in with asset-add.
 using System.Globalization;
 using System.Text;
 
@@ -57,9 +57,12 @@ static class Place
         // Nothing on top of anything else.
         var kept = new List<Item>();
         foreach (var it in items.Where(i => g.InA(i.At)))
-            if (!kept.Any(k => (k.At - it.At).Length < (k.Kind == "props" || it.Kind == "props" ? 70 : 30))) kept.Add(it);
+            if (!kept.Any(k => (k.At - it.At).Length < Math.Max(Room(k.Kind), Room(it.Kind)))) kept.Add(it);
         return kept;
     }
+
+    /// <summary>How far apart a kind of feature keeps from the others: wrecked buildings most, props next.</summary>
+    static double Room(string kind) => kind switch { "ruins" => 110, "props" => 70, _ => 30 };
 
     static string Rock(Ground g, string set) => $"rocks30_{set}_{g.Rnd.Next(1, 31):00}";
 
@@ -182,18 +185,21 @@ static class Place
     static List<Item> ForgeFeatures(Design d, Ground g, Masks m)
     {
         var items = new List<Item>();
-        // Pipe runs outside the fortress ramparts, along them.
-        foreach (var w in d.Walls.Where(w => g.InA((w.A + w.B) * 0.5)))
+        // Ruined works: a wrecked factory, its storage tanks and metal makers round it, rubble strewn about.
+        foreach (var c in g.GridA(1100))
         {
-            var u = (w.B - w.A).Unit;
-            var n = u.Perp;
-            var mid = (w.A + w.B) * 0.5;
-            if (g.Top(mid + n * (w.HalfWidth + 60))) n = n * -1;
-            double heading = Math.Atan2(u.X, -u.Z) * 180 / Math.PI;
-            for (double s = 60; s < (w.B - w.A).Length - 60; s += 130)
+            if (g.Rnd.NextDouble() > 0.6 || !g.Clear(c, roads: 0.05, starts: 700) || g.Top(c) || g.Slope(c) > 10) continue;
+            items.Add(new Item(g.Pick("armvp_dead", "corvp_dead", "armlab_dead", "corlab_dead", "armmoho_dead", "cormoho_dead"), c, g.Rnd.Next(4) * 90, "ruins"));
+            for (int k = 0; k < 4; k++)
             {
-                var p = w.A + u * s + n * (w.HalfWidth + 90);
-                if (g.Clear(p, roads: 0.3, starts: 300)) items.Add(new Item(g.Pick("pipeslong1", "pipeslong2", "pipeslong3", "pipesarray1", "pipesarray2"), p, heading, "props"));
+                var p = g.Around(c, 160, 290);
+                if (g.Clear(p, roads: 0.05, starts: 600) && !g.Top(p) && g.Slope(p) < 12)
+                    items.Add(new Item(g.Pick("armmstor_dead", "cormstor_dead", "armestor_dead", "corestor_dead", "armmmkr_dead", "cormmkr_dead"), p, g.Rnd.Next(4) * 90, "ruins"));
+            }
+            for (int k = 0; k < 10; k++)
+            {
+                var p = g.Around(c, 120, 400);
+                if (g.Clear(p, starts: 500) && !g.Top(p)) items.Add(new Item(Rock(g, "map"), p, g.Heading(), "rubble"));
             }
         }
         // Container yards: two a part, rows of crates; trucks parked by the roads; a crane by the market.
@@ -224,10 +230,10 @@ static class Place
         foreach (var p in g.GridA(60))
             if (d.Radius(p) is > 1300 and < 1700 && g.Clear(p, roads: 0.3) && g.Rnd.NextDouble() < 0.02)
                 items.Add(new Item("cranetruck1", p, g.Heading(), "props"));
-        // Wreck fields with rubble in the open ground.
+        // Smaller wrecks with rubble in the open ground.
         foreach (var c in g.GridA(900))
         {
-            if (g.Rnd.NextDouble() > 0.35 || !g.Clear(c, starts: 600) || g.Top(c)) continue;
+            if (g.Rnd.NextDouble() > 0.25 || !g.Clear(c, starts: 600) || g.Top(c)) continue;
             for (int k = 0; k < 6; k++)
             {
                 var p = g.Around(c, 0, 240);
@@ -237,11 +243,20 @@ static class Place
                     : new Item(Rock(g, "map"), p, g.Heading(), "rubble"));
             }
         }
-        // Mushrooms in the damp corners of the yards, against the ramparts.
-        foreach (var p in g.GridA(45))
-            if (g.Top(p) && m.At(m.EdgeDist, p.X, p.Z) is > 130 and < 260 && m.At(m.Wall, p.X, p.Z) < 0.01 && g.StairDist(p) > 120
-                && m.At(m.SpotDist, p.X, p.Z) > 110 && m.At(m.VentDist, p.X, p.Z) > 130 && m.At(m.StartDist, p.X, p.Z) > 700 && g.Rnd.NextDouble() < 0.12)
-                items.Add(new Item($"mushroom0{g.Rnd.Next(1, 10)}", p, g.Heading(), "mushrooms"));
+        // Crates stacked in the fortress yards, well back from the king; weeds in the waste ground.
+        foreach (var c in g.GridA(420))
+        {
+            if (!g.Top(c) || g.Rnd.NextDouble() > 0.3 || m.At(m.EdgeDist, c.X, c.Z) < 160 || m.At(m.StartDist, c.X, c.Z) < 900
+                || g.StairDist(c) < 200 || m.At(m.SpotDist, c.X, c.Z) < 160 || m.At(m.VentDist, c.X, c.Z) < 180) continue;
+            for (int k = 0; k < 5; k++)
+            {
+                var p = c + new P(k % 3 * 80 - 80, k / 3 * 80);
+                items.Add(new Item(g.Pick("crateblue", "crateorange", "cratered", "crateyellow"), p, 0, "props"));
+            }
+        }
+        foreach (var p in g.GridA(140))
+            if (g.Clear(p) && !g.Top(p) && g.Slope(p) < 14 && g.Rnd.NextDouble() < 0.06)
+                items.Add(new Item($"cycas{g.Rnd.Next(1, 9)}", p, g.Heading(), "weeds"));
         return items;
     }
 

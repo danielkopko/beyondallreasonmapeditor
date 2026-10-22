@@ -1,0 +1,69 @@
+# The king maps: conversion and release
+
+What was done to turn the K6, K4 and K3 drawings into BAR maps and get them out, one at a time, and how to do it again.
+
+## Where they are
+
+| Map | BarMaps release (public) | This repository's release (private) | Notes here |
+|---|---|---|---|
+| Star Fort 1.0 (K6) | [star-fort-1.0](https://github.com/danielkopko/BarMaps/releases/tag/star-fort-1.0): [`star_fort_1.0.sd7`](https://github.com/danielkopko/BarMaps/releases/download/star-fort-1.0/star_fort_1.0.sd7) | [star-fort-1.0](https://github.com/danielkopko/beyondallreasonmapeditor/releases/tag/star-fort-1.0) | `star_fort/CHECKLIST.md` |
+| Edge Keeps 1.0 (K4) | [edge-keeps-1.0](https://github.com/danielkopko/BarMaps/releases/tag/edge-keeps-1.0): [`edge_keeps_1.0.sd7`](https://github.com/danielkopko/BarMaps/releases/download/edge-keeps-1.0/edge_keeps_1.0.sd7) | [edge-keeps-1.0](https://github.com/danielkopko/beyondallreasonmapeditor/releases/tag/edge-keeps-1.0) | `edge_keeps/CHECKLIST.md` |
+| Corner Fortresses 1.0 (K3) | [corner-fortresses-1.0](https://github.com/danielkopko/BarMaps/releases/tag/corner-fortresses-1.0): [`corner_fortresses_1.0.sd7`](https://github.com/danielkopko/BarMaps/releases/download/corner-fortresses-1.0/corner_fortresses_1.0.sd7) | [corner-fortresses-1.0](https://github.com/danielkopko/beyondallreasonmapeditor/releases/tag/corner-fortresses-1.0) | `corner_fortresses/CHECKLIST.md` |
+
+Each release has the map and its lobby picture (`Star_Fort_1.0.jpg` and so on) and the map's `release_notes.md`. BarMaps' `README.md` has a section for each, beside Simmering Ravine's and Five Rivers', and its `LuaMenu/Images/Minimaps` has the three pictures. The archives (90 to 103 MB) aren't in git: `.gitignore` leaves out `out/step46-king-maps/*/*.sd7`.
+
+## What was asked
+
+- **"No doors for the moment":** none of the three has a door.
+- **"Walls are terrain":** the ramparts are heights, 90 above the ground beneath, flat on top (you can build on them), with sheer faces. Towers are 110.
+- **"Kings areas elevated":** every king's ground is a cliff-top (Star Fort's bastions at 300 over realms at 200, Edge Keeps' keeps at 360 over 240, Corner Fortresses' yards at 330 over 240) on cliffs over 54°.
+- **"Both ramp for full access and side zig zags for bot access":** each king has one 12° ramp that everything climbs, and two bots-only zigzags (flights of 38° with landings) cut through the ramparts. The access checks prove it on each built map: the ramp is the only way up for vehicles, and the zigzags take bots and nothing else.
+- **"Geo vents":** 10, 9 and 9.
+- **"Rocks/tree features making maps look like real locations, with interest":** each planet's look paints the ground and places features to suit:
+  - Star Fort: dunes, a sandstone fort, palm oases, desert rocks and wrecks.
+  - Edge Keeps: a highland moor with pinewoods, birch copses, tors and cairns.
+  - Corner Fortresses: a derelict industrial estate of ruined works, container yards and trucks.
+
+## The conversion
+
+The steps are in `converter/README.md`. In short, for each map:
+
+1. `export_geometry.py <key>` writes the drawing's geometry to `<key>/design/geometry.json`.
+2. `KingMaps build` makes:
+   - the heights, then the access checks (it stops if one fails);
+   - the planet's texture, straight into a new SMT;
+   - the detail maps and sky;
+   - `mapinfo.lua`;
+   - MapTool's `run.txt`.
+3. `MapTool edit … @run.txt` adds the metal, vents and features.
+4. `KingMaps check` runs the access checks again on the built map's own heights, and compares the parts.
+5. `MapTool install` into a scratch maps folder makes the lobby picture.
+6. The pictures (`MapTool render` and `render3d`), `info.txt` and `metal.txt` are written beside the map.
+
+All three passed their checks first time (41, 30 and 29). Passing them wasn't enough, though: the renders were looked at too, and two of the three were redone before release.
+- **Edge Keeps:**
+  - The first build was flat, with blotchy heather and pines only in three thin rows.
+  - The Heath look gained broad rolling hills that roads and bases follow (`Look.Swell`), natural heather and moor grass, small peat hags, sett causeways, pinewoods, birch copses, tors, scree and boulders.
+- **Corner Fortresses:**
+  - Industrial Revolution's pipe models (runs up to 2000 long, 250 tall) looped over the ramparts, the ground was one tiled floor, and the market was a checkerboard.
+  - The Forge look now has an estate's paved lots on waste ground, worn asphalt and brick paving. BAR's building wrecks make ruined works, and the pipes and mushrooms are gone.
+- **Star Fort:** the first pass over each ridge climbed the cliff face, so bots couldn't cross. The pass is now the ground lowered along its line, at most 60 above the realms and 38° anywhere.
+
+The later changes (the swell, the new Heath and Forge looks, a feature's room by kind) leave Star Fort's build as it was released. The swell is Heath's alone, and dry ground was never below the new puddle floor there.
+
+## The release
+
+`king_maps.cmd publish <map>` (`king_maps.ps1`):
+
+1. Commits and pushes this folder, `out/koth-maps`, `PLAN.md` and `.gitignore` to origin.
+2. Puts `<map>/<map>_1.0.sd7` and its lobby picture on the release `<map-with-dashes>-1.0`, in this repository and in danielkopko/BarMaps, with `<map>/release_notes.md`. It makes the release if it isn't there, or replaces its files and refreshes the notes if it is.
+
+As with Five Rivers, it signs in as danielkopko through the GitHub CLI (`gh auth token --user danielkopko`), for that run only, because git and `gh` on this PC default to the work account. Each map's BarMaps README section and lobby picture were added by hand after its release, in a sparse clone of BarMaps (its README and `LuaMenu` only), and pushed the same way.
+
+`king_maps.cmd install <map>` copies a map and its lobby picture into BAR (`-BarData <folder>` if BAR isn't in its usual place).
+
+## To release a new version
+
+1. Raise the version in `converter/Program.cs` (the file name in `Maps.For`, and `version` in `WriteMapInfo`, both `1.0` now), rebuild (`converter/README.md`) and run the checks. Look at the renders.
+2. Update the map's `release_notes.md` and `CHECKLIST.md`, and its section in BarMaps' README.
+3. `king_maps.cmd publish <map> -Version <version> -Message "<Map> <version>: ..."`.

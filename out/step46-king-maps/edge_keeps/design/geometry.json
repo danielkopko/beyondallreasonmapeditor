@@ -7046,9 +7046,9 @@
    0.2,
    0.28
   ],
-  "ground": "purple heather and brown peat on the fields, grey granite tors and keep cliffs, black peat round the loch.",
-  "plants": "ad0_fir and treetype pines in shelterbelts round the corners, birchtree by the loch, ferns as bracken on the slopes.",
-  "features": "rocks30_def granite tors for the corner rocks, legstone cairns on the keeps, rocks30_moss on the isle.",
+  "ground": "rolling hills of heather and moor grass, peat hags and green flushes in the hollows, bracken on the slopes, grey granite tors and keep cliffs, black peat round the loch, granite-sett causeways.",
+  "plants": "ad0_fir pinewoods thinning to lone pines, birchtree copses by the loch and in the hollows, ferns as bracken on the slopes.",
+  "features": "rocks30_def granite tors on the crests, scree under the crags and boulders on the moor, legstone cairns on the keeps, rocks30_moss on the isle.",
   "weather": "grey sky, drifting mist; wind 10 to 25; tidal 12.",
   "mapinfo": {
    "atmosphere.skyColor": [

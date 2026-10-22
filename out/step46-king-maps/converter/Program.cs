@@ -84,7 +84,6 @@ static class Maps
     static readonly string[] HeathAssets = ["ad0_fir-09afd514", "birchtree-967cee52"];
     static readonly string[] ForgeAssets =
     [
-        "pipesarray1-255655f4", "pipesarray2-d7522be9", "pipeslong1-9ddb81f3", "pipeslong2-3b1b3139", "pipeslong3-bfc953a3",
         "crateblue-f00d1b45", "crateorange-734ef546", "cratered-74d6eff6", "crateyellow-947e5b77", "cranetruck1-5987a6a4",
         "minitruck1-c2e2201a", "minitruck2-83876ebe",
     ];

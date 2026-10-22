@@ -77,4 +77,5 @@ Also checked:
 - **Players:** a 20-player lobby (5 teams of 4). I haven't checked BAR's player limit. The map has no start boxes, so draw them in the lobby or play with fixed starts in the order above.
 - **Ramparts:** whether buildings sit well on top (flat, about 160 wide, 200 at the foot), and whether the towers' tops (225 to 315 across) are useful.
 - **Amphibious units and commanders** (54°) climb the zigzags and passes, as bots do.
+- **Reclaim:** the rocks and wrecks hold 13,855 metal, 2,771 a team, mostly in the scree and the desert rocks.
 - **Archive:** 102.5 MB, over GitHub's 100 MB a file, so the `.sd7` is on the releases and not in git.

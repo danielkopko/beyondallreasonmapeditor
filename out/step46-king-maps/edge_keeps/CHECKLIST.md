@@ -80,6 +80,7 @@ Also checked:
 ## To try in BAR
 
 - **Players:** a 16-player lobby (4 teams of 4). The map has no start boxes, so draw them in the lobby or play with fixed starts in the order above.
+- **Reclaim:** the rocks hold 10,784 metal, 2,696 a team, and the trees give energy.
 - **Woods:** whether the pinewoods block too much. The firs are blocking features; they're kept off roads, spots and bases.
 - **Amphibious units and commanders** (54°, any depth) climb the zigzags and walk under the loch, as on any map.
 - **Archive:** 97.7 MB. It's on the releases, like the other king maps, and not in git.

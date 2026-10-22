@@ -214,7 +214,8 @@ sealed class Heath : Look
     }
 }
 
-/// <summary>Forge: an industrial wasteland. Cracked concrete and rust, oil-dark ground, paved yards, acid lakes.</summary>
+/// <summary>Forge: a derelict industrial estate. Lots of cracked, broken concrete between gravel waste ground gone to
+/// weeds, rust and oil, worn asphalt roads, a brick market square, paved fortress yards, acid lakes.</summary>
 sealed class Forge : Look
 {
     public override double Relief(Design d, Sym sym, P p, double h) =>
@@ -230,16 +231,36 @@ sealed class Forge : Look
         ["water.absorb"] = "0.012,0.006,0.03", ["water.specularColor"] = "0.8,0.9,0.4",
     };
 
-    static readonly C Joint = new(88, 86, 82), Gravel = new(120, 110, 96), Rust = new(148, 88, 52), Oil = new(44, 42, 40);
-    static readonly C Yard = new(172, 168, 160), Yellow = new(220, 176, 40), Black = new(40, 40, 40), TileA = new(150, 92, 70), TileB = new(128, 80, 62);
+    static readonly C Joint = new(88, 86, 82), Gravel = new(124, 116, 102), Dirt = new(110, 96, 78), Weeds = new(96, 102, 58);
+    static readonly C Rust = new(148, 88, 52), Oil = new(44, 42, 40);
+    static readonly C Yard = new(172, 168, 160), Yellow = new(220, 176, 40), Black = new(40, 40, 40);
+    static readonly C BrickA = new(152, 86, 64), BrickB = new(122, 70, 54), Mortar = new(150, 140, 126);
     static readonly C Crust = new(176, 186, 72), Sludge = new(90, 120, 30), SludgeDeep = new(58, 82, 22), Panel = new(130, 128, 124);
-    static readonly C Asphalt = new(62, 62, 64), Kerb = new(150, 150, 148), Steel = new(116, 118, 122);
+    static readonly C Asphalt = new(86, 86, 88), Patch = new(66, 66, 68), Kerb = new(156, 154, 148), Steel = new(116, 118, 122);
 
     static double Slab(P q, double size, out bool joint)
     {
         double fx = q.X / size, fz = q.Z / size;
         joint = Frac(fx) < 3 / size || Frac(fz) < 3 / size;
         return Hash((long)Math.Floor(fx), (long)Math.Floor(fz));
+    }
+
+    /// <summary>The estate's lots, 720 × 560: how far inside its edge a point is, negative (less one) on waste ground.</summary>
+    static double Lot(P q)
+    {
+        const double W = 720, H = 560;
+        double fx = q.X / W, fz = q.Z / H;
+        double inside = Math.Min(Math.Min(Frac(fx), 1 - Frac(fx)) * W, Math.Min(Frac(fz), 1 - Frac(fz)) * H);
+        return Hash((long)Math.Floor(fx) + 17, (long)Math.Floor(fz) - 5) < 0.62 ? inside : -1 - inside;
+    }
+
+    /// <summary>Bricks 26 × 12 in stretcher bond: each brick's tone, or -1 in the mortar.</summary>
+    static double Brick(P q)
+    {
+        double bz = q.Z / 12;
+        long row = (long)Math.Floor(bz);
+        double bx = q.X / 26 + (((row % 2) + 2) % 2) * 0.5;
+        return Frac(bz) < 0.14 || Frac(bx) < 0.07 ? -1 : Hash((long)Math.Floor(bx), row);
     }
 
     public override C Colour(Design d, ref Ctx x)
@@ -249,15 +270,22 @@ sealed class Forge : Look
             c = Sludge.Mix(SludgeDeep, Geo.S(-x.H / 40));
         else
         {
-            double big = x.Top > 0.5 ? 128 : 96;
+            // Waste ground: gravel and dirt gone to weeds.
+            var waste = Gravel.Mix(Dirt, Geo.S((x.N1 + 0.1) / 0.3)) * (0.9 + 0.1 * x.Fine + 0.06 * x.Grain);
+            waste = waste.Mix(Weeds * (0.85 + 0.2 * x.Fine), Geo.S((x.N3 - 0.05) / 0.15) * 0.6);
+            c = waste;
+            // The paved lots: concrete slabs, cracked, some broken out to the gravel, fading at the lot's edge.
+            double lot = x.Own(Lot), big = x.Top > 0.5 ? 128 : 96;
             double tone = x.Own(q => Slab(q, big, out bool j) * (j ? -1 : 1));
             bool joint = tone < 0;
-            c = new C(140, 136, 128).Mix(new C(168, 164, 156), Math.Abs(tone));
-            if (joint) c = Joint;
-            double crack = x.Pattern(q => Math.Abs(A4.Fbm(q.X / 70, q.Z / 70, 2)));
-            if (crack < 0.025) c = c.Mix(Joint, 0.8);
-            c = c.Mix(Gravel * (0.9 + 0.15 * x.Grain), Geo.S((-x.N1 - 0.15) / 0.2) * (1 - x.Top));
-            c = c.Mix(Rust, Geo.S((x.N2 - 0.3) / 0.15) * 0.6);
+            if (lot > 0 && x.Top < 0.5)
+            {
+                var slab = joint ? Joint : new C(146, 142, 134).Mix(new C(170, 166, 158), Math.Abs(tone)) * (0.95 + 0.05 * x.Grain);
+                if (x.Pattern(q => Math.Abs(A4.Fbm(q.X / 70, q.Z / 70, 2))) < 0.025) slab = slab.Mix(Joint, 0.8);
+                if (Math.Abs(tone) > 0.9) slab = slab.Mix(waste, 0.85);
+                c = slab.Mix(waste, 1 - Geo.S((lot - 16) / 20));
+            }
+            c = c.Mix(Rust, Geo.S((x.N2 - 0.3) / 0.15) * 0.55);
             c = c.Mix(Oil, Geo.S((x.N3 - 0.5) / 0.1) * 0.7 * (1 - x.Top));
             if (x.Top > 0)
             {
@@ -270,15 +298,21 @@ sealed class Forge : Look
             }
             if (x.Radius < 56 * d.Upp)
             {
-                double check = x.Own(q => Math.Abs(Math.Floor(q.X / 32) + Math.Floor(q.Z / 32)) % 2 == 0 ? 1 : 0);
-                c = c.Mix(TileA.Mix(TileB, check), 1 - Geo.S((x.Radius - 52 * d.Upp) / (4 * d.Upp)));
+                double brick = x.Own(Brick);
+                var paving = brick < 0 ? Mortar : BrickA.Mix(BrickB, brick) * (0.94 + 0.08 * x.Fine);
+                c = c.Mix(paving, 1 - Geo.S((x.Radius - 52 * d.Upp) / (4 * d.Upp)));
             }
             if (x.H < 10) c = c.Mix(Crust, (1 - Geo.S((x.H - 2) / 8)) * 0.85);
             double wr = Geo.S((x.Slope - 32) / 10);
             c = c.Mix(Gravel * 0.8, wr * 0.7);
             if (x.Wall > 0) c = c.Mix(Panel * (x.H % 24 < 1.5 ? 0.72 : 1) * (0.95 + 0.05 * x.Fine), x.Wall);
+            // Roads: worn asphalt, patched and cracked, paler at its edges, with a concrete kerb.
+            var asphalt = Asphalt * (0.94 + 0.1 * x.Grain) * (0.96 + 0.06 * x.Fine);
+            if (x.Pattern(q => Math.Abs(A5.Fbm(q.X / 60, q.Z / 60, 2))) < 0.02) asphalt *= 0.8;
+            asphalt = asphalt.Mix(Patch, Geo.S((x.N3 - 0.35) / 0.05) * 0.8);
+            asphalt = asphalt.Mix(Asphalt * 1.25, (1 - Geo.S((x.Road - 0.3) / 0.4)) * 0.5);
             c = c.Mix(Kerb, x.Glow * (1 - x.Road) * 0.45);
-            c = c.Mix(Asphalt * (0.95 + 0.08 * x.Grain), x.Road);
+            c = c.Mix(asphalt, x.Road);
             if (x.Stair > 0) c = c.Mix(Steel * (x.Slope > 6 && x.H % 6 < 1.1 ? 0.75 : 1), x.Stair);
         }
         return Finish(c, x, new C(40, 42, 46), new C(156, 92, 50), new C(30, 30, 30), new C(226, 206, 70));
