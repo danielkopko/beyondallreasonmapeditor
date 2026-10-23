@@ -6,7 +6,7 @@
 
 **Download:** one file, [edge_keeps_1.0.sd7](https://github.com/danielkopko/BarMaps/releases/download/edge-keeps-1.0/edge_keeps_1.0.sd7), from the public BarMaps release [edge-keeps-1.0](https://github.com/danielkopko/BarMaps/releases/tag/edge-keeps-1.0), with its lobby picture `Edge_Keeps_1.0.jpg`. The same files are on [this repository's release](https://github.com/danielkopko/beyondallreasonmapeditor/releases/tag/edge-keeps-1.0) (signed in as danielkopko). After rebuilding, `../king_maps.cmd publish edge_keeps -Message "..."` pushes the notes and replaces both releases' files. `../king_maps.cmd install edge_keeps` copies the map into BAR.
 
-**Rebuilt 2026-10-23, not yet on the releases:** the map beside this file has its features turned the way the converter meant (*Headings*, below). The releases still have the first build, in which every feature faces south. `../king_maps.cmd publish edge_keeps` replaces them.
+**Rebuilt 2026-10-23, not yet on the releases:** the map beside this file has its features turned the way the converter meant (*Headings*, below), and a minimap and lobby picture seen from above in 3D (*The minimap and lobby picture*). The releases still have the first build, in which every feature faces south and the minimap is the flat texture. `../king_maps.cmd publish edge_keeps` replaces them.
 
 ## The layout
 
@@ -71,9 +71,17 @@ Also checked:
 - **Headings (fixed after release, 2026-10-23):**
   - The first build wrote each feature's heading in degrees. MapTool's `item-add` takes the engine's units: 65536 to a turn, with 0 facing south. So all 2,532 features faced within 2° of south, and the other quarters' copies weren't turned.
   - The converter now writes `round((180 − degrees) × 65536 / 360)`, wrapped to 0-65535. Its degrees run clockwise from north, the way it turns the parts.
-  - The rebuild differs from the release only in `mapconfig/featureplacer/set.lua` (`MapTool compare`). Its `run.txt` is the same line for line, but for the headings. Each copy faces its original turned exactly a quarter with its part, so the facings are even: 633 each way.
+  - The rebuild differs from the release only in `mapconfig/featureplacer/set.lua` and in the SMF's minimap bytes (`MapTool compare`, and the SMF compared byte by byte). Its `run.txt` is the same line for line, but for the headings. Each copy faces its original turned exactly a quarter with its part, so the facings are even: 633 each way.
   - The 30 checks come out exactly as before (`check.txt` is unchanged). They take each blocking feature's footprint as a square round it, whichever way it faces.
-  - `info.txt`, `metal.txt` and the lobby picture are the same as before. The 3D pictures were drawn again with the same cameras.
+  - `info.txt` and `metal.txt` are the same as before. The 3D pictures were drawn again with the same cameras.
+
+## The minimap and lobby picture
+
+Since 2026-10-23, as for every map now, the minimap is the map seen straight down in 3D, with heights, light and features, not the flat texture. That covers the in-game minimap and the lobby's picture, which `MapTool install` draws from it. It's made as Starfall Marsh's is:
+1. `MapTool render3d edge_keeps_1.0.sd7 top.png --size 8192x8192 --camera 6144,6144,0,89.9,62423 --models`. The camera is 5.08 map-widths up, four times Starfall Marsh's 1.27, with a render four times as wide, so the map still covers about 1950 pixels of it. At 1.27 widths, ground lower than the map's high edges was drawn inward of them, and the render's background showed through along the edges. Edge Keeps had a sliver of up to 5 pixels in 1024 and Corner Fortresses up to 12, round its edge lakes. Four times as far away leaves at most a hairline, and features and high ground sit a quarter as far out of place.
+2. `Starfall minimap top.png minimap.png 1024` (`out/step47-starfall-marsh/converter`) cuts the map out of the render and scales it.
+3. `Starfall setminimap <extracted map> minimap.png` puts it into the SMF; `MapTool pack` packs the map again.
+4. `MapTool install` into a scratch maps folder gives the lobby picture (`bar-data/`).
 
 ## Pictures
 

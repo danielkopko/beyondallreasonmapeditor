@@ -16,7 +16,8 @@ How `five_rivers_1.0.sd7` was made from `out/koth-maps/k7_five_rivers.svg` (the 
 4. `MapTool edit five_rivers_stage.sd7 five_rivers_1.0.sd7 @run.txt`.
 5. `FiveRivers check design/geometry.json <final map, extracted>`: the access checks again on the built map's heights, and how alike the fifths are.
 6. `MapTool render … --layer splat` and `--layer normals`: the detail maps line up with the texture (map `.dds` files are stored upside down; `Derive.cs` flips each image before writing it).
-7. `five_rivers.cmd publish`: the map on the GitHub releases, here and in BarMaps (`../RELEASE.md`).
+7. The minimap from a straight-down 3D render, features included (`../CHECKLIST.md`, *The minimap and lobby picture*), then `MapTool install` for the lobby picture.
+8. `five_rivers.cmd publish`: the map on the GitHub releases, here and in BarMaps (`../RELEASE.md`).
 
 ## Layout
 

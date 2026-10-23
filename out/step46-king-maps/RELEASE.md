@@ -37,7 +37,7 @@ The steps are in `converter/README.md`. In short, for each map:
    - MapTool's `run.txt`.
 3. `MapTool edit … @run.txt` adds the metal, vents and features.
 4. `KingMaps check <geometry> <map> <run.txt>` runs the access checks again. It reads the built map's own heights, and goes round each blocking feature's footprint in the checks that units get through. It also compares the parts.
-5. `MapTool install` into a scratch maps folder makes the lobby picture.
+5. `MapTool install` into a scratch maps folder makes the lobby picture. Since 2026-10-23 the minimap it's drawn from is first made from a straight-down 3D render (each map's `CHECKLIST.md`, *The minimap and lobby picture*).
 6. The pictures (`MapTool render` and `render3d`), `info.txt` and `metal.txt` are written beside the map.
 
 All three passed their checks first time (41, 30 and 29). Passing them wasn't enough, though: the renders were looked at too, and two of the three were redone before release.
@@ -49,7 +49,7 @@ All three passed their checks first time (41, 30 and 29). Passing them wasn't en
   - The Forge look now has an estate's paved lots on waste ground, worn asphalt and brick paving. BAR's building wrecks make ruined works, and the pipes and mushrooms are gone.
 - **Star Fort:** the first pass over each ridge climbed the cliff face, so bots couldn't cross. The pass is now the ground lowered along its line, at most 60 above the realms and 38° anywhere.
 
-The later changes (the swell, the new Heath and Forge looks, a feature's room by kind) left Star Fort's build as it was released: a rebuild after them gave the same SMF, SMT, detail maps, `mapinfo.lua` and `run.txt`, byte for byte. That stopped being true with the headings fix (below). A rebuild now differs from the release in `run.txt`'s headings, and so in the archive's `mapconfig/featureplacer/set.lua`, and in nothing else.
+The later changes (the swell, the new Heath and Forge looks, a feature's room by kind) left Star Fort's build as it was released: a rebuild after them gave the same SMF, SMT, detail maps, `mapinfo.lua` and `run.txt`, byte for byte. That stopped being true with the headings fix (below). A rebuild now differs from the release in `run.txt`'s headings, and so in the archive's `mapconfig/featureplacer/set.lua`, and in nothing else. The 3D minimap, made after the build, then changes the SMF's minimap bytes.
 
 After all three were out, the checks were extended to the features. Re-run on all three maps, every check passed: the features block 0.6%, 1.9% and 2.5% of the ground, and none cuts off a ramp, zigzag, pass or start.
 
@@ -59,9 +59,10 @@ After all three were out, the checks were extended to the features. Re-run on al
 
 - **Units and frame:** the converter's degrees run clockwise from north, the way `Design.Turn` turns the parts and a road's bearing is worked out. The engine's run the other way from south (16384 is east). So `Place.Heading` writes `round((180 − degrees) × 65536 / 360)`, wrapped to 0-65535: MapEditSession.AddItem's rounding, after turning the frame round. The units alone would have left each part's copies turned the wrong way and diagonal roads' trucks across them.
 - **Trucks:** the minitrucks' models are long along x, not z, so each is turned a quarter more than its road.
-- **Rebuilt, all three:** each archive differs from its release only in `mapconfig/featureplacer/set.lua` (`MapTool compare`), and each `run.txt` is the same line for line, but for the headings. Every copy faces its original turned with its part (to within a unit for Star Fort's fifths, exactly for the quarters). The facings spread evenly.
-- **Unchanged:** `check.txt` (41, 30 and 29 checks, all passed), `info.txt`, `metal.txt` and the lobby pictures. The checks take each blocking feature's footprint as a square round it, the same whichever way it faces. How BAR turns a wreck's real footprint with its facing is still to try in game.
+- **Rebuilt, all three:** each archive differs from its release only in `mapconfig/featureplacer/set.lua` and in the SMF's minimap bytes (`MapTool compare`, and the SMF compared byte by byte), and each `run.txt` is the same line for line, but for the headings. Every copy faces its original turned with its part (to within a unit for Star Fort's fifths, exactly for the quarters). The facings spread evenly.
+- **Unchanged:** `check.txt` (41, 30 and 29 checks, all passed), `info.txt` and `metal.txt`. The checks take each blocking feature's footprint as a square round it, the same whichever way it faces. How BAR turns a wreck's real footprint with its facing is still to try in game.
 - **Pictures:** the 3D pictures with features in them were drawn again with their first cameras. Corner Fortresses has a new one, `3d_trucks.png`.
+- **Minimaps and lobby pictures:** at your new requirement for every release, each map's minimap is now the map seen straight down in 3D, with heights and features. The lobby picture follows it. They're made as Starfall Marsh's are, with the camera four times as far up (5.08 map-widths, an 8192 render), so the edges' high ground and lakes leave no background showing (each map's `CHECKLIST.md`, *The minimap and lobby picture*).
 
 The maps beside the notes are the rebuilt ones. The releases still have the first builds until `king_maps.cmd publish <map>` replaces their files.
 

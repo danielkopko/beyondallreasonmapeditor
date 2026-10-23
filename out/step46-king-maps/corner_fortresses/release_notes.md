@@ -18,4 +18,4 @@
 
 **Not yet tried in a game.** The acid's damage (`water.damage` 60) and the amount of reclaim are first guesses. The map has no start boxes. The fixed starts go A's king, then A's three peasants, then B, C and D clockwise.
 
-**Rebuilt 2026-10-23:** the wrecks, rubble, crates and trucks (parked along the roads) now face every way, as they were meant to. In the first upload of this version they all faced south. If you downloaded it before then, replace your copy.
+**Rebuilt 2026-10-23:** the wrecks, rubble, crates and trucks (parked along the roads) now face every way, as they were meant to, and the minimap and lobby picture show the map from above in 3D, heights and features included. In the first upload of this version they all faced south and the minimap was the flat texture. If you downloaded it before then, replace your copy.

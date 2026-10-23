@@ -6,7 +6,7 @@
 
 **Download:** one file, [five_rivers_1.0.sd7](https://github.com/danielkopko/BarMaps/releases/download/five-rivers-1.0/five_rivers_1.0.sd7), from the public BarMaps release [five-rivers-1.0](https://github.com/danielkopko/BarMaps/releases/tag/five-rivers-1.0), with its lobby picture `Five_Rivers_1.0.jpg`; the same files are on [this repository's release](https://github.com/danielkopko/beyondallreasonmapeditor/releases/tag/five-rivers-1.0) (signed in as danielkopko). After rebuilding the map, `five_rivers.cmd publish -Message "..."` pushes the notes and replaces both releases' files; `five_rivers.cmd install` copies the map beside it into BAR. `RELEASE.md` has how it was converted and released.
 
-**Rebuilt 2026-10-23, not yet on the releases:** the map beside this file has its features turned the way the converter meant (*Headings*, below). The releases still have the first build, in which every feature faces south. `five_rivers.cmd publish` replaces them.
+**Rebuilt 2026-10-23, not yet on the releases:** the map beside this file has its features turned the way the converter meant (*Headings*, below), and a minimap and lobby picture seen from above in 3D (*The minimap and lobby picture*). The releases still have the first build, in which every feature faces south and the minimap is the flat texture. `five_rivers.cmd publish` replaces them.
 
 Install by hand: copy `five_rivers_1.0.sd7` into BAR's `maps` folder, and `bar-data/LuaMenu` (beside this file) into BAR's data folder (the folder that holds `maps`, usually `%LOCALAPPDATA%\Programs\Beyond-All-Reason\data`) for the lobby picture; or `MapTool install five_rivers_1.0.sd7` on a machine with BAR.
 
@@ -54,8 +54,16 @@ Also checked:
 - **Headings (fixed after release, 2026-10-23):**
   - The first build wrote each feature's heading in degrees. MapTool's `item-add` takes the engine's units: 65536 to a turn, with 0 facing south. So all 2,515 features faced within 2° of south, and the other fifths' copies weren't turned. Step 47's test map showed it.
   - The converter now converts its headings (degrees clockwise from north, the way it turns the fifths) to the engine's units: `round((180 − degrees) × 65536 / 360)`, wrapped to 0-65535.
-  - The rebuild differs from the release only in `mapconfig/featureplacer/set.lua` (`MapTool compare`). Its `run.txt` is the same line for line, but for the headings. Each copy faces its original turned with its fifth, to within a unit. The facings spread evenly: 618 south, 637 east, 629 north, 631 west.
-  - `check.txt`, `info.txt`, `metal.txt` and the lobby picture are the same as before. The pictures with features in them were drawn again.
+  - The rebuild differs from the release only in `mapconfig/featureplacer/set.lua` and in the SMF's minimap bytes (`MapTool compare`, and the SMF compared byte by byte). Its `run.txt` is the same line for line, but for the headings. Each copy faces its original turned with its fifth, to within a unit. The facings spread evenly: 618 south, 637 east, 629 north, 631 west.
+  - `check.txt`, `info.txt` and `metal.txt` are the same as before. The pictures with features in them were drawn again.
+
+## The minimap and lobby picture
+
+Since 2026-10-23, as for every map now, the minimap is the map seen straight down in 3D, with heights, light and features, not the flat texture. That covers the in-game minimap and the lobby's picture, which `MapTool install` draws from it. It's made as Starfall Marsh's is:
+1. `MapTool render3d five_rivers_1.0.sd7 top.png --size 8192x8192 --camera 7168,7168,0,89.9,72826 --models`. The camera is 5.08 map-widths up, four times Starfall Marsh's 1.27, with a render four times as wide, so the map still covers about 1950 pixels of it. At 1.27 widths, ground lower than the map's high edges was drawn inward of them, and the render's background showed through along the edges. Edge Keeps had a sliver of up to 5 pixels in 1024 and Corner Fortresses up to 12, round its edge lakes. Four times as far away leaves at most a hairline, and features and high ground sit a quarter as far out of place.
+2. `Starfall minimap top.png minimap.png 1024` (`out/step47-starfall-marsh/converter`) cuts the map out of the render and scales it.
+3. `Starfall setminimap <extracted map> minimap.png` puts it into the SMF; `MapTool pack` packs the map again.
+4. `MapTool install` into a scratch maps folder gives the lobby picture (`bar-data/`).
 
 ## Pictures
 

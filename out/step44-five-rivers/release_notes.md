@@ -10,4 +10,4 @@
 
 Not yet tried in a game: worth checking that the night isn't too dark, that extractors go down on the ford spots (10 deep), and that your lobby takes 20 players. There are no start boxes in the map; the fixed starts go A's king, A's three peasants, then B, C, D and E clockwise.
 
-**Rebuilt 2026-10-23:** the trees, ferns, mushrooms, crystals and rocks now face every way, as they were meant to. In the first upload of this version they all faced south. If you downloaded it before then, replace your copy.
+**Rebuilt 2026-10-23:** the trees, ferns, mushrooms, crystals and rocks now face every way, as they were meant to, and the minimap and lobby picture show the map from above in 3D, heights and features included. In the first upload of this version they all faced south and the minimap was the flat texture. If you downloaded it before then, replace your copy.

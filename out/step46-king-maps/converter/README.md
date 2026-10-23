@@ -15,7 +15,7 @@ How the king maps (`star_fort_1.0.sd7`, `edge_keeps_1.0.sd7`, `corner_fortresses
    - All That Simmers' own layout is left out: its SMF and SMT, its detail maps, its grass and feature list, its sunrise sky, two unused textures, and its map options.
 4. `MapTool edit <key>_1.0_stage.sd7 <key>_1.0.sd7 @run.txt`.
 5. `KingMaps check <geometry.json> <final map, extracted> <work>/run.txt`: the access checks again on the built map's own heights, the ones that units get through going round every blocking feature (its footprint and 8 more), and how alike the parts are.
-6. `MapTool install <key>_1.0.sd7 <scratch maps folder>`: the lobby picture, kept in `<key>/bar-data`.
+6. The minimap from a straight-down 3D render, features included (`<key>/CHECKLIST.md`, *The minimap and lobby picture*), then `MapTool install <key>_1.0.sd7 <scratch maps folder>`: the lobby picture, kept in `<key>/bar-data`.
 7. `king_maps.cmd publish <key>`: the map on the GitHub releases, here and in BarMaps (`../RELEASE.md`).
 
 ## The terrain (`Terrain.cs`)
