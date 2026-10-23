@@ -4,7 +4,7 @@
 
 **Not tried in BAR yet.** BAR isn't installed on this machine, so everything below was checked with MapCore's copy of the engine's rules, and the models with MapTool's renderer, not in the game.
 
-**Not released yet.** `starfall_marsh.cmd publish -Message "Starfall Marsh 1.0"` commits and pushes this folder and puts the map and its lobby picture on the release `starfall-marsh-1.0` here and in danielkopko/BarMaps (as for the king maps); BarMaps' README section and picture are then added by hand. `starfall_marsh.cmd install` copies the map into BAR.
+**Download:** one file, [starfall_marsh_1.0.sd7](https://github.com/danielkopko/BarMaps/releases/download/starfall-marsh-1.0/starfall_marsh_1.0.sd7), from the public BarMaps release [starfall-marsh-1.0](https://github.com/danielkopko/BarMaps/releases/tag/starfall-marsh-1.0), with its lobby picture `Starfall_Marsh_1.0.jpg`. The same files are on [this repository's release](https://github.com/danielkopko/beyondallreasonmapeditor/releases/tag/starfall-marsh-1.0) (signed in as danielkopko), and BarMaps' README has its section and `LuaMenu/Images/Minimaps/Starfall_Marsh_1.0.jpg`. After rebuilding, `starfall_marsh.cmd publish -Message "..."` pushes the notes and replaces both releases' files (BarMaps' README section and picture are updated by hand); `starfall_marsh.cmd install` copies the map into BAR.
 
 ## The layout
 
@@ -102,4 +102,4 @@ Also checked:
 - **Reclaim:** whether 7,190 metal a team in wreckage is too much early on. The metal is set in each feature's `.lua` and `Models.cs`.
 - **The breach and the marsh:** whether 320 between the torn ends and the wadeable furrow make good fights.
 - **Players:** 4 (2v2). The map has no start boxes, so draw them in the lobby or play with the fixed starts (0 and 1 north, 2 and 3 south).
-- **Archive:** 59.7 MB. It isn't in git (`.gitignore`). It would go on the releases, as the other maps do.
+- **Archive:** 59.7 MB. It isn't in git (`.gitignore`). It is on the releases, as the other maps are.
