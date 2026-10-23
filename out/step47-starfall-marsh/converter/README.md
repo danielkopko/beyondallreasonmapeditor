@@ -13,6 +13,7 @@ How `starfall_marsh_1.0.sd7` is made: the terrain, texture, detail maps and sky,
 - `Starfall build <template> <work>`: the map folder, `starfall_marsh_1.0_stage.sd7` and `run.txt` (it runs the checks first and builds anyway, to look).
 - `MapTool edit starfall_marsh_1.0_stage.sd7 starfall_marsh_1.0.sd7 @run.txt`: metal, vents, the ship, wreckage and jungle.
 - `Starfall check <final map, extracted> <run.txt>`: the checks again on the built map's own heights.
+- `Starfall minimap <render.png> <out.png> [size]` and `Starfall setminimap <extracted map> <png>`: the minimap from a straight-down `render3d` with `--models`. The first cuts the map out of the render and scales it; the second puts it into the SMF. Then `MapTool pack`. The lobby picture follows, because `MapTool install` draws it from the minimap.
 - `MapTool install`, `render`, `render3d`, `info`, `metal`: the lobby picture, pictures and reports beside this folder.
 
 ## The files

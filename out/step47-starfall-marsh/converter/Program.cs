@@ -80,6 +80,39 @@ switch (args[0])
         Console.WriteLine($"{failures} check(s) failed");
         return failures == 0 ? 0 : 1;
     }
+    case "minimap":
+    {
+        // minimap <render3d top-down png> <out png> [size]: the map cut out of a straight-down 3D render (its border
+        // is the renderer's background) and scaled to the minimap's size, for MapTool's import:minimap and the lobby.
+        var img = MapCore.Imaging.PngReader.Read(args[1]).ToRgba();
+        var bg = img.GetPixel(2, 2);
+        bool Map(int x, int y)
+        {
+            var c = img.GetPixel(x, y);
+            return Math.Abs(c.R - bg.R) + Math.Abs(c.G - bg.G) + Math.Abs(c.B - bg.B) > 18;
+        }
+        int left = 0, right = img.Width - 1, top = 0, bottom = img.Height - 1;
+        while (left < right && !Enumerable.Range(img.Height / 4, img.Height / 2).Any(y => Map(left, y))) left++;
+        while (right > left && !Enumerable.Range(img.Height / 4, img.Height / 2).Any(y => Map(right, y))) right--;
+        while (top < bottom && !Enumerable.Range(img.Width / 4, img.Width / 2).Any(x => Map(x, top))) top++;
+        while (bottom > top && !Enumerable.Range(img.Width / 4, img.Width / 2).Any(x => Map(x, bottom))) bottom--;
+        int size = args.Length > 3 ? int.Parse(args[3], CultureInfo.InvariantCulture) : 1024;
+        var cut = img.Crop(MapCore.Imaging.PixelRect.FromEdges(left, top, right + 1, bottom + 1)).Resample(size, size);
+        MapCore.Imaging.PngWriter.WriteRgba(args[2], cut);
+        Console.WriteLine($"map at ({left}, {top}) to ({right}, {bottom}) of {img.Width}x{img.Height}, written {size}x{size}");
+        break;
+    }
+    case "setminimap":
+    {
+        // setminimap <extracted map folder> <png>: the map's SMF minimap made from the picture (the lobby's picture
+        // follows it: MapTool install draws it from the minimap).
+        var smfPath = Directory.GetFiles(Path.Combine(args[1], "maps"), "*.smf").Single();
+        var smf = MapCore.Smf.SmfFile.Load(File.ReadAllBytes(smfPath));
+        MapCore.Smf.Minimap.Rebuild(smf, MapCore.Imaging.PngReader.Read(args[2]).ToRgba());
+        smf.Save(smfPath);
+        Console.WriteLine($"minimap of {Path.GetFileName(smfPath)} set from {Path.GetFileName(args[2])}");
+        break;
+    }
     case "gallery":
     {
         // Every model on flat ground: the ship where it lies, the wreckage in a row south of it.

@@ -83,6 +83,16 @@ Also checked:
    - A wreck spot stood in a stream and was moved onto the bank.
    - Vehicles couldn't reach the mound's crest spots, so the track was cut.
 
+## The minimap and lobby picture
+
+The map's minimap (in game, and the lobby's picture, which `MapTool install` draws from it) is the map seen straight down in 3D, heights, light and features included, not the flat texture:
+1. `MapTool render3d starfall_marsh_1.0.sd7 top.png --size 2048x2048 --camera 4096,4096,0,89.9,10400 --models`
+2. `Starfall minimap top.png minimap.png 1024` cuts the map out of the render (the border is the renderer's background) and scales it.
+3. `Starfall setminimap <extracted map> minimap.png` puts it into the SMF.
+4. `MapTool pack` packs the map again.
+
+The render is `minimap_3d_render.png`.
+
 ## Pictures
 
 - **The map:** `map_2d.png`, `3d_overview.png`
