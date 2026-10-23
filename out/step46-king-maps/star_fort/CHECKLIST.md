@@ -6,6 +6,8 @@
 
 **Download:** one file, [star_fort_1.0.sd7](https://github.com/danielkopko/BarMaps/releases/download/star-fort-1.0/star_fort_1.0.sd7), from the public BarMaps release [star-fort-1.0](https://github.com/danielkopko/BarMaps/releases/tag/star-fort-1.0), with its lobby picture `Star_Fort_1.0.jpg`. The same files are on [this repository's release](https://github.com/danielkopko/beyondallreasonmapeditor/releases/tag/star-fort-1.0) (signed in as danielkopko). After rebuilding the map, `../king_maps.cmd publish star_fort -Message "..."` pushes the notes and replaces both releases' files. `../king_maps.cmd install star_fort` copies the map into BAR.
 
+**Rebuilt 2026-10-23, not yet on the releases:** the map beside this file has its features turned the way the converter meant (*Headings*, below). The releases still have the first build, in which every feature faces south. `../king_maps.cmd publish star_fort` replaces them.
+
 ## The layout
 
 | From the drawing | On the map |
@@ -62,6 +64,12 @@ Also checked:
   - The palms and ferns are All That Simmers'.
   - The rocks (`rocks30_desert_*`) and wrecks (`armsolar_dead` and the like) are BAR's. MapTool warns that the map doesn't define them; BAR does.
 - **The first pass profile failed:** it was a straight climb, so it ran up the ridge's cliff face. Bots couldn't cross. The pass is now the ground lowered along its line (no higher than 60 above the realms, no steeper than 38°), and all five pass the checks.
+- **Headings (fixed after release, 2026-10-23):**
+  - The first build wrote each feature's heading in degrees. MapTool's `item-add` takes the engine's units: 65536 to a turn, with 0 facing south. So all 665 features faced within 2° of south, and the other fifths' copies weren't turned.
+  - The converter now writes `round((180 − degrees) × 65536 / 360)`, wrapped to 0-65535. Its degrees run clockwise from north, the way it turns the parts.
+  - The rebuild differs from the release only in `mapconfig/featureplacer/set.lua` (`MapTool compare`). Its `run.txt` is the same line for line, but for the headings. Each copy faces its original turned with its fifth, to within a unit. The facings spread evenly: 166 south, 167 east, 167 north, 165 west.
+  - The 41 checks come out exactly as before (`check.txt` is unchanged). They take each blocking feature's footprint as a square round it, whichever way it faces. How BAR turns a wreck's real footprint with its facing is still to try in game.
+  - `info.txt`, `metal.txt` and the lobby picture are the same as before. The 3D pictures were drawn again with the same cameras.
 
 ## Pictures
 

@@ -17,3 +17,5 @@
 **Install:** put `corner_fortresses_1.0.sd7` in BAR's `maps` folder (usually `%LOCALAPPDATA%\Programs\Beyond-All-Reason\data\maps`). To see its picture on the lobby's setup screen, put `Corner_Fortresses_1.0.jpg` in `data\LuaMenu\Images\Minimaps` and restart the lobby.
 
 **Not yet tried in a game.** The acid's damage (`water.damage` 60) and the amount of reclaim are first guesses. The map has no start boxes. The fixed starts go A's king, then A's three peasants, then B, C and D clockwise.
+
+**Rebuilt 2026-10-23:** the wrecks, rubble, crates and trucks (parked along the roads) now face every way, as they were meant to. In the first upload of this version they all faced south. If you downloaded it before then, replace your copy.

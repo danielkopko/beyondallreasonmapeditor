@@ -9,3 +9,5 @@
 **Install:** put `five_rivers_1.0.sd7` in BAR's `maps` folder (usually `%LOCALAPPDATA%\Programs\Beyond-All-Reason\data\maps`). For its picture on the lobby's setup screen, put `Five_Rivers_1.0.jpg` in `data\LuaMenu\Images\Minimaps` and restart the lobby.
 
 Not yet tried in a game: worth checking that the night isn't too dark, that extractors go down on the ford spots (10 deep), and that your lobby takes 20 players. There are no start boxes in the map; the fixed starts go A's king, A's three peasants, then B, C, D and E clockwise.
+
+**Rebuilt 2026-10-23:** the trees, ferns, mushrooms, crystals and rocks now face every way, as they were meant to. In the first upload of this version they all faced south. If you downloaded it before then, replace your copy.

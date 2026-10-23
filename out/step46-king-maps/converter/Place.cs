@@ -203,7 +203,8 @@ static class Place
                 if (g.Clear(p, starts: 500) && !g.Top(p)) items.Add(new Item(Rock(g, "map"), p, g.Heading(), "rubble"));
             }
         }
-        // Container yards: two a part, rows of crates; trucks parked by the roads; a crane by the market.
+        // Container yards: two a part, rows of crates; trucks parked by the roads (turned a quarter more than the road:
+        // their models are long along x, not z); a crane by the market.
         int yards = 0;
         foreach (var c in g.GridA(700))
         {
@@ -226,7 +227,7 @@ static class Place
                 if (g.Rnd.NextDouble() > 0.35) continue;
                 var u = (path[i + 1] - path[i]).Unit;
                 var p = path[i] + u.Perp * (g.Rnd.NextDouble() < 0.5 ? 130 : -130);
-                if (g.Clear(p, roads: 0.5, starts: 350)) items.Add(new Item(g.Pick("minitruck1", "minitruck2"), p, Math.Atan2(u.X, -u.Z) * 180 / Math.PI, "props"));
+                if (g.Clear(p, roads: 0.5, starts: 350)) items.Add(new Item(g.Pick("minitruck1", "minitruck2"), p, Math.Atan2(u.X, -u.Z) * 180 / Math.PI + 90, "props"));
             }
         foreach (var p in g.GridA(60))
             if (d.Radius(p) is > 1300 and < 1700 && g.Clear(p, roads: 0.3) && g.Rnd.NextDouble() < 0.02)
@@ -263,6 +264,10 @@ static class Place
 
     static string F(double v) => Math.Round(v).ToString(CultureInfo.InvariantCulture);
 
+    /// <summary>A heading here (degrees clockwise from north, the way <c>Design.Turn</c> turns) in the engine's units,
+    /// which item-add takes: 65536 a turn, 0 facing south, 16384 east (MapEditSession.AddItem's rounding).</summary>
+    static string Heading(double degrees) => F((Math.Round((180 - degrees) * 65536 / 360) % 65536 + 65536) % 65536);
+
     /// <summary>The MapTool operations: assets copied in, metal, vents and every item, turned into each part.</summary>
     public static string Ops(Design d, IEnumerable<string> assets, List<Item> items)
     {
@@ -275,7 +280,7 @@ static class Place
             foreach (var it in items)
             {
                 var p = d.Turn(it.At, d.Step * k);
-                o.AppendLine($"item-add:placer:{it.Name}:{F(p.X)},{F(p.Z)}:{F(((it.Heading + d.Step * k) % 360 + 360) % 360)}");
+                o.AppendLine($"item-add:placer:{it.Name}:{F(p.X)},{F(p.Z)}:{Heading(it.Heading + d.Step * k)}");
             }
         return o.ToString();
     }

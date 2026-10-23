@@ -6,6 +6,8 @@
 
 **Download:** one file, [corner_fortresses_1.0.sd7](https://github.com/danielkopko/BarMaps/releases/download/corner-fortresses-1.0/corner_fortresses_1.0.sd7), from the public BarMaps release [corner-fortresses-1.0](https://github.com/danielkopko/BarMaps/releases/tag/corner-fortresses-1.0), with its lobby picture `Corner_Fortresses_1.0.jpg`. The same files are on [this repository's release](https://github.com/danielkopko/beyondallreasonmapeditor/releases/tag/corner-fortresses-1.0) (signed in as danielkopko). After rebuilding, `../king_maps.cmd publish corner_fortresses -Message "..."` pushes the notes and replaces both releases' files. `../king_maps.cmd install corner_fortresses` copies the map into BAR.
 
+**Rebuilt 2026-10-23, not yet on the releases:** the map beside this file has its features turned the way the converter meant (*Headings*, below). The releases still have the first build, in which every feature faces south. `../king_maps.cmd publish corner_fortresses` replaces them.
+
 ## The layout
 
 | From the drawing | On the map |
@@ -70,6 +72,13 @@ Also checked:
     - The market was a red checkerboard.
     - Its mushrooms were 8 across, too small to see.
   - The pipes and mushrooms are gone. The Forge look now has paved lots on waste ground, worn asphalt, brick paving and ruined works.
+- **Headings (fixed after release, 2026-10-23):**
+  - The first build wrote each feature's heading in degrees. MapTool's `item-add` takes the engine's units: 65536 to a turn, with 0 facing south. So all 856 features faced within 2° of south. The ruins all lined up, the trucks stood across any road that didn't run east-west, and the other quarters' copies weren't turned.
+  - The converter now writes `round((180 − degrees) × 65536 / 360)`, wrapped to 0-65535. Its degrees run clockwise from north, the way it turns the parts.
+  - The trucks' models are long along x, not z (the minitrucks 67 × 57, the crane truck 138 × 78). So a truck parked by a road is turned a quarter more than the road, to lie along it. `3d_trucks.png` shows a north-south road: before the fix, its trucks stood across it.
+  - The rebuild differs from the release only in `mapconfig/featureplacer/set.lua` (`MapTool compare`). Its `run.txt` is the same line for line, but for the headings. Each copy faces its original turned exactly a quarter with its part, so the facings are even: 214 each way.
+  - The 29 checks come out exactly as before (`check.txt` is unchanged). They take each blocking feature's footprint as a square round it, whichever way it faces (128 across for a factory wreck). How BAR turns a wreck's real footprint with its facing is still to try in game.
+  - `info.txt`, `metal.txt` and the lobby picture are the same as before. The 3D pictures were drawn again with the same cameras.
 
 ## Pictures
 
@@ -78,6 +87,7 @@ Also checked:
 - `3d_fort.png` (a fortress: yard, ramparts, gate towers, ramp, zigzags, and the acid lake behind)
 - `3d_estate.png` (the fields: lots, roads, ruins, trucks)
 - `3d_market.png`
+- `3d_trucks.png` (trucks parked along a north-south road in A's part, looking north)
 - `3d_passability_bots.png`
 - `design/relief.png` (the heights alone)
 

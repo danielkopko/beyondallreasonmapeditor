@@ -11,7 +11,7 @@ How the king maps (`star_fort_1.0.sd7`, `edge_keeps_1.0.sd7`, `corner_fortresses
    - **Texture**, 8 texels a square, painted texel by texel by the planet's look (`Look.cs`, `Paint.cs`) and written straight into a new SMT; a new SMF with the heights, minimap and grass (`Create.cs`).
    - **Detail maps** as DDS: splat distribution, specular and normals (4096), and a sky cube in the planet's colours (`Paint.cs`, `Derive`). Each is flipped before it is written: map `.dds` files are stored upside down (PLAN.md rule 7).
    - **mapinfo.lua**: name, credits, metal, the planet's colours and weather, the look's light and water, the new maps and sky, the starts (`Program.cs`, `Maps.WriteMapInfo`).
-   - **run.txt** for MapTool: the extra models the planet needs, metal spots, geothermal vents, plants, rocks and props (`Place.cs`); then `<key>_1.0_stage.sd7`.
+   - **run.txt** for MapTool: the extra models the planet needs, metal spots, geothermal vents, plants, rocks and props (`Place.cs`; headings in the engine's units, 65536 a turn with 0 facing south, from the converter's degrees clockwise from north); then `<key>_1.0_stage.sd7`.
    - All That Simmers' own layout is left out: its SMF and SMT, its detail maps, its grass and feature list, its sunrise sky, two unused textures, and its map options.
 4. `MapTool edit <key>_1.0_stage.sd7 <key>_1.0.sd7 @run.txt`.
 5. `KingMaps check <geometry.json> <final map, extracted> <work>/run.txt`: the access checks again on the built map's own heights, the ones that units get through going round every blocking feature (its footprint and 8 more), and how alike the parts are.

@@ -16,3 +16,5 @@
 **Install:** put `star_fort_1.0.sd7` in BAR's `maps` folder (usually `%LOCALAPPDATA%\Programs\Beyond-All-Reason\data\maps`). To see its picture on the lobby's setup screen, put `Star_Fort_1.0.jpg` in `data\LuaMenu\Images\Minimaps` and restart the lobby.
 
 **Not yet tried in a game.** Check that your lobby takes 20 players. The map has no start boxes. The fixed starts go A's king, then A's three peasants, then B, C, D and E clockwise, with A north.
+
+**Rebuilt 2026-10-23:** the palms, ferns, rocks and wrecks now face every way, as they were meant to. In the first upload of this version they all faced south. If you downloaded it before then, replace your copy.

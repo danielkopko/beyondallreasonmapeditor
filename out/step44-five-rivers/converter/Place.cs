@@ -10,6 +10,10 @@ static class Place
 
     static string F(double v) => Math.Round(v).ToString(CultureInfo.InvariantCulture);
 
+    /// <summary>A heading here (degrees clockwise from north, the way <c>Design.Turn</c> turns) in the engine's units,
+    /// which item-add takes: 65536 a turn, 0 facing south, 16384 east (MapEditSession.AddItem's rounding).</summary>
+    static string Heading(double degrees) => F((Math.Round((180 - degrees) * 65536 / 360) % 65536 + 65536) % 65536);
+
     public static List<Item> Vegetation(Design d, Surface s, Masks m)
     {
         var rnd = new Random(2610);
@@ -118,7 +122,7 @@ static class Place
             foreach (var it in items)
             {
                 var p = Design.Turn(it.At, 72 * k);
-                o.AppendLine($"item-add:placer:{it.Name}:{F(p.X)},{F(p.Z)}:{F((it.Heading + 72 * k) % 360)}");
+                o.AppendLine($"item-add:placer:{it.Name}:{F(p.X)},{F(p.Z)}:{Heading(it.Heading + 72 * k)}");
             }
         return o.ToString();
     }

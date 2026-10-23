@@ -49,9 +49,21 @@ All three passed their checks first time (41, 30 and 29). Passing them wasn't en
   - The Forge look now has an estate's paved lots on waste ground, worn asphalt and brick paving. BAR's building wrecks make ruined works, and the pipes and mushrooms are gone.
 - **Star Fort:** the first pass over each ridge climbed the cliff face, so bots couldn't cross. The pass is now the ground lowered along its line, at most 60 above the realms and 38° anywhere.
 
-The later changes (the swell, the new Heath and Forge looks, a feature's room by kind) leave Star Fort's build as it was released. A rebuild after them gives the same SMF, SMT, detail maps, `mapinfo.lua` and `run.txt`, byte for byte.
+The later changes (the swell, the new Heath and Forge looks, a feature's room by kind) left Star Fort's build as it was released: a rebuild after them gave the same SMF, SMT, detail maps, `mapinfo.lua` and `run.txt`, byte for byte. That stopped being true with the headings fix (below). A rebuild now differs from the release in `run.txt`'s headings, and so in the archive's `mapconfig/featureplacer/set.lua`, and in nothing else.
 
 After all three were out, the checks were extended to the features. Re-run on all three maps, every check passed: the features block 0.6%, 1.9% and 2.5% of the ground, and none cuts off a ramp, zigzag, pass or start.
+
+## Fixed after the release: the features' headings (2026-10-23)
+
+`Place.Ops` wrote each feature's heading in degrees, but MapTool's `item-add` takes the engine's units: 65536 to a turn, with 0 facing south. Step 47's test map showed it. So in all three releases (and Five Rivers) every feature faces within 2° of south: the ruins line up, trucks stand across the roads, and the parts' copies aren't turned.
+
+- **Units and frame:** the converter's degrees run clockwise from north, the way `Design.Turn` turns the parts and a road's bearing is worked out. The engine's run the other way from south (16384 is east). So `Place.Heading` writes `round((180 − degrees) × 65536 / 360)`, wrapped to 0-65535: MapEditSession.AddItem's rounding, after turning the frame round. The units alone would have left each part's copies turned the wrong way and diagonal roads' trucks across them.
+- **Trucks:** the minitrucks' models are long along x, not z, so each is turned a quarter more than its road.
+- **Rebuilt, all three:** each archive differs from its release only in `mapconfig/featureplacer/set.lua` (`MapTool compare`), and each `run.txt` is the same line for line, but for the headings. Every copy faces its original turned with its part (to within a unit for Star Fort's fifths, exactly for the quarters). The facings spread evenly.
+- **Unchanged:** `check.txt` (41, 30 and 29 checks, all passed), `info.txt`, `metal.txt` and the lobby pictures. The checks take each blocking feature's footprint as a square round it, the same whichever way it faces. How BAR turns a wreck's real footprint with its facing is still to try in game.
+- **Pictures:** the 3D pictures with features in them were drawn again with their first cameras. Corner Fortresses has a new one, `3d_trucks.png`.
+
+The maps beside the notes are the rebuilt ones. The releases still have the first builds until `king_maps.cmd publish <map>` replaces their files.
 
 ## The release
 

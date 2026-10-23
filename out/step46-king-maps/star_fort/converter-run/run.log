@@ -745,4 +745,4 @@ armadvsol_dead added to mapconfig/featureplacer/set.lua at (2024, 4331)
 armadvsol_dead added to mapconfig/featureplacer/set.lua at (2269, 4197)
 warning: The map is still called "Star Fort 1.0", like the original: BAR would treat the two as the same map. Change the name or the version.
 warning: Not defined by this map: rocks30_desert_27, rocks30_desert_09, rocks30_desert_25, rocks30_desert_19, rocks30_desert_06, rocks30_desert_29, rocks30_desert_01, rocks30_desert_16, .. They must exist in BAR, or those items will simply be missing in game.
-Wrote C:\Users\DanielKopko\AppData\Local\Temp\claude\C--Users-DanielKopko-Documents-Claude-Projects-Beyond-All-Reason\dbce7ec2-7026-4c13-85a6-481328f92158\scratchpad\kings\star_fort\star_fort_1.0.sd7
+Wrote C:\Users\DanielKopko\AppData\Local\Temp\claude\C--Users-DanielKopko-Documents-Claude-Projects-Beyond-All-Reason\24e62bcc-69db-40d6-a58a-5867224e3cd0\scratchpad\kings\star_fort\star_fort_1.0.sd7

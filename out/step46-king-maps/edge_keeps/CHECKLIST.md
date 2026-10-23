@@ -6,6 +6,8 @@
 
 **Download:** one file, [edge_keeps_1.0.sd7](https://github.com/danielkopko/BarMaps/releases/download/edge-keeps-1.0/edge_keeps_1.0.sd7), from the public BarMaps release [edge-keeps-1.0](https://github.com/danielkopko/BarMaps/releases/tag/edge-keeps-1.0), with its lobby picture `Edge_Keeps_1.0.jpg`. The same files are on [this repository's release](https://github.com/danielkopko/beyondallreasonmapeditor/releases/tag/edge-keeps-1.0) (signed in as danielkopko). After rebuilding, `../king_maps.cmd publish edge_keeps -Message "..."` pushes the notes and replaces both releases' files. `../king_maps.cmd install edge_keeps` copies the map into BAR.
 
+**Rebuilt 2026-10-23, not yet on the releases:** the map beside this file has its features turned the way the converter meant (*Headings*, below). The releases still have the first build, in which every feature faces south. `../king_maps.cmd publish edge_keeps` replaces them.
+
 ## The layout
 
 | From the drawing | On the map |
@@ -66,6 +68,12 @@ Also checked:
 - **Made better before release:**
   - The first build was flat, with blotchy heather and pines only in three thin rows. The converter's Heath look now gives the moor broad hills, softer heather and moor grass, small peat hags, sett causeways, pinewoods, birch copses, tors on the crests, scree and boulders.
   - The hills never dip into puddles: dry ground stays above the shore.
+- **Headings (fixed after release, 2026-10-23):**
+  - The first build wrote each feature's heading in degrees. MapTool's `item-add` takes the engine's units: 65536 to a turn, with 0 facing south. So all 2,532 features faced within 2° of south, and the other quarters' copies weren't turned.
+  - The converter now writes `round((180 − degrees) × 65536 / 360)`, wrapped to 0-65535. Its degrees run clockwise from north, the way it turns the parts.
+  - The rebuild differs from the release only in `mapconfig/featureplacer/set.lua` (`MapTool compare`). Its `run.txt` is the same line for line, but for the headings. Each copy faces its original turned exactly a quarter with its part, so the facings are even: 633 each way.
+  - The 30 checks come out exactly as before (`check.txt` is unchanged). They take each blocking feature's footprint as a square round it, whichever way it faces.
+  - `info.txt`, `metal.txt` and the lobby picture are the same as before. The 3D pictures were drawn again with the same cameras.
 
 ## Pictures
 

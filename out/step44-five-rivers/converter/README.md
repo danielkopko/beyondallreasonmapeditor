@@ -11,7 +11,7 @@ How `five_rivers_1.0.sd7` was made from `out/koth-maps/k7_five_rivers.svg` (the 
    - **Texture**, 14336 × 14336, painted texel by texel (`Paint.cs`) and written straight into a new SMT; a new SMF (28 × 28) with the heights, minimap and grass (`Create.cs`).
    - **Detail maps** as DDS: splat distribution (4096, for All That Simmers' four detail textures), specular (4096), normals (4096, the slopes), and a **night sky** cube (`Derive.cs`).
    - **mapinfo.lua**: name, credits, metal, the Bloom planet's colours and weather, glowing water, the new maps and sky, twenty starts (`Program.cs`, `Build.WriteMapInfo`).
-   - **run.txt** for MapTool: metal spots, geothermal vents, plants, crystals and rocks (`Place.cs`); then `five_rivers_stage.sd7`.
+   - **run.txt** for MapTool: metal spots, geothermal vents, plants, crystals and rocks (`Place.cs`; headings in the engine's units, 65536 a turn with 0 facing south, from the converter's degrees clockwise from north); then `five_rivers_stage.sd7`.
    - All That Simmers' own layout is left out: its SMF and SMT, its detail maps, its grass and feature list, its sunrise sky, two unused textures, and its map options (a *Dry* option there would reset the heights to 150-1000).
 4. `MapTool edit five_rivers_stage.sd7 five_rivers_1.0.sd7 @run.txt`.
 5. `FiveRivers check design/geometry.json <final map, extracted>`: the access checks again on the built map's heights, and how alike the fifths are.

@@ -16,3 +16,5 @@
 **Install:** put `edge_keeps_1.0.sd7` in BAR's `maps` folder (usually `%LOCALAPPDATA%\Programs\Beyond-All-Reason\data\maps`). To see its picture on the lobby's setup screen, put `Edge_Keeps_1.0.jpg` in `data\LuaMenu\Images\Minimaps` and restart the lobby.
 
 **Not yet tried in a game.** The map has no start boxes. The fixed starts go A's king, then A's three peasants, then B, C and D clockwise, with A north.
+
+**Rebuilt 2026-10-23:** the trees, bracken, rocks and cairns now face every way, as they were meant to. In the first upload of this version they all faced south. If you downloaded it before then, replace your copy.

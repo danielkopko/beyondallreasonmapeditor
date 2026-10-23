@@ -936,4 +936,4 @@ cycas8 added to mapconfig/featureplacer/set.lua at (5926, 7579)
 cycas5 added to mapconfig/featureplacer/set.lua at (6132, 9905)
 warning: The map is still called "Corner Fortresses 1.0", like the original: BAR would treat the two as the same map. Change the name or the version.
 warning: Not defined by this map: cormoho_dead, cormstor_dead, armestor_dead, rocks30_map_23, rocks30_map_01, rocks30_map_06, rocks30_map_30, rocks30_map_04, .. They must exist in BAR, or those items will simply be missing in game.
-Wrote C:\Users\DanielKopko\AppData\Local\Temp\claude\C--Users-DanielKopko-Documents-Claude-Projects-Beyond-All-Reason\dbce7ec2-7026-4c13-85a6-481328f92158\scratchpad\kings\corner_fortresses\corner_fortresses_1.0.sd7
+Wrote C:\Users\DanielKopko\AppData\Local\Temp\claude\C--Users-DanielKopko-Documents-Claude-Projects-Beyond-All-Reason\24e62bcc-69db-40d6-a58a-5867224e3cd0\scratchpad\kings\corner_fortresses\corner_fortresses_1.0.sd7
