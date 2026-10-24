@@ -2,7 +2,7 @@
 
 A 4v4 map that is one whole starship. Two salvage fleets board a derelict battle-carrier adrift in space, one from the port side and one from starboard, and fight for the ship's centreline: the bridge, the command room, the reactor, the shield generator and the engine room.
 
-**Status: built** to this plan, with no wind (your choice), as `starship_meridian_1.0.sd7`; see `CHECKLIST.md`. The layout's numbers live in one table, `design/layout.py`, which draws `design/layout.svg`; the same numbers are the converter's `Layout.cs`.
+**Status: built** to this plan, with no wind (your choice), as `starship_meridian_1.0.sd7`, and released; see `CHECKLIST.md`. The layout's numbers live in one table, `design/layout.py`, which draws `design/layout.svg`; the same numbers are the converter's `Layout.cs`.
 
 **As built, where it differs from the plan below:**
 - **The reactor well's two ramps** run straight from the crossing doors down into the well (about 11°), not spiralling round its wall.

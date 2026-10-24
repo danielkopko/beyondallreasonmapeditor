@@ -12,7 +12,7 @@ The map is **symmetric**: the starboard half is the port half's mirror image acr
 
 **Not tried in BAR yet.** BAR isn't installed on this machine. Everything below was checked with MapCore's copy of the engine's rules, and the looks with MapTool's renderer, not in the game.
 
-**Not released yet.** At your go-ahead, `starship_meridian.cmd publish -Message "..."` commits and pushes this folder, then puts the map and its lobby picture `Starship_Meridian_1.0.jpg` on the release `starship-meridian-1.0`, here and in BarMaps. BarMaps' README section and picture are added by hand. `starship_meridian.cmd install` copies the map into BAR.
+**Download:** one file, [starship_meridian_1.0.sd7](https://github.com/danielkopko/BarMaps/releases/download/starship-meridian-1.0/starship_meridian_1.0.sd7), from the public BarMaps release [starship-meridian-1.0](https://github.com/danielkopko/BarMaps/releases/tag/starship-meridian-1.0), with its lobby picture `Starship_Meridian_1.0.jpg`. The same files are on [this repository's release](https://github.com/danielkopko/beyondallreasonmapeditor/releases/tag/starship-meridian-1.0) (signed in as danielkopko), and BarMaps' README has its section and `LuaMenu/Images/Minimaps/Starship_Meridian_1.0.jpg`. After rebuilding, `starship_meridian.cmd publish -Message "..."` pushes the notes and replaces both releases' files (BarMaps' README section and picture are updated by hand); `starship_meridian.cmd install` copies the map into BAR.
 
 ## The layout
 
