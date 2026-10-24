@@ -1,0 +1,243 @@
+metal spot added at (1480, 4952), 2.016 metal/s
+metal spot added at (10808, 4952), 2.016 metal/s
+metal spot added at (2248, 4952), 2.016 metal/s
+metal spot added at (10040, 4952), 2.016 metal/s
+metal spot added at (1864, 5672), 2.016 metal/s
+metal spot added at (10424, 5672), 2.016 metal/s
+metal spot added at (3224, 4952), 2.016 metal/s
+metal spot added at (9064, 4952), 2.016 metal/s
+metal spot added at (3976, 4952), 2.016 metal/s
+metal spot added at (8312, 4952), 2.016 metal/s
+metal spot added at (3608, 5672), 2.016 metal/s
+metal spot added at (8696, 5672), 2.016 metal/s
+metal spot added at (1480, 9144), 2.016 metal/s
+metal spot added at (10808, 9144), 2.016 metal/s
+metal spot added at (2248, 9144), 2.016 metal/s
+metal spot added at (10040, 9144), 2.016 metal/s
+metal spot added at (1864, 9864), 2.016 metal/s
+metal spot added at (10424, 9864), 2.016 metal/s
+metal spot added at (3224, 9144), 2.016 metal/s
+metal spot added at (9064, 9144), 2.016 metal/s
+metal spot added at (3976, 9144), 2.016 metal/s
+metal spot added at (8312, 9144), 2.016 metal/s
+metal spot added at (3608, 9864), 2.016 metal/s
+metal spot added at (8696, 9864), 2.016 metal/s
+metal spot added at (2904, 3352), 2.412 metal/s
+metal spot added at (9384, 3352), 2.412 metal/s
+metal spot added at (1496, 7352), 2.412 metal/s
+metal spot added at (10792, 7352), 2.412 metal/s
+metal spot added at (2296, 7352), 2.412 metal/s
+metal spot added at (9992, 7352), 2.412 metal/s
+metal spot added at (3608, 7352), 2.412 metal/s
+metal spot added at (8696, 7352), 2.412 metal/s
+metal spot added at (1864, 11992), 2.412 metal/s
+metal spot added at (10424, 11992), 2.412 metal/s
+metal spot added at (3608, 11992), 2.412 metal/s
+metal spot added at (8696, 11992), 2.412 metal/s
+metal spot added at (5592, 2504), 2.988 metal/s
+metal spot added at (6680, 2504), 2.988 metal/s
+metal spot added at (5592, 5256), 2.988 metal/s
+metal spot added at (6680, 5256), 2.988 metal/s
+metal spot added at (5656, 7496), 3.384 metal/s
+metal spot added at (6632, 7496), 3.384 metal/s
+metal spot added at (5592, 10344), 2.988 metal/s
+metal spot added at (6680, 10344), 2.988 metal/s
+metal spot added at (5592, 12200), 2.988 metal/s
+metal spot added at (6680, 12200), 2.988 metal/s
+geovent added to the SMF feature list at (1864, 7350)
+geovent added to the SMF feature list at (10424, 7350)
+geovent added to the SMF feature list at (5844, 8470)
+geovent added to the SMF feature list at (6444, 8470)
+sm_weaponrack added to mapconfig/featureplacer/set.lua at (2600, 2800)
+sm_weaponrack added to mapconfig/featureplacer/set.lua at (2900, 2800)
+sm_weaponrack added to mapconfig/featureplacer/set.lua at (3700, 2800)
+sm_weaponrack added to mapconfig/featureplacer/set.lua at (4000, 2800)
+sm_munitions added to mapconfig/featureplacer/set.lua at (3300, 2830)
+sm_munitions added to mapconfig/featureplacer/set.lua at (4250, 2850)
+sm_missilecart added to mapconfig/featureplacer/set.lua at (4150, 3050)
+sm_fighter added to mapconfig/featureplacer/set.lua at (1864, 4575)
+sm_fighter added to mapconfig/featureplacer/set.lua at (1864, 5925)
+sm_tower added to mapconfig/featureplacer/set.lua at (1230, 4250)
+sm_tug added to mapconfig/featureplacer/set.lua at (2440, 4300)
+sm_fuelcart added to mapconfig/featureplacer/set.lua at (2440, 6300)
+sm_pallet added to mapconfig/featureplacer/set.lua at (1220, 6200)
+sm_crate added to mapconfig/featureplacer/set.lua at (1200, 6400)
+sm_crate added to mapconfig/featureplacer/set.lua at (1250, 6440)
+sm_bunks added to mapconfig/featureplacer/set.lua at (2950, 4120)
+sm_bunks added to mapconfig/featureplacer/set.lua at (2950, 4220)
+sm_bunks added to mapconfig/featureplacer/set.lua at (2950, 4320)
+sm_bunks added to mapconfig/featureplacer/set.lua at (2950, 4420)
+sm_bunks added to mapconfig/featureplacer/set.lua at (2950, 6080)
+sm_bunks added to mapconfig/featureplacer/set.lua at (2950, 6180)
+sm_bunks added to mapconfig/featureplacer/set.lua at (2950, 6280)
+sm_bunks added to mapconfig/featureplacer/set.lua at (2950, 6380)
+sm_messtable added to mapconfig/featureplacer/set.lua at (3900, 4200)
+sm_messtable added to mapconfig/featureplacer/set.lua at (3900, 4400)
+sm_lockers added to mapconfig/featureplacer/set.lua at (4300, 4150)
+sm_lockers added to mapconfig/featureplacer/set.lua at (4300, 4300)
+sm_medpod added to mapconfig/featureplacer/set.lua at (4300, 5950)
+sm_medpod added to mapconfig/featureplacer/set.lua at (4300, 6100)
+sm_planter added to mapconfig/featureplacer/set.lua at (4100, 6390)
+sm_planter added to mapconfig/featureplacer/set.lua at (4100, 6480)
+sm_capacitor added to mapconfig/featureplacer/set.lua at (1180, 6830)
+sm_capacitor added to mapconfig/featureplacer/set.lua at (1180, 6980)
+sm_capacitor added to mapconfig/featureplacer/set.lua at (2560, 6830)
+sm_capacitor added to mapconfig/featureplacer/set.lua at (2560, 6980)
+sm_transformer added to mapconfig/featureplacer/set.lua at (1180, 7880)
+sm_transformer added to mapconfig/featureplacer/set.lua at (2560, 7880)
+sm_pipes added to mapconfig/featureplacer/set.lua at (1110, 7350)
+sm_weaponrack added to mapconfig/featureplacer/set.lua at (2980, 6800)
+sm_weaponrack added to mapconfig/featureplacer/set.lua at (3130, 6800)
+sm_weaponrack added to mapconfig/featureplacer/set.lua at (4070, 6800)
+sm_weaponrack added to mapconfig/featureplacer/set.lua at (4220, 6800)
+sm_munitions added to mapconfig/featureplacer/set.lua at (2980, 7880)
+sm_munitions added to mapconfig/featureplacer/set.lua at (4220, 7880)
+sm_missilecart added to mapconfig/featureplacer/set.lua at (3000, 7000)
+sm_dropship added to mapconfig/featureplacer/set.lua at (1864, 8775)
+sm_shuttle added to mapconfig/featureplacer/set.lua at (1864, 10125)
+sm_tower added to mapconfig/featureplacer/set.lua at (1230, 9450)
+sm_tug added to mapconfig/featureplacer/set.lua at (2440, 8400)
+sm_fuelcart added to mapconfig/featureplacer/set.lua at (2440, 10500)
+sm_container0 added to mapconfig/featureplacer/set.lua at (2950, 8300)
+sm_container0 added to mapconfig/featureplacer/set.lua at (2950, 8460)
+sm_container1 added to mapconfig/featureplacer/set.lua at (2950, 10440)
+sm_container1 added to mapconfig/featureplacer/set.lua at (2950, 10600)
+sm_pallet added to mapconfig/featureplacer/set.lua at (4200, 8300)
+sm_pallet added to mapconfig/featureplacer/set.lua at (4250, 8380)
+sm_crate added to mapconfig/featureplacer/set.lua at (4150, 8420)
+sm_loader added to mapconfig/featureplacer/set.lua at (4150, 10450)
+sm_pallet added to mapconfig/featureplacer/set.lua at (4250, 10620)
+sm_crate added to mapconfig/featureplacer/set.lua at (4150, 10620)
+sm_fueltank added to mapconfig/featureplacer/set.lua at (1180, 11200)
+sm_fueltank added to mapconfig/featureplacer/set.lua at (1180, 11400)
+sm_fueltank added to mapconfig/featureplacer/set.lua at (1180, 12500)
+sm_fueltank added to mapconfig/featureplacer/set.lua at (1180, 12700)
+sm_transformer added to mapconfig/featureplacer/set.lua at (2550, 11100)
+sm_transformer added to mapconfig/featureplacer/set.lua at (2550, 12900)
+sm_pipes added to mapconfig/featureplacer/set.lua at (1110, 11950)
+sm_repairgantry added to mapconfig/featureplacer/set.lua at (3600, 12750)
+sm_tug added to mapconfig/featureplacer/set.lua at (3950, 12750)
+sm_bench added to mapconfig/featureplacer/set.lua at (2930, 11150)
+sm_bench added to mapconfig/featureplacer/set.lua at (2930, 12500)
+sm_crate added to mapconfig/featureplacer/set.lua at (4250, 11100)
+sm_crate added to mapconfig/featureplacer/set.lua at (4250, 11150)
+sm_console added to mapconfig/featureplacer/set.lua at (5450, 2950)
+sm_console added to mapconfig/featureplacer/set.lua at (5450, 3200)
+sm_console added to mapconfig/featureplacer/set.lua at (5700, 2950)
+sm_console added to mapconfig/featureplacer/set.lua at (5700, 3200)
+sm_console added to mapconfig/featureplacer/set.lua at (5700, 4550)
+sm_console added to mapconfig/featureplacer/set.lua at (5700, 5950)
+sm_capacitor added to mapconfig/featureplacer/set.lua at (5380, 6870)
+sm_transformer added to mapconfig/featureplacer/set.lua at (5380, 9250)
+sm_transformer added to mapconfig/featureplacer/set.lua at (5300, 9680)
+sm_transformer added to mapconfig/featureplacer/set.lua at (5300, 11040)
+sm_coolant added to mapconfig/featureplacer/set.lua at (5380, 12850)
+sm_turret added to mapconfig/featureplacer/set.lua at (3300, 2000)
+sm_turret added to mapconfig/featureplacer/set.lua at (4200, 1500)
+sm_dish added to mapconfig/featureplacer/set.lua at (4000, 2300)
+sm_enginebell added to mapconfig/featureplacer/set.lua at (2000, 13960)
+sm_enginebell added to mapconfig/featureplacer/set.lua at (2800, 13960)
+sm_enginebell added to mapconfig/featureplacer/set.lua at (5744, 13960)
+sm_turret added to mapconfig/featureplacer/set.lua at (2400, 13400)
+sm_weaponrack added to mapconfig/featureplacer/set.lua at (9688, 2800)
+sm_weaponrack added to mapconfig/featureplacer/set.lua at (9388, 2800)
+sm_weaponrack added to mapconfig/featureplacer/set.lua at (8588, 2800)
+sm_weaponrack added to mapconfig/featureplacer/set.lua at (8288, 2800)
+sm_munitions added to mapconfig/featureplacer/set.lua at (8988, 2830)
+sm_munitions added to mapconfig/featureplacer/set.lua at (8038, 2850)
+sm_missilecart added to mapconfig/featureplacer/set.lua at (8138, 3050)
+sm_fighter added to mapconfig/featureplacer/set.lua at (10424, 4575)
+sm_fighter added to mapconfig/featureplacer/set.lua at (10424, 5925)
+sm_tower added to mapconfig/featureplacer/set.lua at (11058, 4250)
+sm_tug added to mapconfig/featureplacer/set.lua at (9848, 4300)
+sm_fuelcart added to mapconfig/featureplacer/set.lua at (9848, 6300)
+sm_pallet_m added to mapconfig/featureplacer/set.lua at (11068, 6200)
+sm_crate added to mapconfig/featureplacer/set.lua at (11088, 6400)
+sm_crate added to mapconfig/featureplacer/set.lua at (11038, 6440)
+sm_bunks added to mapconfig/featureplacer/set.lua at (9338, 4120)
+sm_bunks added to mapconfig/featureplacer/set.lua at (9338, 4220)
+sm_bunks added to mapconfig/featureplacer/set.lua at (9338, 4320)
+sm_bunks added to mapconfig/featureplacer/set.lua at (9338, 4420)
+sm_bunks added to mapconfig/featureplacer/set.lua at (9338, 6080)
+sm_bunks added to mapconfig/featureplacer/set.lua at (9338, 6180)
+sm_bunks added to mapconfig/featureplacer/set.lua at (9338, 6280)
+sm_bunks added to mapconfig/featureplacer/set.lua at (9338, 6380)
+sm_messtable added to mapconfig/featureplacer/set.lua at (8388, 4200)
+sm_messtable added to mapconfig/featureplacer/set.lua at (8388, 4400)
+sm_lockers added to mapconfig/featureplacer/set.lua at (7988, 4150)
+sm_lockers added to mapconfig/featureplacer/set.lua at (7988, 4300)
+sm_medpod added to mapconfig/featureplacer/set.lua at (7988, 5950)
+sm_medpod added to mapconfig/featureplacer/set.lua at (7988, 6100)
+sm_planter added to mapconfig/featureplacer/set.lua at (8188, 6390)
+sm_planter added to mapconfig/featureplacer/set.lua at (8188, 6480)
+sm_capacitor added to mapconfig/featureplacer/set.lua at (11108, 6830)
+sm_capacitor added to mapconfig/featureplacer/set.lua at (11108, 6980)
+sm_capacitor added to mapconfig/featureplacer/set.lua at (9728, 6830)
+sm_capacitor added to mapconfig/featureplacer/set.lua at (9728, 6980)
+sm_transformer added to mapconfig/featureplacer/set.lua at (11108, 7880)
+sm_transformer added to mapconfig/featureplacer/set.lua at (9728, 7880)
+sm_pipes added to mapconfig/featureplacer/set.lua at (11178, 7350)
+sm_weaponrack added to mapconfig/featureplacer/set.lua at (9308, 6800)
+sm_weaponrack added to mapconfig/featureplacer/set.lua at (9158, 6800)
+sm_weaponrack added to mapconfig/featureplacer/set.lua at (8218, 6800)
+sm_weaponrack added to mapconfig/featureplacer/set.lua at (8068, 6800)
+sm_munitions added to mapconfig/featureplacer/set.lua at (9308, 7880)
+sm_munitions added to mapconfig/featureplacer/set.lua at (8068, 7880)
+sm_missilecart added to mapconfig/featureplacer/set.lua at (9288, 7000)
+sm_dropship added to mapconfig/featureplacer/set.lua at (10424, 8775)
+sm_shuttle added to mapconfig/featureplacer/set.lua at (10424, 10125)
+sm_tower added to mapconfig/featureplacer/set.lua at (11058, 9450)
+sm_tug added to mapconfig/featureplacer/set.lua at (9848, 8400)
+sm_fuelcart added to mapconfig/featureplacer/set.lua at (9848, 10500)
+sm_container0 added to mapconfig/featureplacer/set.lua at (9338, 8300)
+sm_container0 added to mapconfig/featureplacer/set.lua at (9338, 8460)
+sm_container1 added to mapconfig/featureplacer/set.lua at (9338, 10440)
+sm_container1 added to mapconfig/featureplacer/set.lua at (9338, 10600)
+sm_pallet_m added to mapconfig/featureplacer/set.lua at (8088, 8300)
+sm_pallet_m added to mapconfig/featureplacer/set.lua at (8038, 8380)
+sm_crate added to mapconfig/featureplacer/set.lua at (8138, 8420)
+sm_loader added to mapconfig/featureplacer/set.lua at (8138, 10450)
+sm_pallet_m added to mapconfig/featureplacer/set.lua at (8038, 10620)
+sm_crate added to mapconfig/featureplacer/set.lua at (8138, 10620)
+sm_fueltank added to mapconfig/featureplacer/set.lua at (11108, 11200)
+sm_fueltank added to mapconfig/featureplacer/set.lua at (11108, 11400)
+sm_fueltank added to mapconfig/featureplacer/set.lua at (11108, 12500)
+sm_fueltank added to mapconfig/featureplacer/set.lua at (11108, 12700)
+sm_transformer added to mapconfig/featureplacer/set.lua at (9738, 11100)
+sm_transformer added to mapconfig/featureplacer/set.lua at (9738, 12900)
+sm_pipes added to mapconfig/featureplacer/set.lua at (11178, 11950)
+sm_repairgantry added to mapconfig/featureplacer/set.lua at (8688, 12750)
+sm_tug added to mapconfig/featureplacer/set.lua at (8338, 12750)
+sm_bench added to mapconfig/featureplacer/set.lua at (9358, 11150)
+sm_bench added to mapconfig/featureplacer/set.lua at (9358, 12500)
+sm_crate added to mapconfig/featureplacer/set.lua at (8038, 11100)
+sm_crate added to mapconfig/featureplacer/set.lua at (8038, 11150)
+sm_console added to mapconfig/featureplacer/set.lua at (6838, 2950)
+sm_console added to mapconfig/featureplacer/set.lua at (6838, 3200)
+sm_console added to mapconfig/featureplacer/set.lua at (6588, 2950)
+sm_console added to mapconfig/featureplacer/set.lua at (6588, 3200)
+sm_console added to mapconfig/featureplacer/set.lua at (6588, 4550)
+sm_console added to mapconfig/featureplacer/set.lua at (6588, 5950)
+sm_capacitor added to mapconfig/featureplacer/set.lua at (6908, 6870)
+sm_transformer added to mapconfig/featureplacer/set.lua at (6908, 9250)
+sm_transformer added to mapconfig/featureplacer/set.lua at (6988, 9680)
+sm_transformer added to mapconfig/featureplacer/set.lua at (6988, 11040)
+sm_coolant added to mapconfig/featureplacer/set.lua at (6908, 12850)
+sm_turret added to mapconfig/featureplacer/set.lua at (8988, 2000)
+sm_turret added to mapconfig/featureplacer/set.lua at (8088, 1500)
+sm_dish added to mapconfig/featureplacer/set.lua at (8288, 2300)
+sm_enginebell added to mapconfig/featureplacer/set.lua at (10288, 13960)
+sm_enginebell added to mapconfig/featureplacer/set.lua at (9488, 13960)
+sm_enginebell added to mapconfig/featureplacer/set.lua at (6544, 13960)
+sm_turret added to mapconfig/featureplacer/set.lua at (9888, 13400)
+sm_chair added to mapconfig/featureplacer/set.lua at (6144, 3050)
+sm_viewport added to mapconfig/featureplacer/set.lua at (6144, 1462)
+sm_antenna added to mapconfig/featureplacer/set.lua at (6144, 1250)
+sm_sensordome added to mapconfig/featureplacer/set.lua at (6144, 900)
+sm_holotable added to mapconfig/featureplacer/set.lua at (6144, 5250)
+sm_reactor added to mapconfig/featureplacer/set.lua at (6144, 8050)
+sm_shield added to mapconfig/featureplacer/set.lua at (6144, 10350)
+sm_drivecore added to mapconfig/featureplacer/set.lua at (6144, 12420)
+sm_turret added to mapconfig/featureplacer/set.lua at (6144, 13400)
+warning: The map is still called "Starship Meridian 1.0", like the original: BAR would treat the two as the same map. Change the name or the version.
+Wrote C:\Users\DanielKopko\AppData\Local\Temp\claude\C--Users-DanielKopko-Documents-Claude-Projects-Beyond-All-Reason\dbce7ec2-7026-4c13-85a6-481328f92158\scratchpad\meridian\map\features.sd7

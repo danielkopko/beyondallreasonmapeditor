@@ -13,6 +13,37 @@ static class MapTextureTests
         return TestData.AcidicQuarry.LoadTexture(smf);
     }
 
+    /// <summary>
+    /// A texture update stores its pixels opaque by default (an edit never punches holes), but keeps alpha below 128
+    /// as DXT1's transparent texels when asked (a voidGround map's holes), at every mip level; opaque pixels stay opaque.
+    /// </summary>
+    [Test]
+    public static void UpdateKeepsTransparencyOnlyWhenAsked()
+    {
+        foreach (bool keep in new[] { false, true })
+        {
+            var texture = LoadTexture(out _);
+            var image = texture.Decode();
+            var hole = new PixelRect(64, 64, 64, 64);
+            for (int y = hole.Y; y < hole.Bottom; y++)
+                for (int x = hole.X; x < hole.Right; x++)
+                {
+                    var p = image.GetPixel(x, y);
+                    image.SetPixel(x, y, new Rgba(p.R, p.G, p.B, 0));
+                }
+            texture.Update(image, new PixelRect(32, 32, 128, 128), keepAlpha: keep);
+            var tile = texture.DecodeTile(3, 3);               // texels 96-127: inside the hole
+            var edge = texture.DecodeTile(1, 1);               // texels 32-63: outside it
+            var small = texture.DecodeTile(3, 3, 3);            // its 4x4 mip
+            bool holeTransparent = Enumerable.Range(0, 32 * 32).All(i => tile.GetPixel(i % 32, i / 32).A == 0);
+            bool holeOpaque = Enumerable.Range(0, 32 * 32).All(i => tile.GetPixel(i % 32, i / 32).A == 255);
+            bool edgeOpaque = Enumerable.Range(0, 32 * 32).All(i => edge.GetPixel(i % 32, i / 32).A == 255);
+            bool mipTransparent = Enumerable.Range(0, 16).All(i => small.GetPixel(i % 4, i / 4).A == 0);
+            Assert.True(keep ? holeTransparent && mipTransparent : holeOpaque, $"keepAlpha {keep}: the hole is {(keep ? "transparent at mip 0 and 3" : "opaque")}");
+            Assert.True(edgeOpaque, $"keepAlpha {keep}: opaque pixels stay opaque");
+        }
+    }
+
     [Test]
     public static void SmtUnchangedSaveIsByteIdentical()
     {

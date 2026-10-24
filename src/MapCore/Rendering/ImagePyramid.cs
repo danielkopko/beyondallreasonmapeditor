@@ -142,6 +142,19 @@ sealed class ImagePyramid
                 p[a + 2] * w00 + p[b + 2] * w01 + p[c + 2] * w10 + p[d + 2] * w11);
     }
 
+    /// <summary>The alpha (0-255) at one world position, bilinear, from the level matching <paramref name="unitsPerPixel"/>.</summary>
+    public float SampleAlpha(double x, double z, double unitsPerPixel)
+    {
+        var level = levels[LevelFor(unitsPerPixel)];
+        int w = level.Width, h = level.Height;
+        double u = Math.Clamp(x * w / MapWidth - 0.5, 0, w - 1), v = Math.Clamp(z * h / MapHeight - 0.5, 0, h - 1);
+        int x0 = (int)u, y0 = (int)v, x1 = Math.Min(x0 + 1, w - 1), y1 = Math.Min(y0 + 1, h - 1);
+        float fx = (float)(u - x0), fy = (float)(v - y0);
+        var p = level.Pixels;
+        return p[(y0 * w + x0) * 4 + 3] * (1 - fx) * (1 - fy) + p[(y0 * w + x1) * 4 + 3] * fx * (1 - fy)
+             + p[(y1 * w + x0) * 4 + 3] * (1 - fx) * fy + p[(y1 * w + x1) * 4 + 3] * fx * fy;
+    }
+
     readonly record struct Tap(bool Inside, int I0, int I1, float F);
 
     /// <summary>

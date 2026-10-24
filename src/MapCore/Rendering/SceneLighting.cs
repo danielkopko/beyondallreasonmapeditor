@@ -14,7 +14,9 @@ public sealed record SceneLighting(
     (double R, double G, double B) WaterAbsorb,
     (double R, double G, double B) WaterSurface,
     (double R, double G, double B) Sky,
-    bool VoidWater)
+    bool VoidWater,
+    bool VoidGround = false,
+    double VoidAlphaMin = 0.9)
 {
     public static SceneLighting From(MapInfo info)
     {
@@ -33,7 +35,11 @@ public sealed record SceneLighting(
             Vector(info, "water.absorb", (0, 0, 0)),
             Vector(info, "water.surfaceColor", (0.75, 0.8, 0.85)),
             Vector(info, "atmosphere.skyColor", (0.1, 0.15, 0.7)),
-            info.Get("voidWater") is Lua.LuaBoolean { Value: true });
+            info.Get("voidWater") is Lua.LuaBoolean { Value: true },
+            // voidGround: the engine cuts the ground wherever the map texture's alpha is below voidAlphaMin
+            // (SMFFragProg.glsl, SMF_VOID_GROUND; MapInfo.cpp's default 0.9). It overrides voidWater.
+            info.Get("voidGround") is Lua.LuaBoolean { Value: true },
+            Math.Clamp(info.GetNumber("voidAlphaMin") ?? 0.9, 0, 1));
     }
 
     static (double, double, double) Vector(MapInfo info, string path, (double, double, double) fallback) =>

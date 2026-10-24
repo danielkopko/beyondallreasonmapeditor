@@ -1,0 +1,45 @@
+heights in 1s, 20 to 440; 102.0 M square units of floor, 52.1 M of space
+placed in 1s: prop 137, craft 8, landmark 12, vehicle 12, pipe 4, hull 12, engine 6
+191 features, 1.0% of the map blocked with the room round them.
+The halves:
+  ok   the heights match their mirror image at every vertex (the most apart 0.000)
+  ok   every feature has its mirror image (the same model, or its twin, at the mirrored place and heading)
+Getting about (vehicles: TANK3, 27 degrees; bots: BOT3, 54 degrees; hovers 33; amphibious ATANK3; spiders TBOT3), round the features:
+  ok   vehicles reach all eight starts (57.9% of the map)
+  ok   vehicles reach every metal spot and vent (the reactor's vents by the well's ramps)
+  ok   bots reach every start and spot
+The crossings (each team's half joins the other only through the shared rooms on the centreline):
+  ok   the Bridge alone lets vehicles across
+  ok   the CIC alone lets vehicles across
+  ok   the Main Reactor alone lets vehicles across
+  ok   the Shield Generator alone lets vehicles across
+  ok   the Engine Room alone lets vehicles across
+  ok   with all five shut, vehicles can't cross
+  ok   with all five shut, bots can't cross
+  ok   with all five shut, hovers can't cross
+  ok   with all five shut, amphibious units can't cross
+       spiders, all five shut: they cross, over the bulkheads (all-terrain bots climb any wall; intended)
+Space:
+  ok   vehicles don't reach space (0 squares)
+  ok   bots don't reach space (0 squares)
+  ok   hovers don't reach space (0 squares)
+  ok   amphibious units don't reach space (0 squares)
+       spiders reach 813220 squares of space (over the rim; it's too rough for anything else, and never drawn)
+  ok   space is too rough to build on or drive over (1.7% of it isn't too steep for vehicles)
+Doors and rooms:
+  ok   every door is at least 500 wide
+  ok   no feature stands in a doorway
+  ok   the Forward Hangar keeps 97% of its floor (4.39 M square units) level and free to build on (at least 60%)
+  ok   the Crew Deck & Mess keeps 95% of its floor (4.11 M square units) level and free to build on (at least 60%)
+  ok   the Main Hangar keeps 96% of its floor (4.36 M square units) level and free to build on (at least 60%)
+  ok   the Cargo Hold keeps 95% of its floor (4.13 M square units) level and free to build on (at least 60%)
+Standing true:
+  ok   every feature stands level: the ground under its footprint rises no more than 4 (the most 0.0)
+Metal spots, vents and starts:
+  ok   no blocking feature within 40 of any of the 46 metal spots (0 crowded)
+  ok   every spot and vent is level (the most any rises over its footprint: 0.0)
+  ok   every start is on level deck
+  ok   each team's own metal: 38.4 metal/s, and 30.8 shared on the centreline; 4 vents
+       the fronts: crew deck to crew deck 5114, crew deck to the enemy's cargo hold 7272 (driving)
+map and texture in 8s
+built in 22s

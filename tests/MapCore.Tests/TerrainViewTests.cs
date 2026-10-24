@@ -147,6 +147,50 @@ static class TerrainViewTests
         }
     }
 
+    /// <summary>
+    /// voidGround: where the map texture is transparent the engine doesn't draw the ground, so the view shows what's
+    /// beyond (seen straight down, the backdrop); with voidGround off the same ground is drawn as it is painted, and
+    /// ground with an opaque texture is drawn either way.
+    /// </summary>
+    [Test]
+    public static void VoidGroundIsNotDrawnWhereTheTextureIsTransparent()
+    {
+        var s = MapEditSession.Open(MapPackage.Open(SyntheticMap.Build(TestData.NewWorkDir("terrain-void")), TestData.NewWorkDir("terrain-void-open")));
+        var image = s.TextureImage;
+        // A transparent square in the texture's middle quarter.
+        int x0 = image.Width * 3 / 8, x1 = image.Width * 5 / 8, y0 = image.Height * 3 / 8, y1 = image.Height * 5 / 8;
+        for (int y = y0; y < y1; y++)
+            for (int x = x0; x < x1; x++)
+            {
+                var p = image.GetPixel(x, y);
+                image.SetPixel(x, y, new Rgba(p.R, p.G, p.B, 0));
+            }
+        Rgba Middle(bool voidGround, double atX, double atZ)
+        {
+            s.Info.Document.SetLiteral("voidGround", voidGround ? "true" : "false");
+            var (layers, view) = Views(s);
+            using (layers)
+            using (view)
+            {
+                var camera = new OrbitCamera(s.MapWidth / 2, s.MapHeight / 2, 0, 89.9, s.MapWidth * 1.4);
+                var target = new RgbaImage(400, 400);
+                view.Render(target, camera, new TerrainOptions { Shadows = false });
+                double y = s.Heights.HeightAt(atX, atZ);
+                if (view.Project(atX, y, atZ) is not (double ix, double iy, _))
+                    throw new InvalidOperationException("the point doesn't project");
+                return target.GetPixel((int)ix, (int)iy);
+            }
+        }
+        double cx = s.MapWidth / 2, cz = s.MapHeight / 2, edge = s.MapWidth * 0.1;
+        var hole = Middle(true, cx, cz);
+        var holeOff = Middle(false, cx, cz);
+        var solid = Middle(true, edge, edge);
+        var bg = MapRenderer.Background;
+        Assert.True(hole.R == bg.R && hole.G == bg.G && hole.B == bg.B, $"voidGround: the transparent ground shows the backdrop ({hole})");
+        Assert.True(holeOff.R != bg.R || holeOff.G != bg.G || holeOff.B != bg.B, $"without voidGround it is drawn ({holeOff})");
+        Assert.True(solid.R != bg.R || solid.G != bg.G || solid.B != bg.B, $"opaque ground is drawn with voidGround on ({solid})");
+    }
+
     [Test]
     public static void RaisedMoundHidesTheGroundBehindIt()
     {

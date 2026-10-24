@@ -86,9 +86,11 @@ public sealed class MapTexture
     /// Re-encodes the tiles <paramref name="region"/> touches from <paramref name="image"/> (the full texture).
     /// Within each tile only the 4x4 blocks the region touches are rewritten, at every mip level. A tile shared
     /// with other positions is copied first, so those positions keep their look. Pixels inside the region are
-    /// stored opaque (DXT1 would otherwise turn alpha below 128 into transparent black).
+    /// stored opaque (DXT1 would otherwise turn alpha below 128 into transparent black), unless
+    /// <paramref name="keepAlpha"/>: then alpha below 128 is kept as DXT1's transparent texels, which a map with
+    /// voidGround uses to cut the ground it doesn't draw.
     /// </summary>
-    public TextureUpdate Update(RgbaImage image, PixelRect region)
+    public TextureUpdate Update(RgbaImage image, PixelRect region, bool keepAlpha = false)
     {
         CheckSize(image);
         region = region.Intersect(Bounds);
@@ -105,7 +107,7 @@ public sealed class MapTexture
                 var local = region.Intersect(tileRect);
                 parts.Add((tx, ty, [local with { X = local.X - tileRect.X, Y = local.Y - tileRect.Y }]));
             }
-        return UpdateTiles(image, parts);
+        return UpdateTiles(image, parts, keepAlpha);
     }
 
     /// <summary>
@@ -170,7 +172,7 @@ public sealed class MapTexture
     }
 
     /// <summary>Re-encodes the given areas (tile-local rectangles) of the given tile positions, copying shared tiles first.</summary>
-    TextureUpdate UpdateTiles(RgbaImage image, IReadOnlyList<(int Tx, int Ty, IReadOnlyList<PixelRect> Local)> parts)
+    TextureUpdate UpdateTiles(RgbaImage image, IReadOnlyList<(int Tx, int Ty, IReadOnlyList<PixelRect> Local)> parts, bool keepAlpha = false)
     {
         if (parts.Count == 0)
             return new(0, 0);
@@ -199,11 +201,11 @@ public sealed class MapTexture
             jobs.Add((tile, tx * SmtFile.TileSize, ty * SmtFile.TileSize, local));
         }
 
-        Parallel.ForEach(jobs, job => EncodeTile(image, job.Tile, job.X, job.Y, job.Local));
+        Parallel.ForEach(jobs, job => EncodeTile(image, job.Tile, job.X, job.Y, job.Local, keepAlpha));
         return new(jobs.Count, added);
     }
 
-    void EncodeTile(RgbaImage image, int tile, int x, int y, IReadOnlyList<PixelRect> areas)
+    void EncodeTile(RgbaImage image, int tile, int x, int y, IReadOnlyList<PixelRect> areas, bool keepAlpha)
     {
         var crop = image.Crop(new PixelRect(x, y, SmtFile.TileSize, SmtFile.TileSize));
         var data = TileData(tile);
@@ -212,7 +214,7 @@ public sealed class MapTexture
         var local = areas[0];
         foreach (var area in areas)
         {
-            crop.MakeOpaque(area);
+            if (!keepAlpha) crop.MakeOpaque(area);
             BlockCompression.Encode(BlockFormat.Dxt1, crop, Level(0), area, parallel: false);
             local = local.Union(area);
         }

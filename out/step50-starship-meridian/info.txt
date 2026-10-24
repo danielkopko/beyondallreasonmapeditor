@@ -1,0 +1,24 @@
+Name         : Starship Meridian 1.0
+Author       : Daniel Kopko
+Heights      : 0 to 520 (mapinfo.lua smf.minheight/maxheight, replacing the SMF header's)
+Metal        : maxMetal 4, extractorRadius 50
+Start points : team 0 (1864, 5250)  team 1 (3600, 5250)  team 2 (1864, 9450)  team 3 (3600, 9450)  team 4 (10424, 5250)  team 5 (8688, 5250)  team 6 (10424, 9450)  team 7 (8688, 9450)
+Map file     : maps/StarshipMeridian.smf
+Size         : 1536x1792 squares = 12288x14336 game units (24x28 map units)
+Height range : 0 to 520 (SMF header; mapinfo.lua may override)
+Map id       : 20261124
+Tile files   : StarshipMeridian.smt (172032 tiles)
+Tile index   : 384x448, 172032 distinct tiles used
+Metal map    : 414 non-zero cells, highest value 94
+Grass map    : none
+Minimap      : 1024x1024 DXT1, 0 transparent pixels
+Features     : 4 placed, 1 types defined
+    geovent: 4
+Layout       :
+    Heightmap  offset         80   length  5,511,682
+    TypeMap    offset  5,511,762   length    688,128
+    Minimap    offset  6,199,890   length    699,048
+    MetalMap   offset  6,898,938   length    688,128
+    Tiles      offset  7,587,066   length    688,161
+    Features   offset  8,275,227   length        112
+Texture      : 12288x14336 from maps/StarshipMeridian.smt, 49,416,286 transparent pixels

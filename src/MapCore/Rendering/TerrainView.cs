@@ -379,6 +379,14 @@ public sealed class TerrainView : IDisposable
                 double x = groundX[i], z = groundZ[i];
                 double distance = 1 / depth[i];
                 double footprint = distance / frame.Focal;
+                if (light.VoidGround && texture != null && texture.SampleAlpha(x, z, footprint) < light.VoidAlphaMin * 255)
+                {
+                    // voidGround: the engine doesn't draw ground whose texture is transparent, so the sky shows there.
+                    var (_, ry, _) = frame.Ray(px + 0.5, py + 0.5);
+                    var c = ry > 0 ? sky : voidColour;
+                    (pixels[o], pixels[o + 1], pixels[o + 2]) = (c.R, c.G, c.B);
+                    continue;
+                }
                 var (r, g, b) = texture?.Sample(x, z, footprint) ?? (128f, 128f, 128f);
                 if (!options.Lighting)
                 {

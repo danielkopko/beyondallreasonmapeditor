@@ -6,9 +6,9 @@ obj/
 testdata/
 workspace/
 out/*
-# Except the king of the hill drawings, Five Rivers, the king maps, Starfall Marsh and Red Dust Open Cut, whose maps
-# go on GitHub releases (five_rivers.cmd publish, king_maps.cmd publish <map>, starfall_marsh.cmd publish,
-# red_dust_open_cut.cmd publish).
+# Except the king of the hill drawings, Five Rivers, the king maps, Starfall Marsh, Red Dust Open Cut and Starship
+# Meridian, whose maps go on GitHub releases (five_rivers.cmd publish, king_maps.cmd publish <map>,
+# starfall_marsh.cmd publish, red_dust_open_cut.cmd publish, starship_meridian.cmd publish).
 !out/koth-maps/
 !out/step44-five-rivers/
 out/step44-five-rivers/*.sd7
@@ -18,6 +18,8 @@ out/step46-king-maps/*/*.sd7
 out/step47-starfall-marsh/*.sd7
 !out/step49-red-dust-open-cut/
 out/step49-red-dust-open-cut/*.sd7
+!out/step50-starship-meridian/
+out/step50-starship-meridian/*.sd7
 __pycache__/
 
 # Third-party map archives kept beside the project (large; the tests use testdata/).
