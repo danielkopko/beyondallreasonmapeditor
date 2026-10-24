@@ -1,0 +1,32 @@
+maxMetal 4, extractorRadius 50: T1 income = 0.001 x sum(raw x maxMetal) within the radius
+30 spots, total raw metal 18540, 74.16 metal/s with a T1 extractor on every spot
+  (  2504,   2552)   9 cells  raw   504   2.016 metal/s
+  (  1896,   2600)   9 cells  raw   504   2.016 metal/s
+  (  1896,   3144)   9 cells  raw   504   2.016 metal/s
+  (  2552,   3144)   9 cells  raw   504   2.016 metal/s
+  (  3896,   4248)   9 cells  raw   648   2.592 metal/s
+  ( 10200,   4344)   9 cells  raw   504   2.016 metal/s
+  ( 10808,   4344)   9 cells  raw   504   2.016 metal/s
+  (  3496,   4504)   9 cells  raw   648   2.592 metal/s
+  ( 10200,   4904)   9 cells  raw   504   2.016 metal/s
+  ( 10808,   4904)   9 cells  raw   504   2.016 metal/s
+  (  6200,   5240)   9 cells  raw   846   3.384 metal/s
+  (  4952,   5352)   9 cells  raw   702   2.808 metal/s
+  (  5560,   5400)   9 cells  raw   846   3.384 metal/s
+  (  9096,   6008)   9 cells  raw   648   2.592 metal/s
+  (  9448,   6344)   9 cells  raw   648   2.592 metal/s
+  (  6520,   6408)   9 cells  raw   846   3.384 metal/s
+  (  5816,   6584)   9 cells  raw   846   3.384 metal/s
+  (  7272,   6760)   9 cells  raw   702   2.808 metal/s
+  (  1496,   6856)   9 cells  raw   504   2.016 metal/s
+  (  2104,   6856)   9 cells  raw   504   2.016 metal/s
+  (  1496,   7400)   9 cells  raw   504   2.016 metal/s
+  (  2104,   7400)   9 cells  raw   504   2.016 metal/s
+  ( 10104,   8248)   9 cells  raw   504   2.016 metal/s
+  ( 10696,   8248)   9 cells  raw   504   2.016 metal/s
+  ( 10104,   8792)   9 cells  raw   504   2.016 metal/s
+  ( 10696,   8792)   9 cells  raw   504   2.016 metal/s
+  (  4472,  10360)   9 cells  raw   702   2.808 metal/s
+  (  5544,  10696)   9 cells  raw   846   3.384 metal/s
+  (  6344,  10696)   9 cells  raw   846   3.384 metal/s
+  (  7416,  10760)   9 cells  raw   702   2.808 metal/s

@@ -1,0 +1,42 @@
+4085 features, 2.1% of the map blocked with the room round them.
+Getting about (vehicles: TANK3, 27 degrees; bots: BOT3, 54 degrees), round the features:
+  ok   vehicles reach all four starts (84.9% of the map)
+  ok   vehicles reach every metal spot and the vent
+  ok   by the west ramp alone, vehicles reach the pit floor (all six spots)
+  ok   by the east ramp alone, vehicles reach the pit floor (all six spots)
+  ok   by the south-west ramp alone, vehicles reach the pit floor (all six spots)
+  ok   by the south-east ramp alone, vehicles reach the pit floor (all six spots)
+  ok   with all four ramps shut, vehicles can't get down the benches
+  ok   with all four ramps shut, bots get down by the slide
+  ok   with the ramps and the slide shut, nothing gets down the benches
+Fair shares (driving distance from each team's starts, round the features):
+  ok   to the nearest pit-floor spot: west 5991, east 5827 (3% apart)
+  ok   to all six pit-floor spots, on average: west 6816, east 6695 (2% apart)
+  ok   to their own first ramp's spot (the old pit's): west 4643, east 4488 (3% apart)
+  ok   to their own second ramp's spot (the extension's): west 4425, east 4099 (8% apart)
+  ok   to the enemy's nearest start: west 8988, east 8988 (0% apart)
+  ok   their own metal: west 26.8, east 26.8 metal/s, and 20.4 shared on the floor
+  ok   machines to reclaim on their side (metal): west 3370, east 3370 (0% apart)
+  ok   level ground to build on within 900 of their starts (squares): west 19825, east 19834 (0% apart)
+The north lane, across the railway (the pit and all south of its middle shut, so only the north lane joins the sides):
+  ok   vehicles and bots cross the north lane, through the train's gaps
+  ok   with its gaps shut, the train, the loadout and the shed wall the lane off: nothing crosses
+  ok   the gap at the north edge alone lets vehicles across (240 clear)
+  ok   the level crossing on road 7 alone lets vehicles across (616 clear)
+  ok   the gap between the shed and the rim alone lets vehicles across (270 clear)
+  ok   the pit runs to the south edge: with it and the north shut, nothing crosses round its south end
+       driving to the level crossing (not a check; the railway is the north's, not the sides'): west 4479, east 4475
+Roads:
+  ok   no road is painted under a building, tank or structure, nor over a stockpile, a heap, the dam's walls, a breakaway or the magazine's bund
+  ok   every road leads somewhere: each end meets a start, a pad, a hardstand, a ramp's top, a dump's top, the dam or another road
+  ok   a road meets every haul ramp's top
+  ok   no road runs into the pit (its edges kept 64 out from the rim)
+  ok   no road runs along a creek's bed, only across it
+  ok   every road is graded: none climbs more than 7 degrees (the steepest 5.7) or leans more than 3 across (the most 2.7)
+Standing true:
+  ok   every machine, building, tank and piece of site gear stands near level (but the tipping trucks): the ground rises no more than 12 under its footprint (the most 7.5)
+Metal spots and starts:
+  ok   no blocking feature within 40 of any of the 30 metal spots (0 crowded)
+  ok   every spot and the vent is level enough to build on (the most any rises over its footprint: 0.0)
+  ok   every start is on dry, nearly level ground
+0 check(s) failed

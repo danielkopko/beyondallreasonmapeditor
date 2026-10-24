@@ -1,0 +1,24 @@
+Name         : Red Dust Open Cut 1.0
+Author       : Daniel Kopko
+Heights      : -80 to 620 (mapinfo.lua smf.minheight/maxheight, replacing the SMF header's)
+Metal        : maxMetal 4, extractorRadius 50
+Start points : team 0 (2200, 2850)  team 1 (1800, 7100)  team 2 (10500, 4600)  team 3 (10400, 8500)
+Map file     : maps/RedDustOpenCut.smf
+Size         : 1536x1536 squares = 12288x12288 game units (24x24 map units)
+Height range : -80 to 620 (SMF header; mapinfo.lua may override)
+Map id       : 20261104
+Tile files   : RedDustOpenCut.smt (147456 tiles)
+Tile index   : 384x384, 147456 distinct tiles used
+Metal map    : 270 non-zero cells, highest value 94
+Grass map    : none
+Minimap      : 1024x1024 DXT1, 0 transparent pixels
+Features     : 1 placed, 1 types defined
+    geovent: 1
+Layout       :
+    Heightmap  offset         80   length  4,724,738
+    TypeMap    offset  4,724,818   length    589,824
+    Minimap    offset  5,314,642   length    699,048
+    MetalMap   offset  6,013,690   length    589,824
+    Tiles      offset  6,603,514   length    589,855
+    Features   offset  7,193,369   length         40
+Texture      : 12288x12288 from maps/RedDustOpenCut.smt, 0 transparent pixels
