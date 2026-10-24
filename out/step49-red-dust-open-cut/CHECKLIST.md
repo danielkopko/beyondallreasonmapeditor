@@ -11,12 +11,7 @@ The map is **not symmetric**. The west is the plant side and the east the dump s
 
 **Not tried in BAR yet.** BAR isn't installed on this machine. Everything below was checked with MapCore's copy of the engine's rules, and the models with MapTool's renderer, not in the game.
 
-**Not released yet.** `red_dust_open_cut.cmd publish -Message "..."` does three things:
-- pushes this folder;
-- puts the map and its lobby picture `Red_Dust_Open_Cut_1.0.jpg` on the release `red-dust-open-cut-1.0`, here and in BarMaps;
-- leaves BarMaps' README section and picture to add by hand.
-
-`red_dust_open_cut.cmd install` copies the map into BAR.
+**Download:** one file, [red_dust_open_cut_1.0.sd7](https://github.com/danielkopko/BarMaps/releases/download/red-dust-open-cut-1.0/red_dust_open_cut_1.0.sd7), from the public BarMaps release [red-dust-open-cut-1.0](https://github.com/danielkopko/BarMaps/releases/tag/red-dust-open-cut-1.0), with its lobby picture `Red_Dust_Open_Cut_1.0.jpg`. The same files are on [this repository's release](https://github.com/danielkopko/beyondallreasonmapeditor/releases/tag/red-dust-open-cut-1.0) (signed in as danielkopko), and BarMaps' README has its section and `LuaMenu/Images/Minimaps/Red_Dust_Open_Cut_1.0.jpg`. After rebuilding, `red_dust_open_cut.cmd publish -Message "..."` pushes the notes and replaces both releases' files (BarMaps' README section and picture are updated by hand); `red_dust_open_cut.cmd install` copies the map into BAR.
 
 ## The layout
 
