@@ -22,6 +22,8 @@ out/step49-red-dust-open-cut/*.sd7
 out/step50-starship-meridian/*.sd7
 !out/step51-meridian-landfall/
 out/step51-meridian-landfall/*.sd7
+!out/step52-marram-line/
+out/step52-marram-line/*.sd7
 __pycache__/
 
 # Third-party map archives kept beside the project (large; the tests use testdata/).

@@ -1,0 +1,63 @@
+5348 features; blocking 6.8% of the map with the room round them (1.6% for vehicles, which crush the wire and hedge bushes)
+Getting about (vehicles: TANK3, 27 degrees; bots: BOT3, 54 degrees; hovers: HOVER3, 33 on land, any slope on water), round the features:
+  ok   vehicles reach all eight starts (82.6% of the map)
+  ok   vehicles reach every metal spot
+  ok   vehicles reach every vent
+  ok   bots reach every metal spot
+The trenches (the fire, support and communication trenches' floors, sampled along them):
+  ok   bots get into every trench (233 floors sampled)
+  ok   vehicles get into none
+  ok   hovers get into none
+  ok   no trench floor is under water (the lowest 6.0)
+  ok   with the beach team's four crossings shut, no vehicle crosses its line
+  ok   with them shut, bots still cross it
+  ok   with them shut and every stretch of water shut, no hover crosses it over land (with the water open, hovers get round by the inlet or the sea)
+  ok   the beach team's crossing at z 2000 alone lets vehicles across its line
+  ok   the beach team's crossing at z 4500 alone lets vehicles across its line
+  ok   the beach team's crossing at z 7000 alone lets vehicles across its line
+  ok   the beach team's crossing at z 9400 alone lets vehicles across its line
+  ok   with the hill team's four crossings shut, no vehicle crosses its line
+  ok   with them shut, bots still cross it
+  ok   with them shut and every stretch of water shut, no hover crosses it over land (with the water open, hovers get round by the inlet or the sea)
+  ok   the hill team's crossing at z 1100 alone lets vehicles across its line
+  ok   the hill team's crossing at z 3600 alone lets vehicles across its line
+  ok   the hill team's crossing at z 6100 alone lets vehicles across its line
+  ok   the hill team's crossing at z 8600 alone lets vehicles across its line
+The beach (from the beach's middle, x a third of the way up it):
+  ok   the draw at z 3300 alone takes vehicles from the beach to the dunes
+  ok   the draw at z 5900 alone takes vehicles from the beach to the dunes
+  ok   the draw at z 8500 alone takes vehicles from the beach to the dunes
+  ok   so does the headland road alone (to the heath's start)
+  ok   and the inlet's north bank by its mouth alone
+  ok   with those five shut, vehicles stay on the beach
+  ok   and bots still climb the foredune
+The ground:
+  ok   bomb craters are bots' only: bots get into all 25, vehicles into 0 (25 as planned)
+  ok   shell holes let vehicles in: 164 of 165; not (6630, 597) r 89 floor 2
+       the dunes' slip faces: 97% of their squares too steep for vehicles (the rest is their crests and feet)
+  ok   the headland's cliffs stop bots: 99% of their face's squares too steep (spiders only)
+The water:
+  ok   a battleship (15 deep) sails from the open sea up the inlet into the cove
+  ok   and so does every smaller ship (8)
+       inside the bars (280 out, 8 deep or more at 28 places sampled), ships needing 8 reach 28 through the rips; the bars themselves are 5 deep
+  ok   no vehicle crosses the inlet: with the hill team's crossings shut, the beach team's vehicles can't reach the sandy end
+  ok   the hill team's vehicles reach the sandy end by land
+Fair shares (driving distance, vehicles, round the features; each start against its opposite number):
+  ok   start 0 against 4, to the zone's middle: beach 2920, hill 2953 (1% apart)
+  ok   start 0 against 4, to their own nearest crossing: beach 2037, hill 1954 (4% apart)
+  ok   start 1 against 5, to the zone's middle: beach 2974, hill 3201 (8% apart)
+  ok   start 1 against 5, to their own nearest crossing: beach 2126, hill 2605 (23% apart)
+  ok   start 2 against 6, to the zone's middle: beach 2901, hill 3058 (5% apart)
+  ok   start 2 against 6, to their own nearest crossing: beach 1832, hill 2093 (14% apart)
+  ok   start 3 against 7, to the zone's middle: beach 2893, hill 2800 (3% apart)
+  ok   start 3 against 7, to their own nearest crossing: beach 1853, hill 1997 (8% apart)
+  ok   their own metal: beach 46.8, hill 46.8 metal/s, and 24.0 in the zone
+  ok   metal to reclaim on their own side (the zone's tanks apart): beach 1982, hill 2039 (3% apart)
+       the zone's tanks: 3200 metal
+  ok   level ground to build on within 900 of their starts (squares): beach 38395, hill 35216 (9% apart)
+Room to build:
+  ok   no blocking feature within 40 of any of the 52 metal spots (0 crowded)
+  ok   every spot is level enough to build on (the most any rises over its footprint: 0.0, at (4166, 1729))
+  ok   every start is on dry, nearly level ground (the most any rises over 96: 4.3)
+  ok   every building and bunker (29) stands near level: the ground rises no more than 16 under its footprint
+0 check(s) failed
