@@ -2,7 +2,7 @@
 
 A 4v4 map on a coast where an old war dug in and never left. From the sea in the west it runs: the sea, a wide beach with its old obstacles, a foredune cut by draws, a belt of dunes, the beach team's trenches, the dead man's zone, the hill team's trenches, and then a slight rise to a crest of fields and hedgerows. The two trench lines face each other across the zone. The landscape isn't symmetric and isn't meant to look made: a rocky headland juts into the sea in the north. In the south a tidal inlet runs in from the sea, through both trench lines and the zone, to a sandy cove at the hill's foot. Both teams take to the water, and ships sail up into the battle.
 
-**Status: built 2026-10-25, with every recommendation below; not released yet.** The built map, its checks, and where it differs from this plan are in `CHECKLIST.md`. The plan below is kept as it was written.
+**Status: built 2026-10-25, with every recommendation below; released as `marram-line-1.0` here and in BarMaps.** The built map, its checks, and where it differs from this plan are in `CHECKLIST.md`. The plan below is kept as it was written.
 
 The numbers live in one table, `design/layout.py`. It draws `design/layout.svg` (the plan to scale, a west-to-east profile, and the fire trench's section at true scale) and writes `design/layout.json` for the converter. The dunes, craters, hedgerows, wire and wrecks are generated from a fixed seed (52), so the drawing shows them where they'll be built.
 

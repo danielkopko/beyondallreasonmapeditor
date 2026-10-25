@@ -11,7 +11,7 @@ The map is **not symmetric**. The beach team (starts 0 to 3) has the open sea be
 
 **Not tried in BAR yet.** BAR isn't installed on this machine. Everything below was checked with MapCore's copy of the engine's rules, and the models with MapTool's renderer, not in the game.
 
-**Not released yet.** At your go-ahead, `marram_line.cmd publish -Message "..."` commits this folder, `PLAN.md` and `.gitignore`, and puts `marram_line_1.0.sd7` and its lobby picture `Marram_Line_1.0.jpg` on the release `marram-line-1.0`, here and in BarMaps (BarMaps' README section and picture go in by hand, as before). `marram_line.cmd install` copies the map into BAR.
+**Download:** one file, [marram_line_1.0.sd7](https://github.com/danielkopko/BarMaps/releases/download/marram-line-1.0/marram_line_1.0.sd7), from the public BarMaps release [marram-line-1.0](https://github.com/danielkopko/BarMaps/releases/tag/marram-line-1.0), with its lobby picture `Marram_Line_1.0.jpg`. The same files are on [this repository's release](https://github.com/danielkopko/beyondallreasonmapeditor/releases/tag/marram-line-1.0) (signed in as danielkopko), and BarMaps' README has its section and `LuaMenu/Images/Minimaps/Marram_Line_1.0.jpg`. After rebuilding, `marram_line.cmd publish -Message "..."` pushes the notes and replaces both releases' files (BarMaps' README section and picture are updated by hand); `marram_line.cmd install` copies the map into BAR.
 
 ## The layout
 
