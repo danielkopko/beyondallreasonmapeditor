@@ -2,7 +2,7 @@
 
 An 8v8 map. Starship Meridian, the same ship, has come down on an asteroid. The two fleets still fight port against starboard: inside the ship as before, and now outside on the asteroid as well. The moonrock round the ship is cratered, and here and there the rock has been blasted right through into void pits.
 
-**Status: built** to this plan as recommended (invisible rubble on the void's floors, hangar bay doors, 32 × 36, no wind), as `meridian_landfall_1.0.sd7`; see `CHECKLIST.md`.
+**Status: built** to this plan as recommended (invisible rubble on the void's floors, hangar bay doors, 32 × 36, no wind), as `meridian_landfall_1.0.sd7`, and released; see `CHECKLIST.md`.
 
 **As built, where it differs from the plan below:**
 - **The edge** is shallower along the flanks (120 to 530) than at the bow and the stern (160 to 710), so the narrow flanks keep their room. The fore bowl, the aft bowl, the aft pit and the outside starts were moved clear of it, and the mares are 900 in radius, not 1,000.

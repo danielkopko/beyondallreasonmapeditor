@@ -13,7 +13,7 @@ The map is **symmetric**: the starboard half is the port half's mirror image (x 
 
 **Not tried in BAR yet.** BAR isn't installed on this machine. Everything below was checked with MapCore's copy of the engine's rules, and the looks with MapTool's renderer, not in the game.
 
-**Not released yet.** At your go-ahead, `meridian_landfall.cmd publish -Message "..."` commits and pushes this folder, then puts the map and its lobby picture `Meridian_Landfall_1.0.jpg` on the release `meridian-landfall-1.0`, here and in BarMaps. BarMaps' README section and picture are added by hand. `meridian_landfall.cmd install` copies the map into BAR.
+**Download:** one file, [meridian_landfall_1.0.sd7](https://github.com/danielkopko/BarMaps/releases/download/meridian-landfall-1.0/meridian_landfall_1.0.sd7), from the public BarMaps release [meridian-landfall-1.0](https://github.com/danielkopko/BarMaps/releases/tag/meridian-landfall-1.0), with its lobby picture `Meridian_Landfall_1.0.jpg`. The same files are on [this repository's release](https://github.com/danielkopko/beyondallreasonmapeditor/releases/tag/meridian-landfall-1.0) (signed in as danielkopko), and BarMaps' README has its section and `LuaMenu/Images/Minimaps/Meridian_Landfall_1.0.jpg`. After rebuilding, `meridian_landfall.cmd publish -Message "..."` pushes the notes and replaces both releases' files (BarMaps' README section and picture are updated by hand); `meridian_landfall.cmd install` copies the map into BAR.
 
 ## The layout
 
