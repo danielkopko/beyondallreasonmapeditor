@@ -1,0 +1,107 @@
+// Meridian Landfall: Starship Meridian's feature writer, copied, for the moonrock's atlas and the void's invisible
+// blockers too.
+//
+// The features as files in the map: features/landfall/<name>.lua, objects3d/<name>.s3o and the atlases in
+// unittextures. Every model is centred on its origin (x and z, over what stands above ground), so its footprint and
+// collision box sit where it is placed.
+using System.Globalization;
+using System.Numerics;
+using System.Text;
+
+/// <summary>
+/// One feature: its model, how it blocks and what it is worth. Landmarks are indestructible with nothing to reclaim;
+/// the rest are reclaimable. A footprint may be given (the base of a machine whose boom or wheel overhangs the ground).
+/// A rock is on the moonrock atlas. An invisible feature (the void's rubble) shows nothing: its footprint blocks every
+/// ground unit, and its collision box is a tiny one buried deep under the ground, so no shot meets it.
+/// </summary>
+sealed record FeatureDef(string Name, string Description, Mesh Mesh, bool Landmark, int Metal, int Energy = 0, bool Blocking = true, (int X, int Z)? Base = null,
+    bool RockAtlas = false, bool Invisible = false)
+{
+    /// <summary>The box of what stands above ground (a little above, so a skirt doesn't count).</summary>
+    public (Vector3 Min, Vector3 Max) Box => Mesh.Solid(above: 2);
+
+    /// <summary>Footprint in footprint units (16 game units), over the model's box above ground, at least 1.</summary>
+    public (int X, int Z) Footprint
+    {
+        get
+        {
+            if (Base is (int bx, int bz)) return (bx, bz);
+            var (min, max) = Box;
+            return (Math.Max(1, (int)Math.Round((max.X - min.X) / 16)), Math.Max(1, (int)Math.Round((max.Z - min.Z) / 16)));
+        }
+    }
+}
+
+static class Features
+{
+    static string F(double v) => Math.Round(v, 1).ToString(CultureInfo.InvariantCulture);
+
+    /// <summary>Moves the mesh so what stands above ground is centred on the origin in x and z.</summary>
+    public static Mesh Centred(Mesh m, bool alongOnly = false)
+    {
+        var (min, max) = m.Solid(above: 2);
+        var c = new Vector3((min.X + max.X) / 2, 0, alongOnly ? 0 : (min.Z + max.Z) / 2);
+        var o = new Mesh();
+        o.Add(m, Matrix4x4.CreateTranslation(-c));
+        return o;
+    }
+
+    public static string Lua(FeatureDef d)
+    {
+        var (min, max) = d.Box;
+        var (fx, fz) = d.Footprint;
+        var sb = new StringBuilder();
+        sb.Append($"-- {d.Name}: {d.Description}. Model and texture made by the Meridian Landfall converter.\n");
+        sb.Append("local featureDef = {\n");
+        sb.Append($"\tname = \"{d.Name}\",\n");
+        sb.Append($"\tdescription = \"{d.Description}\",\n");
+        sb.Append($"\tobject = \"{d.Name}.s3o\",\n");
+        sb.Append($"\tblocking = {(d.Blocking ? "true" : "false")},\n");
+        sb.Append("\tupright = true,\n");
+        sb.Append($"\tfootprintx = {fx},\n");
+        sb.Append($"\tfootprintz = {fz},\n");
+        if (d.Landmark)
+            sb.Append("\tdamage = 1000000000,\n\tindestructible = true,\n\tcrushresistance = 1000000,\n\treclaimable = false,\n\tautoreclaimable = false,\n\tmetal = 0,\n\tenergy = 0,\n");
+        else
+            sb.Append($"\tdamage = {Math.Max(2000, d.Metal * 12)},\n\treclaimable = true,\n\tautoreclaimable = false,\n\tmetal = {d.Metal},\n\tenergy = {d.Energy},\n\treclaimtime = {Math.Max(400, d.Metal * 6)},\n");
+        sb.Append("\tflammable = false,\n");
+        sb.Append("\tcollisionvolumetype = \"box\",\n");
+        if (d.Invisible)
+        {
+            sb.Append("\tnoselect = true,\n");
+            sb.Append("\tcollisionvolumescales = \"1 1 1\",\n");
+            sb.Append("\tcollisionvolumeoffsets = \"0 -600 0\",\n");
+        }
+        else
+        {
+            sb.Append($"\tcollisionvolumescales = \"{F(max.X - min.X)} {F(max.Y)} {F(max.Z - min.Z)}\",\n");
+            sb.Append($"\tcollisionvolumeoffsets = \"{F((min.X + max.X) / 2)} {F(max.Y / 2)} {F((min.Z + max.Z) / 2)}\",\n");
+        }
+        string category = d.RockAtlas || d.Invisible ? "Asteroid" : "Starship";
+        sb.Append($"\tcustomparams = {{\n\t\tcuspbr = true,\n\t\tmodel_author = \"Meridian Landfall converter\",\n\t\tcategory = \"{category}\",\n\t}},\n");
+        sb.Append("}\n");
+        sb.Append("return lowerkeys({[featureDef.name] = featureDef})\n");
+        return sb.ToString();
+    }
+
+    /// <summary>Writes the features, their models and both atlases into a map folder.</summary>
+    public static void Write(string root, IEnumerable<FeatureDef> defs)
+    {
+        string fdir = Path.Combine(root, "features", "landfall"), odir = Path.Combine(root, "objects3d"), tdir = Path.Combine(root, "unittextures");
+        Directory.CreateDirectory(fdir);
+        Directory.CreateDirectory(odir);
+        Directory.CreateDirectory(tdir);
+        foreach (var d in defs)
+        {
+            File.WriteAllText(Path.Combine(fdir, d.Name + ".lua"), Lua(d));
+            var (t1, t2) = d.RockAtlas ? (Rocks.Texture1, Rocks.Texture2) : (Atlas.Texture1, Atlas.Texture2);
+            File.WriteAllBytes(Path.Combine(odir, d.Name + ".s3o"), d.Mesh.ToS3o(d.Name, t1, t2));
+        }
+        var (c, e) = Atlas.Files();
+        File.WriteAllBytes(Path.Combine(tdir, Atlas.Texture1), c);
+        File.WriteAllBytes(Path.Combine(tdir, Atlas.Texture2), e);
+        var (rc, re) = Rocks.Files();
+        File.WriteAllBytes(Path.Combine(tdir, Rocks.Texture1), rc);
+        File.WriteAllBytes(Path.Combine(tdir, Rocks.Texture2), re);
+    }
+}

@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ServerGarbageCollection>true</ServerGarbageCollection>
+    <RootNamespace>Landfall</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\MapCore\MapCore.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\design\layout.json" Link="layout.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <!-- The ship is Starship Meridian's, unchanged: its layout, heights, paint, checks and placement are its own files. -->
+  <ItemGroup>
+    <Compile Include="..\..\step50-starship-meridian\converter\Layout.cs" Link="Ship\Layout.cs" />
+    <Compile Include="..\..\step50-starship-meridian\converter\Terrain.cs" Link="Ship\Terrain.cs" />
+    <Compile Include="..\..\step50-starship-meridian\converter\Common.cs" Link="Ship\Common.cs" />
+    <Compile Include="..\..\step50-starship-meridian\converter\Paint.cs" Link="Ship\Paint.cs" />
+    <Compile Include="..\..\step50-starship-meridian\converter\Check.cs" Link="Ship\Check.cs" />
+    <Compile Include="..\..\step50-starship-meridian\converter\Place.cs" Link="Ship\Place.cs" />
+    <Compile Include="..\..\step50-starship-meridian\converter\Create.cs" Link="Ship\Create.cs" />
+  </ItemGroup>
+</Project>

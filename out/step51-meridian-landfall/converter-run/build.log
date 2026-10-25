@@ -1,0 +1,67 @@
+heights in 1s, 143 to 840; 19.8 M square units of void, 10.5 M in craters
+placed in 1s: ship 191, strut 6, cargo 24, rock 856, void 1702
+2779 features (1702 of them the void's rubble), 11.4% of the map blocked with the room round them.
+The halves:
+  ok   the heights match their mirror image at every vertex (the most apart 0.000)
+  ok   every feature has its mirror image (the same model, or its twin, at the mirrored place and heading)
+The ship:
+  ok   the ship is Meridian's, raised 400: 9157 of its vertices differ, all of them in the bay doors or the walls by the bridge-level floors
+Getting about (vehicles TANK3 27ø, bots BOT3 54ø, hovers 33ø, amphibious ATANK3 54ø, spiders TBOT3 90ø), round the features:
+  ok   vehicles reach all 16 starts (71.6% of the map)
+  ok   vehicles reach every spot and vent but those on the bowls' floors
+  ok   bots reach every start, spot and vent, the bowls' included
+  ok   each port outside start reaches both its team's bay doors by vehicle, without going round the bow or the stern (starboard's are the mirror image)
+The lanes (the ship's five crossings, round the bow and round the stern):
+  ok   the Bridge alone lets vehicles across (outside start 5 to 13)
+  ok   the CIC alone lets vehicles across (outside start 5 to 13)
+  ok   the Main Reactor alone lets vehicles across (outside start 5 to 13)
+  ok   the Shield Generator alone lets vehicles across (outside start 5 to 13)
+  ok   the Engine Room alone lets vehicles across (outside start 5 to 13)
+  ok   the bow alone lets vehicles across (outside start 5 to 13)
+  ok   the stern alone lets vehicles across (outside start 5 to 13)
+  ok   with all seven shut, vehicles can't cross
+  ok   with all seven shut, bots can't cross
+  ok   with all seven shut, hovers can't cross
+  ok   with all seven shut, amphibious units can't cross
+       spiders, all seven shut: they cross, over the ship's bulkheads (all-terrain bots climb any wall; intended, as on Meridian)
+The void (the pits and the asteroid's edge) and the ship's solid tops:
+  ok   vehicles don't reach the void (0 squares)
+  ok   bots don't reach the void (0 squares)
+  ok   hovers don't reach the void (0 squares)
+  ok   amphibious units don't reach the void (0 squares)
+  ok   spiders don't reach the void (0 squares)
+  ok   vehicles from outside don't get onto the ship's walls and solid tops (0 squares)
+  ok   bots from outside don't get onto the ship's walls and solid tops (0 squares)
+  ok   hovers from outside don't get onto the ship's walls and solid tops (0 squares)
+  ok   amphibious units from outside don't get onto the ship's walls and solid tops (0 squares)
+       spiders reach 236316 squares of the ship's solid tops (they climb its walls; intended)
+Craters:
+  ok   vehicles get into none of the 130 craters (no ramps)
+  ok   hovers get into none of them
+  ok   bots get into (and out of) every one
+       amphibious tanks (54ø, as bots) get into 130 of them
+  ok   the bowls' walls stay between 36ø and 48ø all round, on 16-unit cells (38.3ø to 44.9ø)
+  ok   no crater's or pit's outline is a circle: each strays from its mean radius by 6% or more
+Doors, rooms, mares and aprons:
+  ok   every door is at least 500 wide, the bay doors 700
+  ok   no feature stands in a doorway or in the way across an apron
+  ok   the Forward Hangar (start 0) keeps 98 % of its floor level and free (at least 60%)
+  ok   the Crew Deck & Mess (start 1) keeps 95 % of its floor level and free (at least 60%)
+  ok   the Main Hangar (start 2) keeps 98 % of its floor level and free (at least 60%)
+  ok   the Cargo Hold (start 3) keeps 96 % of its floor level and free (at least 60%)
+  ok   the Fore flank start's mare (start 4) keeps 100 % of its ground level and free (at least 60%)
+  ok   the Forward bay start's mare (start 5) keeps 98 % of its ground level and free (at least 60%)
+  ok   the Aft bay start's mare (start 6) keeps 100 % of its ground level and free (at least 60%)
+  ok   the Aft flank start's mare (start 7) keeps 100 % of its ground level and free (at least 60%)
+  ok   every apron is level and mostly free, its cargo at the corners (the least 95 %)
+Standing true:
+  ok   every machine, prop and strut stands level: the ground under its footprint rises no more than 4 (the most 0.1; the moonrock lies as it fell)
+Metal spots, vents and starts:
+  ok   no blocking feature within 40 of any of the 90 metal spots (0 crowded)
+  ok   every spot and vent is level (the most any rises over its footprint: 0.0, at (3532, 6998))
+  ok   every start is on level ground
+  ok   each team's own metal: 72.0 metal/s; 54.8 contested in the ship and on the asteroid, 14.4 on the bowls' floors (bots only); 90 spots, 213.2 metal/s; 7 vents
+       the fronts (driving): crew deck to crew deck 5114; forward bay to forward bay, outside 13569; fore flank to fore flank 13738
+checked in 5s
+map and texture in 53s
+built in 78s

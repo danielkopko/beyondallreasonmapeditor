@@ -1,0 +1,24 @@
+Name         : Meridian Landfall 1.0
+Author       : Daniel Kopko
+Heights      : 100 to 1000 (mapinfo.lua smf.minheight/maxheight, replacing the SMF header's)
+Metal        : maxMetal 4, extractorRadius 50
+Start points : team 0 (3912, 7298)  team 1 (5648, 7298)  team 2 (3912, 11498)  team 3 (5648, 11498)  team 4 (1800, 3600)  team 5 (1500, 7700)  team 6 (1500, 12000)  team 7 (1650, 16150)  team 8 (12472, 7298)  team 9 (10736, 7298)  team 10 (12472, 11498)  team 11 (10736, 11498)  team 12 (14584, 3600)  team 13 (14884, 7700)  team 14 (14884, 12000)  team 15 (14734, 16150)
+Map file     : maps/MeridianLandfall.smf
+Size         : 2048x2304 squares = 16384x18432 game units (32x36 map units)
+Height range : 100 to 1000 (SMF header; mapinfo.lua may override)
+Map id       : 20261125
+Tile files   : MeridianLandfall.smt (294912 tiles)
+Tile index   : 512x576, 294912 distinct tiles used
+Metal map    : 810 non-zero cells, highest value 100
+Grass map    : none
+Minimap      : 1024x1024 DXT1, 0 transparent pixels
+Features     : 7 placed, 1 types defined
+    geovent: 7
+Layout       :
+    Heightmap  offset         80   length  9,445,890
+    TypeMap    offset  9,445,970   length  1,179,648
+    Minimap    offset 10,625,618   length    699,048
+    MetalMap   offset 11,324,666   length  1,179,648
+    Tiles      offset 12,504,314   length  1,179,681
+    Features   offset 13,683,995   length        184
+Texture      : 16384x18432 from maps/MeridianLandfall.smt, 19,566,956 transparent pixels
