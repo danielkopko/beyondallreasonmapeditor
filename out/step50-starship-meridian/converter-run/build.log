@@ -1,24 +1,34 @@
-heights in 1s, 20 to 440; 102.0 M square units of floor, 52.1 M of space
-placed in 1s: prop 137, craft 8, landmark 12, vehicle 12, pipe 4, hull 12, engine 6
-191 features, 1.0% of the map blocked with the room round them.
+heights in 1s, 20 to 440; 112.9 M square units of floor, 52.1 M of space
+placed in 1s: engine 6, crystal 548, landmark 2
+556 features, 0.7% of the map blocked with the room round them.
 The halves:
   ok   the heights match their mirror image at every vertex (the most apart 0.000)
   ok   every feature has its mirror image (the same model, or its twin, at the mirrored place and heading)
 Getting about (vehicles: TANK3, 27 degrees; bots: BOT3, 54 degrees; hovers 33; amphibious ATANK3; spiders TBOT3), round the features:
-  ok   vehicles reach all eight starts (57.9% of the map)
-  ok   vehicles reach every metal spot and vent (the reactor's vents by the well's ramps)
-  ok   bots reach every start and spot
-The crossings (each team's half joins the other only through the shared rooms on the centreline):
+  ok   vehicles reach all 16 starts (61.9% of the map)
+  ok   vehicles reach every vent (the reactor's by the well's ramps)
+  ok   bots reach every start
+  ok   vehicles reach the 3 thruster platforms by their ramps, each at 440, 100 over the bulkheads
+  ok   vehicles reach the outer walk all round: over the bow, along both sides, across the stern
+  ok   from the outer walk and the thruster steps' paths, the ramps and the bridge's front opening shut, vehicles get down into no room (0 squares)
+  ok   from the outer walk and the thruster steps' paths, the ramps and the bridge's front opening shut, bots get down into no room (0 squares)
+  ok   from the outer walk and the thruster steps' paths, the ramps and the bridge's front opening shut, hovers get down into no room (0 squares)
+  ok   from the outer walk and the thruster steps' paths, the ramps and the bridge's front opening shut, amphibious units get down into no room (0 squares)
+  ok   the port thruster step's path round its platform takes vehicles from its landing to the outer walk, the other ways onto the walk shut
+  ok   the starboard thruster step's path round its platform takes vehicles from its landing to the outer walk, the other ways onto the walk shut
+  ok   the centre engine step's path round its platform takes vehicles from its landing to the outer walk, the other ways onto the walk shut
+The crossings (each team's half joins the other only through the shared rooms on the centreline, and the outer walk):
   ok   the Bridge alone lets vehicles across
   ok   the CIC alone lets vehicles across
   ok   the Main Reactor alone lets vehicles across
   ok   the Shield Generator alone lets vehicles across
   ok   the Engine Room alone lets vehicles across
-  ok   with all five shut, vehicles can't cross
-  ok   with all five shut, bots can't cross
-  ok   with all five shut, hovers can't cross
-  ok   with all five shut, amphibious units can't cross
-       spiders, all five shut: they cross, over the bulkheads (all-terrain bots climb any wall; intended)
+  ok   with the five shut, the outer walk alone lets vehicles across (up a thruster ramp to its step, round the hull, down the enemy's)
+  ok   with all five and the outer walk shut, vehicles can't cross
+  ok   with all five and the outer walk shut, bots can't cross
+  ok   with all five and the outer walk shut, hovers can't cross
+  ok   with all five and the outer walk shut, amphibious units can't cross
+       spiders, all six shut: they cross, over the bulkheads (all-terrain bots climb any wall; intended)
 Space:
   ok   vehicles don't reach space (0 squares)
   ok   bots don't reach space (0 squares)
@@ -26,20 +36,41 @@ Space:
   ok   amphibious units don't reach space (0 squares)
        spiders reach 813220 squares of space (over the rim; it's too rough for anything else, and never drawn)
   ok   space is too rough to build on or drive over (1.7% of it isn't too steep for vehicles)
+Walls:
+  ok   vehicles don't get onto the walls or the hull's solid tops (0 squares)
+  ok   bots don't get onto the walls or the hull's solid tops (0 squares)
+  ok   hovers don't get onto the walls or the hull's solid tops (0 squares)
+  ok   amphibious units don't get onto the walls or the hull's solid tops (0 squares)
+       spiders get onto 133408 squares of the walls and the hull's tops (they climb any wall; intended)
 Doors and rooms:
   ok   every door is at least 500 wide
   ok   no feature stands in a doorway
+  ok   vehicles reach all 548 energy crystals, none in the reactor: 32400 energy in port's rooms, 32400 in starboard's, 19200 in the shared rooms
+  ok   the crystals lie in 56 clusters of 5 to 14 (600 to 2400 energy), none alone; no two closer than 40
+  ok   each start's circle is edged by two clusters (on its wall sides) and none inside its ring: 1200 energy each (2400 a start; the tech start's 600, half); each inboard room holds 3600 (1.5 times a start's), each shared room but the reactor 4800 (2 times), the reactor none
+  ok   the Weapons Bay keeps 98% of its floor (2.84 M square units) level and free to build on (at least 60%)
   ok   the Forward Hangar keeps 97% of its floor (4.39 M square units) level and free to build on (at least 60%)
-  ok   the Crew Deck & Mess keeps 95% of its floor (4.11 M square units) level and free to build on (at least 60%)
-  ok   the Main Hangar keeps 96% of its floor (4.36 M square units) level and free to build on (at least 60%)
-  ok   the Cargo Hold keeps 95% of its floor (4.13 M square units) level and free to build on (at least 60%)
+  ok   the Power Room keeps 98% of its floor (2.13 M square units) level and free to build on (at least 60%)
+  ok   the Main Hangar keeps 97% of its floor (4.39 M square units) level and free to build on (at least 60%)
+  ok   the Thruster Bay keeps 94% of its floor (2.52 M square units) level and free to build on (at least 60%)
 Standing true:
   ok   every feature stands level: the ground under its footprint rises no more than 4 (the most 0.0)
-Metal spots, vents and starts:
-  ok   no blocking feature within 40 of any of the 46 metal spots (0 crowded)
-  ok   every spot and vent is level (the most any rises over its footprint: 0.0)
+  ok   the 6 main engines stand on the outer walk's level and wholly under it: their highest point 10 below its surface
+  ok   the main engines' cones clear the ground of space under them, by 33 at the least
+Metal (a metal map: the whole deck), vents and starts:
+  ok   metal 79 on every deck floor cell and nowhere else (not the walls, hull tops or space): 441208 cells, 112.9 M square units
+  ok   the metal is its own mirror image (0 cells differ)
+  ok   each team's rooms hold the same metal: 39.2 M square units each, the shared rooms 26.4 M, the doorways and the outer walk 8.1 M
+  ok   BAR reads it as a metal map, not spots: its widest stretch of metal is 13600 across, over 6 x the extractor radius (144)
+  ok   Cloud9's yield (maxMetal 7.5, extractor radius 24): a T1 extractor on open deck takes 5.33 metal/s centred on a metal cell (9 cells), 2.37 on a cell corner (4)
+  ok   all the metal is in reach: vehicles reach 99.8% of its cells, bots another 0.1%, and 0.1% is under features
+Gun sites (1.1: the bridge and the thruster platforms, high ground for long-range guns):
+  ok   the thruster platforms and their ramps stand open: no wall within 48 stands over them (0 floor points)
+  ok   the bridge's walls stand no more than its lip, 30, over its deck (0 floor points)
+       a gun of range 6100 (Legion's Starfall) on the bridge or a thruster platform reaches 100% of the deck; from one side's own sites and the shared ones (its platform and bridge landing, the bridge, the centre platform), 100% of the enemy's half, and from its own thruster platform alone 21%
+  ok   every vent is level (the most any rises over its footprint: 0.0); 4 vents
   ok   every start is on level deck
-  ok   each team's own metal: 38.4 metal/s, and 30.8 shared on the centreline; 4 vents
-       the fronts: crew deck to crew deck 5114, crew deck to the enemy's cargo hold 7272 (driving)
-map and texture in 8s
-built in 22s
+  ok   every start's floor circle (16) lies wholly on its room's level deck, clear of ramps, doors and walls
+       the fronts: air start to the enemy's air start 8603, forward hangar to the enemy's forward hangar 8891 (driving)
+map and texture in 19s
+built in 42s

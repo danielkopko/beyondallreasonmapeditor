@@ -21,7 +21,7 @@ param(
     [Parameter(Mandatory = $true, Position = 0)]
     [ValidateSet('publish', 'install')]
     [string]$Action,
-    [string]$Version = '1.0',
+    [string]$Version = '1.1',
     [string]$Message = 'Starship Meridian: notes updated',
     # BAR's data folder, the one that holds maps\ (its usual place when not given).
     [string]$BarData = '',

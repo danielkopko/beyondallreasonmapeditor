@@ -87,7 +87,7 @@ static class LandCheck
 
         log("The ship:");
         {
-            // Meridian's own heights, raised: they differ only in the bay doors and by the bridge-level floors' walls.
+            // Meridian's own heights (its Terrain.cs, compiled in), raised: they differ only in the bay doors.
             var ship = land.Ship;
             int changed = 0, unexplained = 0;
             var odd = new List<string>();
@@ -99,10 +99,10 @@ static class LandCheck
                     int i = z * World.NX + x;
                     if (Math.Abs(land.H[i] - (ship.H[si] + World.HY)) < 0.01) continue;
                     changed++;
-                    if (land.Kind[i] == Asteroid.BayDoor || NearHighFloor(ship, si)) continue;
+                    if (land.Kind[i] == Asteroid.BayDoor) continue;
                     if (unexplained++ < 12) odd.Add($"({x * 8}, {z * 8})");
                 }
-            Expect(unexplained == 0, $"the ship is Meridian's, raised {World.HY:0}: {changed} of its vertices differ, all of them in the bay doors or the walls by the bridge-level floors{List(odd)}");
+            Expect(unexplained == 0, $"the ship is Meridian's, raised {World.HY:0}: {changed} of its vertices differ, all of them in the bay doors{List(odd)}");
         }
 
         log("Getting about (vehicles TANK3 27°, bots BOT3 54°, hovers 33°, amphibious ATANK3 54°, spiders TBOT3 90°), round the features:");
@@ -149,16 +149,20 @@ static class LandCheck
         }
         foreach (var (name, map) in ground)
         {
-            var reach = Access.Fill(map, starts[4], items);
+            // From anywhere (start 0 is inside the ship; the bay doors join it to the outside): nothing reached is on the
+            // ship off its floors and more than 30 over the highest floor within 24 (Meridian's own walls check, raised).
+            var reach = Access.Fill(map, starts[0], items);
             int onTop = 0;
             var where = new List<string>();
             for (int i = 0; i < reach.Length; i++)
-                if (reach[i] && land.ShipCell(Centre(i)) == Terrain.Solid && !land.ShipFloor(Centre(i)) && heights.HeightAt(Centre(i).X, Centre(i).Z) > World.Plain + 90)
-                {
-                    if (onTop++ % 4000 == 0) where.Add($"({Centre(i).X:0}, {Centre(i).Z:0})");
-                }
-            if (name == "spiders") log($"       spiders reach {onTop} squares of the ship's solid tops (they climb its walls; intended)");
-            else Expect(onTop == 0, $"{name} from outside don't get onto the ship's walls and solid tops ({onTop} squares){List(where)}");
+            {
+                var c = Centre(i);
+                if (!reach[i] || land.ShipCell(c) == Terrain.Space || land.ShipFloor(c) || land.Kind[(int)Math.Round(c.Z / 8) * World.NX + (int)Math.Round(c.X / 8)] == Asteroid.BayDoor
+                    || heights.HeightAt(c.X, c.Z) <= Check.FloorNear(land.Ship, World.ToShip(c)) + World.HY + 30) continue;
+                if (onTop++ % 400 == 0) where.Add($"({c.X:0}, {c.Z:0})");
+            }
+            if (name == "spiders") log($"       spiders reach {onTop} squares of the ship's walls and solid tops (they climb its walls; intended)");
+            else Expect(onTop == 0, $"{name} don't get onto the ship's walls or solid tops, from inside or out ({onTop} squares){List(where)}");
         }
 
         log("Craters:");
@@ -300,22 +304,6 @@ static class LandCheck
             if (p.Z > World.OZ + 13000) return "stern";
         }
         return null;
-    }
-
-    /// <summary>Whether a ship vertex is a wall within 48 of a floor above Asteroid.HighFloor (Asteroid.Build raises those walls).</summary>
-    static bool NearHighFloor(Terrain.Result ship, int si)
-    {
-        if (ship.Floor[si]) return false;
-        int sx = si % ship.NX, sz = si / ship.NX;
-        for (int dz = -6; dz <= 6; dz++)
-            for (int dx = -6; dx <= 6; dx++)
-            {
-                int ox = sx + dx, oz = sz + dz;
-                if (ox < 0 || oz < 0 || ox >= ship.NX || oz >= ship.NZ || dx * dx + dz * dz > 36) continue;
-                int o = oz * ship.NX + ox;
-                if (ship.Floor[o] && ship.H[o] > Asteroid.HighFloor) return true;
-            }
-        return false;
     }
 
     static bool InCrater(P p) => World.Bowls.Concat(World.Small).Any(c => (c.At - p).Length < c.R || (World.Mirror(c.At) - p).Length < c.R);

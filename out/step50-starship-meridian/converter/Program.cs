@@ -1,4 +1,4 @@
-// Starship Meridian: a 4v4 map that is one whole starship, port against starboard, built from scratch with MapCore on
+// Starship Meridian: an 8v8 map (1.0 was 4v4) that is one whole starship, port against starboard, built from scratch with MapCore on
 // All That Simmers' gadgets (its detail textures unused), with every feature modelled and painted here.
 //   build <template> <work>                   the map folder, <file>_stage.sd7 and run.txt (the checks run first; it
 //                                             builds anyway, to look)
@@ -28,18 +28,21 @@ switch (args[0])
         var ops = Place.Ops(items);
         File.WriteAllText(Path.Combine(work, "run.txt"), ops);
         Console.WriteLine($"placed in {clock.Elapsed.TotalSeconds:0}s: " + string.Join(", ", items.GroupBy(i => i.Kind).Select(g => $"{g.Key} {g.Count()}")));
-        int failures = Check.Report(Build.HeightMapOf(t.H), t, ops.Split('\n'), Check.Footprints(defs), Console.WriteLine);
+        var metal = Metal.Map(t);
+        int failures = Check.Report(Build.HeightMapOf(t.H), t, ops.Split('\n'), Check.Footprints(defs), metal, Layout.MaxMetal, Layout.ExtractorRadius, Console.WriteLine);
         if (failures > 0) Console.WriteLine($"{failures} check(s) failed (building anyway, to look)");
         var surface = new Surface(t.H, t.NX, t.NZ);
         var painter = new Painter(surface, t);
-        Create.Map(args[1], root, Layout.SquaresX, Layout.SquaresZ, Layout.MinH, Layout.MaxH, (x, z) => t.H[z * t.NX + x], painter.Row, Build.Smf, null, 20261124);
+        Create.Map(args[1], root, Layout.SquaresX, Layout.SquaresZ, Layout.MinH, Layout.MaxH, (x, z) => t.H[z * t.NX + x], painter.Row, Build.Smf, smf => metal.CopyTo(smf.MetalMap, 0), 20261124);
         Console.WriteLine($"map and texture in {clock.Elapsed.TotalSeconds:0}s");
         var maps = Path.Combine(root, "maps");
         Derive.Splat(1024, Path.Combine(maps, $"{Build.Smf}_splat.dds"));
         Derive.Specular(surface, t, 4096, 4096, Path.Combine(maps, $"{Build.Smf}_specular.dds"));
         Derive.Normals(surface, 4096, 4096, Path.Combine(maps, $"{Build.Smf}_normals.dds"));
         Derive.Sky(Path.Combine(maps, $"{Build.Smf}Sky.dds"));
-        if (defs.Count > 0) Features.Write(root, defs);
+        // Only the models placed go into the map (their mirror-image twins with them).
+        var used = items.Select(i => i.Name).ToHashSet();
+        Features.Write(root, defs.Where(d => used.Contains(d.Name)));
         Build.WriteMapInfo(Path.Combine(root, "mapinfo.lua"));
         Create.Pack(root, Path.Combine(work, $"{Build.File}_stage.sd7"));
         Console.WriteLine($"built in {clock.Elapsed.TotalSeconds:0}s");
@@ -90,7 +93,8 @@ switch (args[0])
     {
         var session = MapCore.Editing.MapEditSession.Open(MapCore.MapPackage.OpenFolder(args[1]));
         var t = Terrain.Build();
-        int failures = Check.Report(session.Heights, t, File.ReadAllLines(args[2]), Check.Footprints(Build.Models()), Console.WriteLine);
+        int failures = Check.Report(session.Heights, t, File.ReadAllLines(args[2]), Check.Footprints(Build.Models()), session.Smf.MetalMap,
+            session.Info.MaxMetal ?? 0, session.Info.ExtractorRadius ?? 0, Console.WriteLine);
         Console.WriteLine($"{failures} check(s) failed");
         return failures == 0 ? 0 : 1;
     }
@@ -133,7 +137,7 @@ return 0;
 
 static class Build
 {
-    public const string File = "starship_meridian_1.0", Smf = "StarshipMeridian";
+    public const string File = "starship_meridian_1.1", Smf = "StarshipMeridian";
 
     /// <summary>The features: every model, and a mirror-image twin (name_m) of any that isn't symmetric about its length.</summary>
     public static List<FeatureDef> Models()
@@ -187,18 +191,19 @@ static class Build
         return MapCore.Heights.HeightMap.Load(smf, null);
     }
 
-    /// <summary>mapinfo.lua: name and credits, metal, space (voidGround, a starfield sky, no fog, no wind or tide), a near
-    /// star's hard light, eight starts (teams 0-3 port, 4-7 starboard).</summary>
+    /// <summary>mapinfo.lua: name and credits, metal (a metal map: Cloud9's maxMetal and extractor radius), space (voidGround, a starfield sky, no fog, no wind or tide), a near
+    /// star's hard light, sixteen starts (1.1, 8v8: teams 0-7 port, 8-15 starboard).</summary>
     public static void WriteMapInfo(string path)
     {
         var info = MapCore.MapInfo.Load(path);
         void Set(string key, string value) => info.SetFromText(key, value);
         Set("name", "Starship Meridian");
         Set("shortname", "StarshipMeridian");
-        Set("version", "1.0");
+        Set("version", "1.1");
         Set("author", "Daniel Kopko");
-        Set("description", "A 4v4 map that is one whole starship adrift in space, port against starboard: hangars, a crew deck, a cargo hold, power rooms on each side, and on the centreline the bridge, command room, reactor, shield generator and engine room to fight over. No wind in space. Gadgets from All That Simmers by Nikuksis.");
-        Set("maxMetal", "4");
+        Set("description", "An 8v8 map that is one whole starship adrift in space, port against starboard: hangars, a crew deck, a cargo hold, power rooms on each side, and on the centreline the bridge, command room, reactor, shield generator and engine room to fight over. No wind in space. Gadgets from All That Simmers by Nikuksis.");
+        Set("maxMetal", Layout.MaxMetal.ToString(CultureInfo.InvariantCulture));
+        Set("extractorRadius", Layout.ExtractorRadius.ToString(CultureInfo.InvariantCulture));
         // Space: the ground with a transparent texture isn't drawn (the hull's surroundings), and the sky is a starfield.
         info.Document.SetLiteral("voidGround", "true");
         info.Document.SetLiteral("voidWater", "false");

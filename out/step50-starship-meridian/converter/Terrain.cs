@@ -2,10 +2,12 @@
 // the two halves match exactly:
 //   1. each vertex's cell (Layout.Cells) or door, or the solid hull, or space;
 //   2. floors: a cell's vertices with no other group's cell within 50 (so a 100-wide bulkhead stands where two cells
-//      of different groups touch), and every door's; each floor at its cell's height, the bridge ramps and the stair
-//      graded, the reactor's sunken well and its two ramps cut into the reactor's floor;
+//      of different groups touch), and every door's; and (1.1) the outer walk, round the hull's edge and over the bow; each floor at its cell's height, the ramps (the bridge's and, 1.1,
+//      the thruster platforms') and the stair graded, the reactor's sunken well and its two ramps cut into its floor;
 //   3. the solid hull: rising from the nearest floor at 70° to its cap (bulkheads 340, the rim and the engine housings
-//      380, round the bridge 440);
+//      380, round the bridge its lip, 410), and never less than the lip (30) over a floor above HighFloor within 48 of it
+//      (1.1: the walls beside the bridge ramps' upper parts were under them in 1.0), but for the open thruster platforms
+//      and their ramps, which no wall stands over;
 //   4. space: rough ground at about +20 (nothing builds or walks on it; the engine never draws it), and the hull's
 //      sheer side down to it.
 static class Terrain
@@ -25,6 +27,8 @@ static class Terrain
     }
 
     public const int Space = -2, Solid = -1;
+    /// <summary>A floor above this (the bulkheads' cap, 340, less 60) has the walls within 48 of it raised a lip over it.</summary>
+    public const double HighFloor = Layout.Bulkhead - 60;
     static readonly Noise Rough = new(5001);
 
     public static bool InPolygon(P p, IReadOnlyList<P> poly)
@@ -86,6 +90,24 @@ static class Terrain
                 int i = z * nx + x;
                 if (res.Door[i] >= 0) { res.Floor[i] = true; continue; }
                 int c = res.Cell[i];
+                if (c == Solid && (res.Inside[i] < Layout.WalkBand + 40 || z * 8.0 < Layout.BowFrontZ))
+                {
+                    // The outer walk (1.1): the hull's edge and the bow ahead of the bridge, 50 clear of the rooms it doesn't
+                    // join; a little wider where it meets a step or a platform, so it runs right up to them.
+                    bool near = false, joins = false;
+                    for (int dz = -6; dz <= 6 && !near; dz++)
+                        for (int dx = -6; dx <= 6 && !near; dx++)
+                        {
+                            if (dx * dx + dz * dz > 6.25 * 6.25) continue;
+                            int ox = x + dx, oz = z + dz;
+                            if (ox < 0 || oz < 0 || ox >= nx || oz >= nz) continue;
+                            int o = res.Cell[oz * nx + ox];
+                            if (o >= 0 && !Layout.JoinsWalk(cells[o])) near = true;
+                            if (o >= 0 && Layout.JoinsWalk(cells[o])) joins = true;
+                        }
+                    res.Floor[i] = !near && (joins || res.Inside[i] < Layout.WalkBand || z * 8.0 < Layout.BowFrontZ);
+                    continue;
+                }
                 if (c < 0) continue;
                 bool walled = false;
                 for (int dz = -6; dz <= 6 && !walled; dz++)
@@ -141,6 +163,20 @@ static class Terrain
                         double d = Math.Sqrt(dx * dx + dz * dz) * 8 - 4;
                         best = Math.Min(best, floorH[o] + Math.Max(0, d) * Layout.WallRise);
                     }
+                // A wall within 48 of a floor above HighFloor (the bridge's, its landings', the bridge ramps' upper parts)
+                // stands at least a lip over it, steeper than bots climb. Capped at 340, 1.0's walls beside the ramps were
+                // under the ramps' tops, and vehicles drove off the ramps onto them and on over the bow's hull. The thruster
+                // platforms and their ramps stand open (no wall over them): their edges drop sheer, nothing level beside them.
+                double high = double.MinValue;
+                for (int dz = -6; dz <= 6; dz++)
+                    for (int dx = -6; dx <= 6; dx++)
+                    {
+                        int ox = x + dx, oz = z + dz;
+                        if (ox < 0 || oz < 0 || ox >= nx || oz >= nz || dx * dx + dz * dz > 36) continue;
+                        int o = oz * nx + ox;
+                        if (res.Floor[o] && floorH[o] > HighFloor && res.Cell[o] >= 0 && !Layout.Open(cells[res.Cell[o]])) high = Math.Max(high, floorH[o]);
+                    }
+                if (high > double.MinValue) best = Math.Max(best, high + Layout.Lip);
                 res.H[i] = (float)best;
             }
         });
@@ -150,7 +186,7 @@ static class Terrain
 
     static bool OnOutline(P p, P[] poly) => ToOutline(p, poly) < 0.5;
 
-    /// <summary>A floor's height: its cell's, or graded along the bridge ramps and the stair, or the reactor's well and its ramps.</summary>
+    /// <summary>A floor's height: its cell's, or graded along a ramp (the bridge's, the thruster platforms') and the stair, or the reactor's well and its ramps.</summary>
     static double FloorHeight(Result res, P p, int i)
     {
         int d = res.Door[i];
@@ -161,9 +197,13 @@ static class Terrain
         }
         // A door is at the deck's height, but where it opens onto the reactor's well ramp it follows the ramp.
         if (d >= 0 && (res.Cell[i] < 0 || Layout.Cells[res.Cell[i]].Name != "Main Reactor")) return Layout.Deck;
+        if (res.Cell[i] < 0) return Layout.WalkH;                   // the outer walk
         var cell = Layout.Cells[res.Cell[i]];
         if (cell.Kind == Layout.Kind.Ramp)
-            return Layout.BridgeDeck + (Layout.Deck - Layout.BridgeDeck) * Math.Clamp((p.Z - Layout.RampTopZ) / (Layout.RampFootZ - Layout.RampTopZ), 0, 1);
+        {
+            var (_, topZ, footZ, topH, footH) = Layout.Ramps.Single(r => r.Name == cell.Name);
+            return topH + (footH - topH) * Math.Clamp((p.Z - topZ) / (footZ - topZ), 0, 1);
+        }
         if (cell.Name == "Main Reactor")
         {
             // The well: its wall at 70° inside its rim, its two ramps (from each crossing door down to the floor).

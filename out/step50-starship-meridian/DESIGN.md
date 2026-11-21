@@ -2,11 +2,11 @@
 
 A 4v4 map that is one whole starship. Two salvage fleets board a derelict battle-carrier adrift in space, one from the port side and one from starboard, and fight for the ship's centreline: the bridge, the command room, the reactor, the shield generator and the engine room.
 
-**Status: built** to this plan, with no wind (your choice), as `starship_meridian_1.0.sd7`, and released; see `CHECKLIST.md`. The layout's numbers live in one table, `design/layout.py`, which draws `design/layout.svg`; the same numbers are the converter's `Layout.cs`.
+**Status: built** to this plan, with no wind (your choice), as `starship_meridian_1.0.sd7`, and released; 1.1 (`starship_meridian_1.1.sd7`) makes it **8v8** (sixteen starts on the back line, each marked with a floor circle and its role: one air, five front, one tech and one support a side) and a **metal map** (every deck floor extractable, no spots: the economy below is 1.0's), opens up the middle (passages 1,000 wide, the crossings but the CIC's and the spine doors 1,400 to 1,500), adds thruster platforms at 440 on the engine housings, open, with ramps rising to them by a step part way up and the engines hung below, adds an outer walk round the hull's edge at 380 reached from the steps (by narrow paths round the platforms' corners) and the bridge's new front opening, cuts the bridge's walls to a 30 lip, strips the ship to the reactor's core, the drive core and the engines, makes every feature but the main engines reclaimable, and raises the walls beside the bridge ramps, built and released; see `CHECKLIST.md`. The layout's numbers live in one table, `design/layout.py`, which draws `design/layout.svg`; the same numbers are the converter's `Layout.cs`.
 
 **As built, where it differs from the plan below:**
 - **The reactor well's two ramps** run straight from the crossing doors down into the well (about 11°), not spiralling round its wall.
-- **The solid hull's tops:** bulkheads 340, the rim and the engine housings 380, round the bridge 440.
+- **The solid hull's tops:** bulkheads 340, the rim and the engine housings 380, round the bridge 440 (1.1: 410, a lip 30 over its deck; the engine housings carry open thruster platforms at 440).
 - **Twins:** only the pallet is lopsided, so only it has a mirror-image twin (`sm_pallet_m`); every other model is its own mirror image.
 - **Left out:** the landing beacons, the door frames and the stencilled deck numbers. The hangars' gantry cranes are service towers.
 - **The archive** is 37 MB, not 110.
@@ -34,7 +34,7 @@ What I found to decide the space question:
 
 The ship's long axis runs north to south, the bow at the top. The port half is west and the starboard half its mirror image east. Teams 0 to 3 are port, 4 to 7 starboard.
 
-**Each team's half** is two columns of rooms on a main deck at height 240, beside its own **passage**, a 600-wide corridor the length of the ship.
+**Each team's half** is two columns of rooms on a main deck at height 240, beside its own **passage**, a 600-wide corridor the length of the ship. (1.1: the passage is 1,000 wide below the weapons bay, and the inboard rooms 1,200 wide; the table below is 1.0's plan.)
 - **Back seats** are outboard: the two hangars (air players, thematically).
 - **Front seats** are inboard, facing the centreline: the crew deck and the cargo hold.
 
@@ -87,9 +87,11 @@ The ship's long axis runs north to south, the bow at the top. The port half is w
   - The biggest ground unit's footprint is 112 wide.
   - Walls block direct fire, so a map of rooms can turn campy and artillery-heavy. Big rooms (start rooms 4.3 to 4.5 M square units) and wide doors are the counter.
   - If it still plays tight, the lever is to lower the team-side bulkheads to about 60, which still blocks movement but lets tall units shoot over, and keep the centreline's at 100.
-- **Ramps**, all graded for vehicles: bridge to deck (about 9°), and the reactor well's two straight ramps from the crossing doors (about 11°).
+- **Ramps**, all graded for vehicles: bridge to deck (about 9°), and the reactor well's two straight ramps from the crossing doors (about 11°); 1.1: each thruster bay's up to its thruster platform (about 10°), and the engine room's up to the centre platform (about 13°).
 
 ## Economy
+
+**1.1 replaces the spots below with a metal map:** the whole ship reads as metal, so every deck floor holds metal (raw 79, `maxMetal` 7.5, extractor radius 24, the values of Cloud9_V2, a certified BAR metal map). That is 107 M square units, 39.4 M in each team's rooms and 26.5 M shared. The table is 1.0's plan.
 
 | | Per team | Shared (centreline) |
 |---|---|---|
@@ -103,7 +105,7 @@ Total: 46 spots (18 a team and 10 shared), 107.6 metal/s, 4 vents. `maxMetal` 4,
 ## The features (all modelled and painted here)
 
 **Key:**
-- **L:** landmark (indestructible, uncrushable, no reclaim);
+- **L:** landmark (indestructible, uncrushable, no reclaim; 1.1: reclaimable, uncrushable and too tough to shoot down, all but the main engines);
 - **R:** reclaimable;
 - **N:** doesn't block;
 - **twin:** the model is lopsided, so the starboard copy is its mirror-image twin (`_m`). Everything else is placed with its heading mirrored (−h, in the engine's units).
@@ -138,7 +140,7 @@ That's about 35 models on one painted atlas.
 ## Checks (on the built map's own heights, round every blocking feature)
 
 - **Symmetry:** the halves match exactly, heights and features (each feature's mirror image placed, its heading −h).
-- **Reach:** every start, spot and vent is reached by vehicles and bots.
+- **Reach:** every start, spot and vent is reached by vehicles and bots (1.1: every start and vent, and all the metal deck).
 - **Crossings:**
   - each of the five crossings alone lets vehicles across;
   - with all five shut, no ground unit crosses but spiders, whose route is logged.

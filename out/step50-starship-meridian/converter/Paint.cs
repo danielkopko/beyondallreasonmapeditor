@@ -3,7 +3,8 @@
 // plated in 64-unit panels with seams, rivets, wear, oil and scorch marks; the hangars have landing circles and guide
 // lines in the side's colour (port red, starboard green, a ship's navigation colours), the passages edge stripes, the
 // doors hazard chevrons, the bridge a dark blue deck, the CIC a lit grid, the reactor's well glowing rings round the
-// core. Bulkhead tops and the rim are hull plating; their faces darker ribs.
+// core. Bulkhead tops and the rim are hull plating; their faces darker ribs. The hull's own outer sides (1.1) are a
+// ship's side: plating, the livery, the ship's name and number, ports, airlocks, vents.
 using System.Buffers.Binary;
 using MapCore.Imaging;
 using MapCore.Textures;
@@ -12,6 +13,7 @@ readonly record struct C(double R, double G, double B)
 {
     public static C operator *(C a, double k) => new(a.R * k, a.G * k, a.B * k);
     public C Mix(C o, double t) { t = Math.Clamp(t, 0, 1); return new(R + (o.R - R) * t, G + (o.G - G) * t, B + (o.B - B) * t); }
+    public static C operator +(C a, C b) => new(a.R + b.R, a.G + b.G, a.B + b.B);
 }
 
 /// <summary>Slope (degrees) and baked light per heightmap vertex.</summary>
@@ -90,6 +92,16 @@ sealed class Painter(Surface s, Terrain.Result t)
         // Space: transparent, but for the hull's own sheer side.
         if (cell == Terrain.Space && (outside > 64 || h < Layout.Space + 45))
             return (new C(0, 0, 0), 0);
+        // The hull's own side (1.1): a ship's side, plated and in its livery, with its name, ports, airlocks and vents.
+        if (cell == Terrain.Space)
+        {
+            // Four samples a texel, each at its own height: the side is steep (a texel spans about 6 of its height), and on
+            // the bow's slanting faces the stripes and letters would otherwise step. The baked light is softened here, so
+            // the sides facing away from it (starboard's, the stern's) read nearly as well as port's.
+            var sum = new C(0, 0, 0);
+            foreach (var (ox, oz) in SubSamples) sum = sum + HullSide(x + ox, z + oz, s.At(s.H, x + ox, z + oz));
+            return (sum * (0.25 * (0.97 + 0.4 * (shade - 0.97))), 255);
+        }
 
         // The 64-unit panel grid, its seams and rivets.
         double px = mx / 64, pz = z / 64;
@@ -132,17 +144,11 @@ sealed class Painter(Surface s, Terrain.Result t)
             if (info != null) c = Room(c, info, p, mx);
             int door = Terrain.Nearest(t.Door, t.NX, t.NZ, p);
             if (door >= 0) c = Door(c, door, p);
+            // The outer walk (1.1): the navigation lights along its outer edge, red to port and green to starboard.
+            if (cell < 0 && s.At(t.Inside, x, z) < 24 && Math.Abs(z % 512 - 256) < 10) c = c.Mix(SideColour(x) * 1.2, 0.85);
         }
 
-        // Metal spots: a round extraction hatch; vents: a grated exhaust.
-        foreach (var (at, _, _) in Layout.Spots)
-        {
-            double d = (p - at).Length;
-            if (d > 70) continue;
-            c = c.Mix(new C(70, 74, 80), 1 - Geo.S((d - 52) / 6)).Mix(new C(150, 156, 164), (1 - Geo.S(Math.Abs(d - 50) / 3)) * 0.8)
-                 .Mix(new C(26, 28, 30), 1 - Geo.S((d - 30) / 4));
-            if (d < 30 && Math.Abs(Math.Sin((p.X - at.X) / 5)) < 0.25) c = c.Mix(new C(90, 96, 104), 0.6);
-        }
+        // Vents: a grated exhaust. (No metal spots to mark: the whole deck is metal, 1.1.)
         foreach (var (at, _) in Layout.Vents)
         {
             double d = (p - at).Length;
@@ -181,25 +187,274 @@ sealed class Painter(Surface s, Terrain.Result t)
         return c;
     }
 
+    // ---- The hull's sides (1.1, at your call: "it looks like a cold wall instead of a ship exterior"). Painted on the
+    // hull's own sheer side, which the top-down texture spreads over about 50 texels for its 320 of height (about 6 of
+    // height a texel), so the markings are big and clean. Laid out along the hull (port's outline from the bow's tip round
+    // to the stern's centre; starboard's points mirrored onto it) and up it by height; lettering reads left to right seen
+    // from outside, on both sides.
+    static readonly C SideUpper = new(126, 130, 136), SideLower = new(70, 74, 81), SideBand = new(44, 46, 51), SideTop = new(150, 154, 160);
+    static readonly C Paintwork = new(236, 236, 228), Glass = new(26, 32, 42), Lamp = new(255, 224, 156), Soot = new(28, 26, 25);
+    static readonly Noise Streak = new(2006), Blotch = new(2007);
+    static readonly double[] HullS = HullLengths();
+    static readonly (double X, double Z)[] SubSamples = [(-0.25, -0.25), (0.25, -0.25), (-0.25, 0.25), (0.25, 0.25)];
+
+    static double[] HullLengths()
+    {
+        var hp = Layout.HullPort;
+        var s = new double[hp.Length];
+        for (int i = 1; i < hp.Length; i++) s[i] = s[i - 1] + (hp[i] - hp[i - 1]).Length;
+        return s;
+    }
+
+    /// <summary>How far along the hull a point by its side is (from the bow's tip round port's side), and the outline's
+    /// segment: 0-2 the bow, 3 the long side, 4 and 8 the stern between the housings, 5-7 and 9-10 the engine housings.</summary>
+    static (double S, int Seg) AlongHull(P q)
+    {
+        var hp = Layout.HullPort;
+        double best = double.MaxValue, s = 0; int seg = 0;
+        for (int i = 0; i + 1 < hp.Length; i++)
+        {
+            double d = Geo.ToSegment(q, hp[i], hp[i + 1], out double t);
+            if (d < best) { best = d; s = HullS[i] + t * (HullS[i + 1] - HullS[i]); seg = i; }
+        }
+        return (s, seg);
+    }
+
+    /// <summary>Stencil letters as strokes on a 4 × 6 grid (y up).</summary>
+    static readonly Dictionary<char, (double X0, double Y0, double X1, double Y1)[]> Glyphs = new()
+    {
+        ['M'] = [(0, 0, 0, 6), (0, 6, 2, 2.5), (2, 2.5, 4, 6), (4, 6, 4, 0)],
+        ['E'] = [(0, 0, 0, 6), (0, 6, 4, 6), (0, 3, 3.2, 3), (0, 0, 4, 0)],
+        ['R'] = [(0, 0, 0, 6), (0, 6, 3, 6), (3, 6, 4, 5), (4, 5, 4, 4), (4, 4, 3, 3), (3, 3, 0, 3), (2.2, 3, 4, 0)],
+        ['I'] = [(2, 0, 2, 6), (0.8, 6, 3.2, 6), (0.8, 0, 3.2, 0)],
+        ['D'] = [(0, 0, 0, 6), (0, 6, 2.6, 6), (2.6, 6, 4, 4.6), (4, 4.6, 4, 1.4), (4, 1.4, 2.6, 0), (2.6, 0, 0, 0)],
+        ['A'] = [(0, 0, 0, 4.6), (0, 4.6, 1.4, 6), (1.4, 6, 2.6, 6), (2.6, 6, 4, 4.6), (4, 4.6, 4, 0), (0, 2.6, 4, 2.6)],
+        ['N'] = [(0, 0, 0, 6), (0, 6, 4, 0), (4, 0, 4, 6)],
+        ['0'] = [(1.2, 0, 2.8, 0), (2.8, 0, 4, 1.2), (4, 1.2, 4, 4.8), (4, 4.8, 2.8, 6), (2.8, 6, 1.2, 6), (1.2, 6, 0, 4.8), (0, 4.8, 0, 1.2), (0, 1.2, 1.2, 0)],
+        ['7'] = [(0, 6, 4, 6), (4, 6, 1.6, 0)],
+        // 1.1: the starts' roles stencilled on their circles.
+        ['O'] = [(1.2, 0, 2.8, 0), (2.8, 0, 4, 1.2), (4, 1.2, 4, 4.8), (4, 4.8, 2.8, 6), (2.8, 6, 1.2, 6), (1.2, 6, 0, 4.8), (0, 4.8, 0, 1.2), (0, 1.2, 1.2, 0)],
+        ['T'] = [(0, 6, 4, 6), (2, 6, 2, 0)],
+        ['C'] = [(4, 6, 1.2, 6), (1.2, 6, 0, 4.8), (0, 4.8, 0, 1.2), (0, 1.2, 1.2, 0), (1.2, 0, 4, 0)],
+        ['H'] = [(0, 0, 0, 6), (4, 0, 4, 6), (0, 3, 4, 3)],
+        ['F'] = [(0, 0, 0, 6), (0, 6, 4, 6), (0, 3, 3.2, 3)],
+        ['S'] = [(4, 6, 1.2, 6), (1.2, 6, 0, 4.8), (0, 4.8, 0, 4.2), (0, 4.2, 1.2, 3), (1.2, 3, 2.8, 3), (2.8, 3, 4, 1.8), (4, 1.8, 4, 1.2), (4, 1.2, 2.8, 0), (2.8, 0, 0, 0)],
+        ['U'] = [(0, 6, 0, 1.2), (0, 1.2, 1.2, 0), (1.2, 0, 2.8, 0), (2.8, 0, 4, 1.2), (4, 1.2, 4, 6)],
+        ['P'] = [(0, 0, 0, 6), (0, 6, 3, 6), (3, 6, 4, 5), (4, 5, 4, 4), (4, 4, 3, 3), (3, 3, 0, 3)],
+    };
+
+    /// <summary>The starts' roles on their circles (1.1, at your call): the grid unit, the strokes' half-width (in units),
+    /// and how far fore of the circle's middle the text's foot stands, in the band between the middle ring (120) and the
+    /// inner ring (r - 30), clear of the diagonals: SUPPORT, the longest, fits the smaller circles (300).</summary>
+    const double RoleUnit = 7, RoleHalf = 0.66, RoleFoot = 165;
+
+    /// <summary>How much of a point a start's role covers: upright as BAR's default camera sees the map (from the south,
+    /// the bow at the top), reading left to right on both sides.</summary>
+    static double RoleCover(P p)
+    {
+        foreach (var (role, at, r) in Layout.StartCircles)
+        {
+            if ((p - at).Length > r) continue;
+            string text = role.ToUpperInvariant();
+            double width = ((text.Length - 1) * Advance + 4) * RoleUnit;
+            return TextCover(text, p.X - (at.X - width / 2), at.Z - p.Z, RoleFoot, RoleUnit, RoleHalf);
+        }
+        return 0;
+    }
+    const double Advance = 5.6;
+
+    /// <summary>The ship's name and hull number: the text, where along the hull its middle is, its grid unit, its strokes'
+    /// half-width (in units), and its foot's height. The number at the bow, the name on each long side forward and across
+    /// the stern between the engine housings (seen from the default camera, from the south).</summary>
+    static readonly (string Text, double Mid, double Unit, double Half, double Foot)[] Lettering =
+    [
+        ("07", (HullS[1] + HullS[2]) / 2, 27, 0.75, 126),
+        ("MERIDIAN", HullS[3] + 1150, 22, 0.55, 150),
+        ("MERIDIAN", (HullS[8] + HullS[9]) / 2, 22, 0.55, 150),
+    ];
+
+    /// <summary>How much of a point text covers: gx along the text from its start (reading left to right), v its height.</summary>
+    static double TextCover(string text, double gx, double v, double foot, double unit, double half)
+    {
+        double adv = Advance * unit;
+        if (gx < -unit || gx > text.Length * adv || v < foot - unit || v > foot + 7 * unit) return 0;
+        int i = (int)Math.Floor(gx / adv);
+        double best = double.MaxValue, ly = (v - foot) / unit;
+        for (int k = Math.Max(0, i - 1); k <= Math.Min(text.Length - 1, i + 1); k++)
+        {
+            if (!Glyphs.TryGetValue(text[k], out var strokes)) continue;
+            var q = new P((gx - k * adv) / unit, ly);
+            foreach (var (x0, y0, x1, y1) in strokes) best = Math.Min(best, Geo.ToSegment(q, new P(x0, y0), new P(x1, y1), out _));
+        }
+        return 1 - Geo.S(((best - half) * unit) / 4 + 0.5);
+    }
+
+    /// <summary>
+    /// The ship's badge (1.1, at your call: "as the ship badge like they did on planes"): your map editor's robot-and-planet
+    /// icon (badge.png, beside this file), as nose art, 190 square, its foot at 96: on each long side forward of the name,
+    /// and on the stern outboard of it. The side gives it about 32 texel rows, so each texel is the icon's average over its
+    /// footprint, cut to the icon's rounded square.
+    /// </summary>
+    static readonly Badge ShipBadge = Badge.Load(Path.Combine(AppContext.BaseDirectory, "badge.png"));
+    const double BadgeSize = 190, BadgeFoot = 96;
+    static readonly double[] Badges = [HullS[3] + 380, (HullS[8] + HullS[9]) / 2 - 675];
+
+    /// <summary>How much of the badge's rounded square covers a point (from its top left).</summary>
+    static double BadgeMask(double bx, double by)
+    {
+        double half = BadgeSize / 2 - BadgeSize * 0.004, r = BadgeSize * 0.175;
+        double qx = Math.Abs(bx - BadgeSize / 2) - (half - r), qy = Math.Abs(by - BadgeSize / 2) - (half - r);
+        double d = Math.Sqrt(Math.Max(qx, 0) * Math.Max(qx, 0) + Math.Max(qy, 0) * Math.Max(qy, 0)) + Math.Min(Math.Max(qx, qy), 0) - r;
+        return 1 - Geo.S(d / 3 + 0.5);
+    }
+
+    /// <summary>The airlocks along each long side (how far along it), and the engines' mounts on the housings' aft faces.</summary>
+    static readonly double[] Airlocks = [2800, 5200, 7600];
+    static readonly double[] Mounts = [HullS[6] + 400, HullS[6] + 1200, HullS[10] + 500];
+
+    C HullSide(double x, double z, double v)
+    {
+        bool port = x < Layout.CX;
+        var (s, seg) = AlongHull(new P(Mx(x), z));
+        double Band(double lo, double hi) => Geo.S((v - lo) / 3 + 0.5) * (1 - Geo.S((v - hi) / 3 + 0.5));
+        double streak = Streak.Fbm(s / 5, v / 200, 2), blotch = Blotch.Fbm(s / 260, v / 120, 3);
+
+        // Plating: the lower hull and two strakes above it, plates 448 long staggered along each, a shade apart; seams,
+        // rivets, weathering streaks running down, darker towards the foot.
+        int strake = v < 124 ? 0 : v < 210 ? 1 : 2;
+        double run = s + strake * 224, col = Math.Floor(run / 448), inPlate = run - col * 448, butt = Math.Min(inPlate, 448 - inPlate);
+        var c = (strake == 0 ? SideLower : SideUpper) * (1 + 0.07 * (Hash((int)col, strake, 21) - 0.5)) * (1 + 0.05 * blotch);
+        c = c.Mix(Soot, Geo.S((streak - 0.1) / 0.35) * 0.2 * (1.2 - v / 380));
+        if (butt < 1.4) c = c.Mix(Seam, 0.7);
+        else if (butt < 3) c *= 1.05;
+        if (Math.Abs(v - 210) < 3) c = c.Mix(Seam, 0.55);
+        if ((Math.Abs(butt - 8) < 1.6 && v % 24 < 7) || (Math.Abs(v - 201) < 3 && s % 16 > 6 && s % 16 < 10)) c = c.Mix(Rivet, 0.35);
+
+        // Small vents low on the hull, here and there.
+        {
+            double k = Math.Floor(s / 640), dv = s - (k * 640 + 320);
+            if (Hash((int)k, 5, 41) < 0.5 && Math.Abs(dv) < 24 && v > 76 && v < 100)
+                c = Math.Abs(dv) > 21 || v < 79 || v > 97 ? c.Mix(Rivet, 0.3) : c.Mix(((int)Math.Floor((dv + 24) / 6) & 1) == 0 ? Seam : SideBand, 0.85);
+        }
+
+        // The long side: rows of lit ports in groups of eight, a vent between the groups, three airlocks.
+        if (seg == 3)
+        {
+            double rel = s - HullS[3];
+            bool byLock = false;
+            foreach (double a in Airlocks)
+            {
+                double da = rel - a;
+                if (Math.Abs(da) < 160) byLock = true;
+                if (Math.Abs(da) <= 62 && v >= 128 && v <= 274)
+                {
+                    bool frame = Math.Abs(da) > 50 || v < 138 || v > 264;
+                    if (frame) c = c.Mix(((int)Math.Floor((rel + v * 0.6) / 16) & 1) == 0 ? Hazard : HazardDark, 0.85);
+                    else
+                    {
+                        c = SideBand * 1.25;
+                        if (Math.Abs(da) < 1.5) c = c.Mix(Seam, 0.8);
+                        if (Math.Abs(da) < 14 && v > 224 && v < 250) c = Lamp * 0.8;
+                    }
+                }
+                if (da > 72 && da < 84 && v > 236 && v < 252) c = SideColour(x) * 1.3;
+            }
+            if (!byLock && rel > 1900 && rel < HullS[4] - HullS[3] - 300)
+            {
+                double g = (rel - 1900) % 480;
+                int slot = (int)Math.Floor(g / 40);
+                if (slot < 8)
+                {
+                    double local = g - slot * 40 - 20;
+                    if (Math.Abs(local) < 10 && v > 226 && v < 256)
+                    {
+                        bool rim = Math.Abs(local) > 6.5 || v < 231 || v > 251;
+                        double lit = Hash((int)Math.Floor((rel - 1900) / 40), 3, 31);
+                        c = rim ? SideBand : lit > 0.3 ? Lamp * (0.8 + 0.2 * lit) : Glass;
+                    }
+                }
+                else
+                {
+                    double vg = g - 400;
+                    if (Math.Abs(vg) < 26 && v > 192 && v < 216)
+                        c = Math.Abs(vg) > 23 || v < 195 || v > 213 ? c.Mix(Rivet, 0.3) : c.Mix(((int)Math.Floor((vg + 26) / 6) & 1) == 0 ? Seam : SideBand, 0.85);
+                    else if (Math.Abs(vg) < 22 && v > 130 && v <= 192)
+                        c = c.Mix(Soot, 0.35 * (v - 130) / 62 * (0.6 + 0.4 * Math.Abs(streak)));
+                }
+            }
+        }
+
+        // The engines' mounts on the housings' aft faces: a dark ring round each throat, the plating scorched round it.
+        if (seg is 6 or 10)
+            foreach (double m in Mounts)
+            {
+                double d = Math.Sqrt((s - m) * (s - m) + (v - (Layout.WalkH + global::Models.BellAxis)) * (v - (Layout.WalkH + global::Models.BellAxis)));
+                if (d > 280) continue;
+                c = c.Mix(Soot, (1 - Geo.S((d - 110) / 160)) * 0.6 * (0.75 + 0.25 * streak));
+                if (Math.Abs(d - (global::Models.BellThroat + 10)) < 7) c = c.Mix(SideBand, 0.9);
+            }
+
+        // The livery: a dark band over the lower hull, a white pinstripe, the side's colour (sweeping down at the bow), a
+        // dark coaming at the top with a lit edge.
+        double accentFoot = s < 1600 ? 304 - (1600 - s) * 0.09 : 304;
+        c = c.Mix(SideBand, Band(118, 128) * 0.9);
+        c = c.Mix(Paintwork * 0.95, Band(292, 300) * 0.9);
+        c = c.Mix(SideColour(x) * 0.92, Band(accentFoot, 326) * 0.92);
+        c = c.Mix(SideBand, Geo.S((v - 330) / 3 + 0.5) * 0.9);
+        c = c.Mix(SideTop, Geo.S((v - 360) / 4) * 0.8);
+
+        // The name and the number, a soft shadow under them, the paint worn here and there.
+        foreach (var (text, mid, unit, half, foot) in Lettering)
+        {
+            double width = ((text.Length - 1) * Advance + 4) * unit, start = mid - width / 2;
+            if (s < start - 60 || s > start + width + 60) continue;
+            double gx = port ? s - start : start + width - s;
+            double shadow = TextCover(text, gx - 6, v + 8, foot, unit, half), cover = TextCover(text, gx, v, foot, unit, half);
+            double wear = 1 - 0.4 * Geo.S((Blotch.Fbm(s / 18, v / 18, 2) - 0.35) / 0.2);
+            c = c.Mix(SideBand, shadow * 0.45).Mix(Paintwork, cover * wear);
+        }
+
+        // The ship's badge: nose art forward of the name on each long side, and outboard of it on the stern; upright and
+        // unmirrored seen from outside, a soft shadow under it.
+        foreach (double mid in Badges)
+        {
+            double start = mid - BadgeSize / 2;
+            if (s < start - 20 || s > start + BadgeSize + 20 || v < BadgeFoot - 20 || v > BadgeFoot + BadgeSize + 20) continue;
+            double bx = port ? s - start : start + BadgeSize - s, by = BadgeFoot + BadgeSize - v;    // from its top left
+            c = c.Mix(SideBand, BadgeMask(bx - 5, by - 7) * 0.45);
+            double m = BadgeMask(bx, by);
+            if (m <= 0) continue;
+            const double k = 1.0 / BadgeSize;
+            var art = ShipBadge.Average((bx - 0.5) * k, (by - 3) * k, (bx + 0.5) * k, (by + 3) * k);
+            double wear = 1 - 0.15 * Geo.S((Blotch.Fbm(s / 14, v / 14, 2) - 0.4) / 0.2);
+            c = c.Mix(art, m * wear);
+        }
+
+        return c * (0.8 + 0.2 * Geo.S((v - 65) / 110));
+    }
+
     /// <summary>A room's own markings.</summary>
     static C Room(C c, Layout.Cell info, P p, double mx)
     {
         var side = SideColour(p.X);
         var (min, max) = Bounds(info.Outline);
         double cx = (min.X + max.X) / 2, cz = (min.Z + max.Z) / 2;
+        // The starts' circles (1.1, 8v8): the hangars' landing circles, and the same etched at every other start (the tech
+        // start's round its vent): a ring in the side's colour, a ring inside it, a white ring at the middle, white
+        // diagonals between.
+        foreach (var (_, at, r) in Layout.StartCircles)
+        {
+            double d = (p - at).Length;
+            if (d > r + 12) continue;
+            if (Math.Abs(d - r) < 9 || Math.Abs(d - (r - 30)) < 3) c = c.Mix(side, 0.8);
+            if (d < r - 30 && Math.Abs(Math.Abs(p.X - at.X) - Math.Abs(p.Z - at.Z)) < 6 && d > 120) c = c.Mix(new C(220, 220, 214), 0.6);
+            if (Math.Abs(d - 120) < 4) c = c.Mix(new C(220, 220, 214), 0.7);
+        }
         switch (info.Name)
         {
             case "Forward Hangar" or "Main Hangar":
             {
-                // Two landing circles, a guide line down the hangar between them, hazard edging round the deck.
-                foreach (double oz in new[] { -0.25, 0.25 })
-                {
-                    var at = new P(cx, cz + (max.Z - min.Z) * oz);
-                    double d = (p - at).Length;
-                    if (Math.Abs(d - 330) < 9 || Math.Abs(d - 300) < 3) c = c.Mix(side, 0.8);
-                    if (d < 300 && Math.Abs(Math.Abs(p.X - at.X) - Math.Abs(p.Z - at.Z)) < 6 && d > 120) c = c.Mix(new C(220, 220, 214), 0.6);
-                    if (Math.Abs(d - 120) < 4) c = c.Mix(new C(220, 220, 214), 0.7);
-                }
+                // A guide line down the hangar between its two start circles, hazard edging round the deck.
                 if (Math.Abs(p.X - cx) < 6) c = c.Mix(new C(230, 190, 40), 0.7);
                 double inset = Math.Min(Math.Min(p.X - min.X, max.X - p.X), Math.Min(p.Z - min.Z, max.Z - p.Z));
                 if (inset > 60 && inset < 84) c = c.Mix(((int)Math.Floor((p.X + p.Z) / 40) & 1) == 0 ? Hazard : HazardDark, 0.75);
@@ -249,16 +504,20 @@ sealed class Painter(Surface s, Terrain.Result t)
             }
             case "Engine Room":
             {
-                // Grating over the drive, framed.
+                // Grating over the drive, framed (1.1: forward, the engine ramp and step aft of it).
                 double gx = Math.Abs(p.X - Layout.CX);
-                if (gx < 260 && p.Z > 11700 && p.Z < 13000)
+                if (gx < 260 && p.Z > 11350 && p.Z < 11950)
                 {
                     bool bar = (((p.Z % 24) + 24) % 24) < 4 || gx % 24 < 4;
-                    c = gx > 250 || p.Z < 11710 || p.Z > 12990 ? c.Mix(Hazard, 0.7) : c.Mix(bar ? new C(80, 80, 78) : new C(30, 30, 32), 0.75);
+                    c = gx > 250 || p.Z < 11360 || p.Z > 11940 ? c.Mix(Hazard, 0.7) : c.Mix(bar ? new C(80, 80, 78) : new C(30, 30, 32), 0.75);
                 }
                 break;
             }
         }
+        // Each start's role stencilled on its circle (AIR, FRONT, TECH, SUPPORT), white like its markings, over the
+        // hangars' guide line, the paint worn here and there.
+        double role = RoleCover(p);
+        if (role > 0) c = c.Mix(new C(226, 226, 220), role * 0.85 * (1 - 0.3 * Geo.S((Blotch.Fbm(p.X / 14, p.Z / 14, 2) - 0.4) / 0.2)));
         return c;
     }
 
@@ -372,5 +631,41 @@ static class Derive
             });
         }
         File.WriteAllBytes(path, bytes);
+    }
+}
+
+/// <summary>A picture painted onto the ground (1.1: the ship's badge), with a summed-area table so any rectangle of it
+/// averages in constant time: the hull's side samples it far below its own resolution.</summary>
+sealed class Badge
+{
+    readonly int w, h;
+    readonly double[] sum;          // (w + 1) × (h + 1) × 3: R, G, B summed over every pixel above and left
+
+    Badge(RgbaImage img)
+    {
+        w = img.Width; h = img.Height;
+        sum = new double[(w + 1) * (h + 1) * 3];
+        for (int y = 0; y < h; y++)
+            for (int x = 0; x < w; x++)
+            {
+                var p = img.GetPixel(x, y);
+                int o = ((y + 1) * (w + 1) + x + 1) * 3, up = (y * (w + 1) + x + 1) * 3, left = ((y + 1) * (w + 1) + x) * 3, diag = (y * (w + 1) + x) * 3;
+                sum[o] = p.R + sum[up] - sum[diag] + sum[left];
+                sum[o + 1] = p.G + sum[up + 1] - sum[diag + 1] + sum[left + 1];
+                sum[o + 2] = p.B + sum[up + 2] - sum[diag + 2] + sum[left + 2];
+            }
+    }
+
+    public static Badge Load(string path) => new(PngReader.Read(path).ToRgba());
+
+    /// <summary>The picture's average colour over a rectangle given in its own units (0 to 1 across and down).</summary>
+    public C Average(double u0, double v0, double u1, double v1)
+    {
+        int x0 = Math.Clamp((int)Math.Floor(u0 * w), 0, w - 1), x1 = Math.Clamp((int)Math.Ceiling(u1 * w), x0 + 1, w);
+        int y0 = Math.Clamp((int)Math.Floor(v0 * h), 0, h - 1), y1 = Math.Clamp((int)Math.Ceiling(v1 * h), y0 + 1, h);
+        double n = (x1 - x0) * (y1 - y0);
+        double At(int x, int y, int k) => sum[(y * (w + 1) + x) * 3 + k];
+        double Box(int k) => (At(x1, y1, k) - At(x0, y1, k) - At(x1, y0, k) + At(x0, y0, k)) / n;
+        return new C(Box(0), Box(1), Box(2));
     }
 }

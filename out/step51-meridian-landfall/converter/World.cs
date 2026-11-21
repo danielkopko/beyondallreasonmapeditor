@@ -80,9 +80,22 @@ static class World
     /// <summary>Every metal spot: where, metal/s, and whose ("port", "starboard", "shared", or "bowl": in a crater, bots only).</summary>
     public static readonly (P At, double Income, string Side)[] Spots;
 
+    /// <summary>Starship Meridian 1.0's spots on the ship (its own coordinates). Meridian became a metal map in 1.1, so
+    /// they live here now; this map is shelved (a metal ship on a spot map can't be balanced).</summary>
+    static IEnumerable<(P, double, string)> ShipSpots()
+    {
+        var port = new List<(P, double)>();
+        foreach (var s in new P[] { new(1864, 5250), new(3600, 5250), new(1864, 9450), new(3600, 9450) })
+            port.AddRange([(s + new P(-380, -300), 2.0), (s + new P(380, -300), 2.0), (s + new P(0, 420), 2.0)]);
+        port.AddRange([(new P(2900, 3350), 2.4), (new P(1500, 7350), 2.4), (new P(2300, 7350), 2.4), (new P(3600, 7350), 2.4), (new P(1864, 12000), 2.4), (new P(3600, 12000), 2.4)]);
+        foreach (var (at, m) in port) { yield return (at, m, "port"); yield return (Layout.Mirror(at), m, "starboard"); }
+        foreach (var (at, m) in new[] { (new P(5600, 2500), 3.0), (new P(5600, 5250), 3.0), (new P(5650, 7500), 3.4), (new P(5600, 10350), 3.0), (new P(5600, 12200), 3.0) })
+        { yield return (at, m, "shared"); yield return (Layout.Mirror(at), m, "shared"); }
+    }
+
     static IEnumerable<(P, double, string)> BuildSpots()
     {
-        foreach (var (at, m, side) in Layout.Spots) yield return (FromShip(at), m, side);
+        foreach (var (at, m, side) in ShipSpots()) yield return (FromShip(at), m, side);
         foreach (var (at, m) in SpotsOutsidePort) { yield return (at, m, "port"); yield return (Mirror(at), m, "starboard"); }
         foreach (var (at, m) in SpotsContestedPort) { yield return (at, m, "shared"); yield return (Mirror(at), m, "shared"); }
         foreach (var b in Bowls.Where(b => b.What.StartsWith("metal", StringComparison.Ordinal)))

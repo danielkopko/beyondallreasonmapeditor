@@ -22,5 +22,6 @@
     <Compile Include="..\..\step50-starship-meridian\converter\Check.cs" Link="Ship\Check.cs" />
     <Compile Include="..\..\step50-starship-meridian\converter\Place.cs" Link="Ship\Place.cs" />
     <Compile Include="..\..\step50-starship-meridian\converter\Create.cs" Link="Ship\Create.cs" />
+    <Compile Include="..\..\step50-starship-meridian\converter\Metal.cs" Link="Ship\Metal.cs" />
   </ItemGroup>
 </Project>

@@ -65,7 +65,7 @@ static class Models
         foreach (int s in Sides) Leg(m, V(-50, 34, s * 46), 34);
         m.Quad(V(-160, 46, -26), V(-160, 46, 26), V(-210, 0, 26), V(-210, 0, -26), V(-0.6, 1, 0), Region.Grate);
         m.Quad(V(-160, 45, 26), V(-160, 45, -26), V(-210, -1, -26), V(-210, -1, 26), V(0.6, -1, 0), Region.Graphite);
-        return new FeatureDef("sm_dropship", "Starship Meridian: a dropship", Features.Centred(m), false, 600, Base: (18, 8));
+        return new FeatureDef("sm_dropship", "Starship Meridian: a dropship", Features.Centred(m), false, Base: (18, 8));
     }
 
     public static FeatureDef Fighter()
@@ -84,7 +84,7 @@ static class Models
         }
         Leg(m, V(40, 14, 0), 14);
         foreach (int s in Sides) Leg(m, V(-24, 12, s * 14), 12);
-        return new FeatureDef("sm_fighter", "Starship Meridian: a fighter", Features.Centred(m), false, 200);
+        return new FeatureDef("sm_fighter", "Starship Meridian: a fighter", Features.Centred(m), false);
     }
 
     public static FeatureDef Shuttle()
@@ -100,7 +100,7 @@ static class Models
             m.Tube(V(-118, 44, s * 24), V(-96, 44, s * 24), 16, 13, Region.Graphite, 12, cap0: Region.EngineBell);
             foreach (float x in new[] { -60f, 60f }) Leg(m, V(x, 18, s * 36), 18);
         }
-        return new FeatureDef("sm_shuttle", "Starship Meridian: a cargo shuttle", Features.Centred(m), false, 400);
+        return new FeatureDef("sm_shuttle", "Starship Meridian: a cargo shuttle", Features.Centred(m), false);
     }
 
     public static FeatureDef Tug()
@@ -112,7 +112,7 @@ static class Models
         m.Quad(V(-3.5, 38, -11), V(-3.5, 38, 11), V(-3.5, 26, 11), V(-3.5, 26, -11), Vector3.UnitX, Region.Window, stretch: true);
         m.Box(V(34, 10, -6), V(52, 14, 6), Region.Hazard, Region.Hazard);                          // the tow bar
         m.Box(V(-10, 40, -10), V(-4, 43, 10), Region.Dark, Region.GlowWarm);                         // the beacon bar
-        return new FeatureDef("sm_tug", "Starship Meridian: a tow tug", Features.Centred(m), false, 80);
+        return new FeatureDef("sm_tug", "Starship Meridian: a tow tug", Features.Centred(m), false);
     }
 
     public static FeatureDef FuelCart()
@@ -123,7 +123,7 @@ static class Models
         m.Tube(V(-34, 28, 0), V(28, 28, 0), 15, 15, Region.Yellow, 14, cap0: Region.Yellow, cap1: Region.Yellow);
         m.Tube(V(34, 18, -9), V(34, 18, 9), 7, 7, Region.Rubber, 10, cap0: Region.Yellow, cap1: Region.Yellow);    // the hose reel
         m.Box(V(-40, 12, -10), V(-34, 30, 10), Region.Yellow, Region.Hazard);
-        return new FeatureDef("sm_fuelcart", "Starship Meridian: a fuel cart", Features.Centred(m), false, 60, 300);
+        return new FeatureDef("sm_fuelcart", "Starship Meridian: a fuel cart", Features.Centred(m), false);
     }
 
     public static FeatureDef ServiceTower()
@@ -138,7 +138,7 @@ static class Models
         m.Beam(V(22, h - 20, 0), V(110, h - 30, 0), 5, 4, Region.Yellow);
         m.Box(V(100, h - 46, -8), V(116, h - 30, 8), Region.Graphite, Region.GlowWarm);
         m.Box(V(-28, h + 6, -4), V(-22, h + 30, 4), Region.Dark, Region.NavRed);
-        return new FeatureDef("sm_tower", "Starship Meridian: a hangar service tower", m, true, 0, Base: (4, 4));
+        return new FeatureDef("sm_tower", "Starship Meridian: a hangar service tower", m, true, Base: (4, 4));
     }
 
     // ---- The bridge and the CIC.
@@ -156,7 +156,7 @@ static class Models
             m.Quad(V(-14, 32, z + 13), V(-14, 32, z - 13), V(-14, 18, z - 13), V(-14, 18, z + 13), -Vector3.UnitX, Region.Vent, stretch: true);
             m.Seam(V(10.5f, 4, z - 11), V(10.5f, 4, z + 11), Vector3.UnitX, 2, Region.Glow);
         }
-        return new FeatureDef("sm_console", "Starship Meridian: a console bank", Features.Centred(m), false, 40);
+        return new FeatureDef("sm_console", "Starship Meridian: a console bank", Features.Centred(m), false);
     }
 
     public static FeatureDef Chair()
@@ -170,7 +170,7 @@ static class Models
             m.Box(V(-10, 20, s * 13 - 3), V(14, 27, s * 13 + 3), Region.Graphite, Region.Screen);
             m.Quad(V(6, 27.5f, s * 11), V(14, 27.5f, s * 11), V(14, 27.5f, s * 15), V(6, 27.5f, s * 15), Vector3.UnitY, Region.Screen, stretch: true);
         }
-        return new FeatureDef("sm_chair", "Starship Meridian: the command chair", Features.Centred(m), false, 30);
+        return new FeatureDef("sm_chair", "Starship Meridian: the command chair", Features.Centred(m), false);
     }
 
     public static FeatureDef HoloTable()
@@ -183,7 +183,7 @@ static class Models
         m.Blob(V(0, 66, 0), V(34, 30, 34), Region.Holo, 41, 0f, 2);
         m.Tube(V(0, 64, 0), V(0, 66, 0), 50, 50, Region.Holo, 20);
         m.Plant--;
-        return new FeatureDef("sm_holotable", "Starship Meridian: the holo-table", m, true, 0, Base: (8, 8));
+        return new FeatureDef("sm_holotable", "Starship Meridian: the holo-table", m, true, Base: (8, 8));
     }
 
     public static FeatureDef Viewport()
@@ -194,7 +194,7 @@ static class Models
         m.Quad(V(12, 10, -296), V(12, 10, 296), V(-4, 58, 296), V(-4, 58, -296), V(1, 0.4, 0), Region.Window);
         for (float z = -300; z <= 300; z += 75) m.Beam(V(12, 10, z), V(-4, 60, z), 3, 3, Region.Graphite);
         m.Box(V(-10, 58, -302), V(4, 66, 302), Region.Graphite, Region.Plate);
-        return new FeatureDef("sm_viewport", "Starship Meridian: the bridge viewport", m, true, 0, Blocking: false);
+        return new FeatureDef("sm_viewport", "Starship Meridian: the bridge viewport", m, true, Blocking: false);
     }
 
     public static FeatureDef SensorDome()
@@ -204,7 +204,7 @@ static class Models
         m.Blob(V(0, 20, 0), V(46, 44, 46), Region.PlateLight, 51, 0.0f, 2, cutY: 18);
         m.Beam(V(0, 60, 0), V(0, 104, 0), 2, 2, Region.Chrome);
         m.Box(V(-3, 104, -3), V(3, 110, 3), Region.NavRed, Region.NavRed);
-        return new FeatureDef("sm_sensordome", "Starship Meridian: a sensor dome", Features.Centred(m), true, 0);
+        return new FeatureDef("sm_sensordome", "Starship Meridian: a sensor dome", Features.Centred(m), true);
     }
 
     // ---- Power, the reactor, the shield.
@@ -226,7 +226,7 @@ static class Models
             m.Beam(d * 136 + V(0, 34, 0), d * 96 + V(0, 120, 0), 5, 5, Region.Plate);            // the buttresses
         }
         m.Tube(V(0, 250, 0), V(0, 278, 0), 100, 60, Region.Plate, 24, cap1: Region.Glow);
-        return new FeatureDef("sm_reactor", "Starship Meridian: the main reactor's core", m, true, 0, Base: (22, 22));
+        return new FeatureDef("sm_reactor", "Starship Meridian: the main reactor's core", m, true, Base: (22, 22), EnergyOverride: 3000);
     }
 
     public static FeatureDef Capacitor()
@@ -239,7 +239,7 @@ static class Models
             m.Tube(V(x, 58, 0), V(x, 66, 0), 4, 3, Region.Chrome, 8);
         }
         foreach (int s in Sides) m.Seam(V(-32, 20, s * 22.5f), V(32, 20, s * 22.5f), V(0, 0, s), 3, Region.Glow);
-        return new FeatureDef("sm_capacitor", "Starship Meridian: a capacitor bank", Features.Centred(m), false, 60, 400);
+        return new FeatureDef("sm_capacitor", "Starship Meridian: a capacitor bank", Features.Centred(m), false);
     }
 
     public static FeatureDef Transformer()
@@ -249,7 +249,7 @@ static class Models
         foreach (int s in Sides) m.Quad(V(-26, 40, s * 24.3f), V(26, 40, s * 24.3f), V(26, 6, s * 24.3f), V(-26, 6, s * 24.3f), V(0, 0, s), Region.Vent, stretch: true);
         foreach (float x in new[] { -14f, 0f, 14f }) m.Tube(V(x, 44, 0), V(x, 64, 0), 4, 2.5f, Region.PlateLight, 8, cap1: Region.Chrome);
         m.Quad(V(30.3f, 40, -18), V(30.3f, 40, 18), V(30.3f, 30, 18), V(30.3f, 30, -18), Vector3.UnitX, Region.Hazard, stretch: true);
-        return new FeatureDef("sm_transformer", "Starship Meridian: a transformer", Features.Centred(m), false, 50, 200);
+        return new FeatureDef("sm_transformer", "Starship Meridian: a transformer", Features.Centred(m), false);
     }
 
     public static FeatureDef Pipes()
@@ -258,7 +258,7 @@ static class Models
         foreach (float x in new[] { -96f, 0f, 96f }) m.Box(V(x - 4, 0, -16), V(x + 4, 14, 16), Region.Graphite, Region.Graphite);
         foreach (var (z, y, r) in new[] { (-9f, 22f, 7f), (9f, 22f, 7f), (0f, 34f, 5f) })
             m.Tube(V(-128, y, z), V(128, y, z), r, r, Region.Pipe, 10);
-        return new FeatureDef("sm_pipes", "Starship Meridian: a pipe run", m, true, 0, Blocking: false);
+        return new FeatureDef("sm_pipes", "Starship Meridian: a pipe run", m, true, Blocking: false);
     }
 
     public static FeatureDef ShieldEmitter()
@@ -276,7 +276,7 @@ static class Models
         }
         m.Blob(V(0, 170, 0), V(56, 56, 56), Region.Energy, 61, 0f, 2);
         m.Tube(V(0, 166, 0), V(0, 174, 0), 72, 72, Region.Plate, 24, cap0: Region.Graphite, cap1: Region.Graphite);
-        return new FeatureDef("sm_shield", "Starship Meridian: the shield emitter", m, true, 0, Base: (18, 18));
+        return new FeatureDef("sm_shield", "Starship Meridian: the shield emitter", m, true, Base: (18, 18));
     }
 
     // ---- The engines.
@@ -291,7 +291,7 @@ static class Models
         foreach (float x in new[] { -120f, -52f, 16f, 84f })
             m.Tube(V(x + 14, 110, 0), V(x + 40, 110, 0), 87, 87, Region.Energy, 20);
         m.Tube(V(200, 110, 0), V(230, 110, 0), 60, 40, Region.Copper, 16, cap1: Region.Glow);
-        return new FeatureDef("sm_drivecore", "Starship Meridian: the drive core", m, true, 0, Base: (27, 12));
+        return new FeatureDef("sm_drivecore", "Starship Meridian: the drive core", m, true, Base: (27, 12));
     }
 
     public static FeatureDef CoolantTower()
@@ -301,19 +301,33 @@ static class Models
         for (float y = 30; y < 210; y += 45) m.Tube(V(0, y, 0), V(0, y + 6, 0), 54, 54, Region.Hazard, 16, cap0: Region.Graphite, cap1: Region.Graphite);
         foreach (int s in Sides) m.Tube(V(0, 180, s * 46), V(0, 20, s * 74), 7, 7, Region.Pipe, 8);
         m.Box(V(-4, 210, -4), V(4, 222, 4), Region.GlowWarm, Region.GlowWarm);
-        return new FeatureDef("sm_coolant", "Starship Meridian: a coolant tower", Features.Centred(m), true, 0);
+        return new FeatureDef("sm_coolant", "Starship Meridian: a coolant tower", Features.Centred(m), true);
     }
+
+    /// <summary>
+    /// The main engine's cone (1.1): its axis this far under its origin (the outer walk at the housing's aft edge), its
+    /// throat's radius, its mouth's (the rim's) and where along its length (aft, +x) each is. Sized to fit between the walk
+    /// (its top 10 under it) and the rough ground of space under it (its bottom clear of it): at your call it was raised out
+    /// of that ground, which cut through 1.0's bigger, lower bell.
+    /// </summary>
+    public const float BellAxis = -160, BellThroat = 78, BellMouth = 147, BellRim = 150, BellFlare = 60, BellEnd = 330, BellRimEnd = 340;
+
+    /// <summary>The cone's outer radius at a point along its length (model x).</summary>
+    public static float BellRadius(float x) =>
+        x < BellFlare ? BellThroat : x < BellEnd ? BellThroat + (BellMouth - BellThroat) * (x - BellFlare) / (BellEnd - BellFlare) : BellRim;
 
     public static FeatureDef EngineBell()
     {
         var m = new Mesh();
-        // Mounted on its housing's aft end, the bell flaring out aft (+x) over space.
-        m.Box(V(-120, 0, -150), V(0, 150, 150), Region.Plate, Region.Graphite);
-        m.Tube(V(0, 140, 0), V(60, 140, 0), 110, 110, Region.Graphite, 24, cap0: Region.Dark);
-        m.Tube(V(60, 140, 0), V(330, 140, 0), 110, 210, Region.Plate, 24);
-        m.Tube(V(60, 140, 0), V(328, 140, 0), 100, 200, Region.EngineBell, 24, inside: true);
-        m.Tube(V(330, 140, 0), V(340, 140, 0), 214, 214, Region.Graphite, 24);
-        return new FeatureDef("sm_enginebell", "Starship Meridian: a main engine", m, true, 0, Blocking: false);
+        // Its throat in its housing's aft face, the bell flaring out aft (+x) over space. 1.1: it hangs wholly below the
+        // outer walk behind the thruster platform, so units cross the walk over it and guns fire over it; at your call the
+        // mounting block behind it (and the plate that showed on the walk) is gone: only the cone.
+        const float Y = BellAxis;
+        m.Tube(V(0, Y, 0), V(BellFlare, Y, 0), BellThroat, BellThroat, Region.Graphite, 24, cap0: Region.Dark);
+        m.Tube(V(BellFlare, Y, 0), V(BellEnd, Y, 0), BellThroat, BellMouth, Region.Plate, 24);
+        m.Tube(V(BellFlare, Y, 0), V(BellEnd - 2, Y, 0), BellThroat - 8, BellMouth - 8, Region.EngineBell, 24, inside: true);
+        m.Tube(V(BellEnd, Y, 0), V(BellRimEnd, Y, 0), BellRim, BellRim, Region.Graphite, 24);
+        return new FeatureDef("sm_enginebell", "Starship Meridian: a main engine", m, true, Blocking: false, Fixed: true);
     }
 
     public static FeatureDef FuelTank()
@@ -323,7 +337,7 @@ static class Models
         m.Tube(V(-64, 38, 0), V(64, 38, 0), 26, 26, Region.PlateLight, 16, cap0: Region.Plate, cap1: Region.Plate);
         foreach (float x in new[] { -30f, 30f }) m.Tube(V(x, 38, 0), V(x + 4, 38, 0), 27, 27, Region.Hazard, 16);
         m.Box(V(64, 30, -6), V(76, 46, 6), Region.Graphite, Region.Pipe);
-        return new FeatureDef("sm_fueltank", "Starship Meridian: a fuel tank", Features.Centred(m), false, 80, 600);
+        return new FeatureDef("sm_fueltank", "Starship Meridian: a fuel tank", Features.Centred(m), false);
     }
 
     // ---- The crew deck.
@@ -336,7 +350,7 @@ static class Models
             foreach (int a in Sides) foreach (int b in Sides) m.Beam(V(x + a * 12, 0, b * 22), V(x + a * 12, 38, b * 22), 1.2f, 1.2f, Region.Chrome);
             foreach (float y in new[] { 10f, 28f }) m.Box(V(x - 12, y, -22), V(x + 12, y + 5, 22), Region.Graphite, Region.Fabric);
         }
-        return new FeatureDef("sm_bunks", "Starship Meridian: crew bunks", Features.Centred(m), false, 30);
+        return new FeatureDef("sm_bunks", "Starship Meridian: crew bunks", Features.Centred(m), false);
     }
 
     public static FeatureDef MessTable()
@@ -345,7 +359,7 @@ static class Models
         m.Box(V(-48, 14, -12), V(48, 17, 12), Region.Chrome, Region.PlateLight);
         foreach (float x in new[] { -40f, 40f }) m.Box(V(x - 2, 0, -2), V(x + 2, 14, 2), Region.Chrome, Region.Chrome);
         foreach (int s in Sides) m.Box(V(-46, 8, s * 22 - 5), V(46, 11, s * 22 + 5), Region.Graphite, Region.Orange);
-        return new FeatureDef("sm_messtable", "Starship Meridian: a mess table", Features.Centred(m), false, 20);
+        return new FeatureDef("sm_messtable", "Starship Meridian: a mess table", Features.Centred(m), false);
     }
 
     public static FeatureDef Lockers()
@@ -357,7 +371,7 @@ static class Models
             m.Quad(V(10.3f, 40, z - 9), V(10.3f, 40, z + 9), V(10.3f, 4, z + 9), V(10.3f, 4, z - 9), Vector3.UnitX, Region.PlateLight, stretch: true);
             m.Quad(V(10.6f, 36, z - 6), V(10.6f, 36, z + 6), V(10.6f, 32, z + 6), V(10.6f, 32, z - 6), Vector3.UnitX, Region.Vent, stretch: true);
         }
-        return new FeatureDef("sm_lockers", "Starship Meridian: lockers", Features.Centred(m), false, 20);
+        return new FeatureDef("sm_lockers", "Starship Meridian: lockers", Features.Centred(m), false);
     }
 
     public static FeatureDef MedPod()
@@ -368,7 +382,7 @@ static class Models
         m.Seam(V(-30, 14.5f, 16.5f), V(30, 14.5f, 16.5f), Vector3.UnitZ, 3, Region.Glow);
         m.Seam(V(-30, 14.5f, -16.5f), V(30, 14.5f, -16.5f), -Vector3.UnitZ, 3, Region.Glow);
         m.Box(V(34, 0, -8), V(42, 30, 8), Region.Graphite, Region.Screen);
-        return new FeatureDef("sm_medpod", "Starship Meridian: a medical pod", Features.Centred(m), false, 40);
+        return new FeatureDef("sm_medpod", "Starship Meridian: a medical pod", Features.Centred(m), false);
     }
 
     public static FeatureDef Planter()
@@ -381,7 +395,7 @@ static class Models
         foreach (float x in new[] { -46f, 46f }) m.Beam(V(x, 16, 0), V(x, 54, 0), 1.6f, 1.6f, Region.Chrome);
         m.Box(V(-48, 54, -6), V(48, 58, 6), Region.Graphite, Region.Graphite);
         m.Quad(V(-46, 53.7f, -5), V(46, 53.7f, -5), V(46, 53.7f, 5), V(-46, 53.7f, 5), -Vector3.UnitY, Region.GlowWarm, stretch: true);
-        return new FeatureDef("sm_planter", "Starship Meridian: a hydroponics planter", Features.Centred(m), false, 20, 100);
+        return new FeatureDef("sm_planter", "Starship Meridian: a hydroponics planter", Features.Centred(m), false);
     }
 
     // ---- The armory, the cargo hold, the machine shop.
@@ -397,7 +411,7 @@ static class Models
             m.Beam(V(-2, 10, z), V(-2, 42, z), 1.6f, 1.2f, Region.Dark);
             m.Box(V(-4, 24, z - 2), V(2, 30, z + 2), Region.Dark, Region.Dark);
         }
-        return new FeatureDef("sm_weaponrack", "Starship Meridian: a weapon rack", Features.Centred(m), false, 40);
+        return new FeatureDef("sm_weaponrack", "Starship Meridian: a weapon rack", Features.Centred(m), false);
     }
 
     public static FeatureDef Munitions()
@@ -406,7 +420,7 @@ static class Models
         m.Box(V(-30, 0, -30), V(30, 4, 30), Region.Graphite, Region.Graphite);
         foreach (int a in Sides) foreach (int b in Sides) m.Box(V(a > 0 ? 2 : -28, 4, b > 0 ? 2 : -28), V(a > 0 ? 28 : -2, 22, b > 0 ? 28 : -2), Region.Crate, Region.Crate);
         m.Box(V(-14, 22, -14), V(14, 38, 14), Region.Crate, Region.Hazard);
-        return new FeatureDef("sm_munitions", "Starship Meridian: munitions crates", Features.Centred(m), false, 80);
+        return new FeatureDef("sm_munitions", "Starship Meridian: munitions crates", Features.Centred(m), false);
     }
 
     public static FeatureDef MissileCart()
@@ -419,7 +433,7 @@ static class Models
             m.Tube(V(-40, y, z), V(30, y, z), 7, 7, Region.PlateLight, 10, cap0: Region.Graphite);
             m.Tube(V(30, y, z), V(46, y, z), 7, 1, Region.Orange, 10);
         }
-        return new FeatureDef("sm_missilecart", "Starship Meridian: a missile cart", Features.Centred(m), false, 100);
+        return new FeatureDef("sm_missilecart", "Starship Meridian: a missile cart", Features.Centred(m), false);
     }
 
     public static FeatureDef Container(int k)
@@ -429,7 +443,7 @@ static class Models
         m.Box(V(-70, 0, -28), V(70, 56, 28), paint, paint);
         foreach (int s in Sides) foreach (int e in Sides) m.Box(V(e * 70 - 3, 0, s * 28 - 3), V(e * 70 + 3, 56, s * 28 + 3), Region.Dark, Region.Dark);
         m.Quad(V(70.4f, 52, -24), V(70.4f, 52, 24), V(70.4f, 4, 24), V(70.4f, 4, -24), Vector3.UnitX, Region.Marking, stretch: true);
-        return new FeatureDef($"sm_container{k}", "Starship Meridian: a cargo container", Features.Centred(m), false, 60);
+        return new FeatureDef($"sm_container{k}", "Starship Meridian: a cargo container", Features.Centred(m), false);
     }
 
     public static FeatureDef Loader()
@@ -444,7 +458,7 @@ static class Models
         m.Box(V(28, 20, -14), V(34, 28, 14), Region.Graphite, Region.Graphite);
         foreach (int s in Sides) m.Box(V(34, 2, s * 9 - 2), V(62, 6, s * 9 + 2), Region.Chrome, Region.Chrome);
         m.Box(V(-26, 62, -10), V(-18, 65, 10), Region.Dark, Region.GlowWarm);
-        return new FeatureDef("sm_loader", "Starship Meridian: a cargo loader", Features.Centred(m), false, 120);
+        return new FeatureDef("sm_loader", "Starship Meridian: a cargo loader", Features.Centred(m), false);
     }
 
     public static FeatureDef Pallet()
@@ -454,7 +468,7 @@ static class Models
         m.Box(V(-22, 5, -22), V(0, 26, 0), Region.Crate, Region.Crate);
         m.Box(V(2, 5, -22), V(22, 20, 0), Region.Crate, Region.Crate);
         m.Box(V(-22, 5, 2), V(22, 18, 22), Region.Crate, Region.Marking);
-        return new FeatureDef("sm_pallet", "Starship Meridian: a loaded pallet", Features.Centred(m), false, 30);
+        return new FeatureDef("sm_pallet", "Starship Meridian: a loaded pallet", Features.Centred(m), false);
     }
 
     public static FeatureDef RepairGantry()
@@ -474,7 +488,7 @@ static class Models
             m.Beam(V(30, 90, s * 46), V(50, 60, s * 30), 3, 3, Region.Orange);
             m.Box(V(46, 52, s * 30 - 5), V(56, 62, s * 30 + 5), Region.Dark, Region.GlowWarm);
         }
-        return new FeatureDef("sm_repairgantry", "Starship Meridian: a repair gantry", Features.Centred(m), true, 0);
+        return new FeatureDef("sm_repairgantry", "Starship Meridian: a repair gantry", Features.Centred(m), true);
     }
 
     public static FeatureDef Bench()
@@ -485,14 +499,14 @@ static class Models
         m.Box(V(-14, 30, -40), V(-10, 56, 40), Region.Graphite, Region.Grate);                        // the tool board
         m.Box(V(-6, 30, -20), V(6, 38, -6), Region.Orange, Region.Orange);
         m.Box(V(-4, 30, 8), V(8, 36, 24), Region.Chrome, Region.Chrome);
-        return new FeatureDef("sm_bench", "Starship Meridian: a tool bench", Features.Centred(m), false, 30);
+        return new FeatureDef("sm_bench", "Starship Meridian: a tool bench", Features.Centred(m), false);
     }
 
     public static FeatureDef Crate()
     {
         var m = new Mesh();
         m.Box(V(-16, 0, -16), V(16, 30, 16), Region.Crate, Region.Crate);
-        return new FeatureDef("sm_crate", "Starship Meridian: a supply crate", Features.Centred(m), false, 20);
+        return new FeatureDef("sm_crate", "Starship Meridian: a supply crate", Features.Centred(m), false);
     }
 
     // ---- The hull.
@@ -508,7 +522,7 @@ static class Models
             m.Tube(V(20, 40, s * 11), V(110, 44, s * 11), 5, 4, Region.Graphite, 10, cap1: Region.Dark);
             m.Tube(V(20, 40, s * 11), V(44, 41, s * 11), 7, 7, Region.Plate, 10);
         }
-        return new FeatureDef("sm_turret", "Starship Meridian: a point-defence turret", Features.Centred(m), true, 0, Base: (5, 5));
+        return new FeatureDef("sm_turret", "Starship Meridian: a point-defence turret", Features.Centred(m), true, Base: (5, 5));
     }
 
     public static FeatureDef Antenna()
@@ -518,7 +532,7 @@ static class Models
         m.Tube(V(0, 10, 0), V(0, 220, 0), 4, 2, Region.Chrome, 8);
         foreach (float y in new[] { 120f, 160f, 196f }) m.Beam(V(0, y, -30 + y / 10), V(0, y, 30 - y / 10), 1.2f, 1.2f, Region.Chrome);
         m.Box(V(-3, 220, -3), V(3, 226, 3), Region.NavRed, Region.NavRed);
-        return new FeatureDef("sm_antenna", "Starship Meridian: an antenna mast", Features.Centred(m), true, 0);
+        return new FeatureDef("sm_antenna", "Starship Meridian: an antenna mast", Features.Centred(m), true);
     }
 
     public static FeatureDef Dish()
@@ -531,7 +545,7 @@ static class Models
         dish.Tube(V(0.5, 0, 0), V(25, 0, 0), 5, 60, Region.Graphite, 20, inside: true);
         dish.Beam(V(0, 0, 0), V(56, 0, 0), 1.5f, 1.5f, Region.Chrome);
         m.Add(dish, Matrix4x4.CreateRotationZ(0.7f) * Matrix4x4.CreateTranslation(0, 56, 0));
-        return new FeatureDef("sm_dish", "Starship Meridian: a comm dish", Features.Centred(m), true, 0);
+        return new FeatureDef("sm_dish", "Starship Meridian: a comm dish", Features.Centred(m), true);
     }
 
     public static List<FeatureDef> All() =>

@@ -1,6 +1,6 @@
 # Meridian Landfall: the converter
 
-How `meridian_landfall_1.0.sd7` is made. **The ship is Starship Meridian's own:** `Landfall.csproj` compiles Meridian's `Layout.cs`, `Terrain.cs`, `Common.cs`, `Paint.cs`, `Check.cs`, `Place.cs` and `Create.cs` from `../../step50-starship-meridian/converter`, unchanged, and moves the ship by one offset. **So an edit to any of those files changes this map's build too.** Everything round it is made here: the asteroid's terrain, texture, detail maps and sky, the moonrock models, the landing struts and the void's invisible rubble. It is built on All That Simmers v1.1.1 for its featureplacer gadget (its detail textures aren't used).
+How `meridian_landfall_1.0.sd7` is made. **The ship is Starship Meridian's own:** `Landfall.csproj` compiles Meridian's `Layout.cs`, `Terrain.cs`, `Common.cs`, `Paint.cs`, `Check.cs`, `Place.cs`, `Create.cs` and (since Meridian 1.1) `Metal.cs` from `../../step50-starship-meridian/converter`, unchanged, and moves the ship by one offset. **So an edit to any of those files changes this map's build too.** Everything round it is made here: the asteroid's terrain, texture, detail maps and sky, the moonrock models, the landing struts and the void's invisible rubble. It is built on All That Simmers v1.1.1 for its featureplacer gadget (its detail textures aren't used).
 
 **The layout** outside the ship is `../design/layout.py`: one table, which draws `../design/layout.svg` and writes `../design/layout.json`. The build copies that file beside the converter, and `World.cs` reads it. The small craters are generated there (seed 51), and the outlines' shapes come from the same SplitMix64 hash in both, so the build makes the craters the drawing shows. Run `python layout.py` after changing the table, then rebuild.
 
@@ -61,7 +61,7 @@ MapTool install meridian_landfall_1.0.sd7 bar-data/maps
   - Every noise is read at the port half's mirror image.
   - Also the specular and normal maps (written upside down, PLAN.md rule 7). The splat and the starfield sky are Meridian's.
 - `Rocks.cs`: the moonrock (boulders in four sizes, and slabs and shards as faceted lumps, each face dust, basalt or fresh-broken by how it lies) on its own 1024 atlas, the ship's landing strut, and the void's rubble: an invisible feature, 128 × 128, whose collision box is a 1-unit cube 600 under the ground.
-- `Mesh.cs`, `Atlas.cs`, `Models.cs`, `Features.cs`: Meridian's model builder, atlas, models and feature writer, copied. The mesh maps the moonrock's regions to the second atlas, and the writer gives each model its atlas and writes the rubble's buried collision box.
+- `Mesh.cs`, `Atlas.cs`, `Models.cs`, `Features.cs`: Meridian's model builder, atlas, models and feature writer, copied. `Models.cs` keeps Meridian 1.0's engine bell and names its sizes (`BellAxis` and the rest), which Meridian's `Check.cs` and `Paint.cs` read; 1.1's bell is smaller and lower. The mesh maps the moonrock's regions to the second atlas, and the writer gives each model its atlas and writes the rubble's buried collision box.
 - `LandPlace.cs`: what MapTool adds.
   - The ship's features, moved.
   - The struts, three on each long side between the bay doors.

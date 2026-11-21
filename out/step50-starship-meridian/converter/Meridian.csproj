@@ -9,5 +9,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\MapCore\MapCore.csproj" />
+    <!-- 1.1: the ship's badge (your map editor's icon), painted on the hull's sides as nose art. -->
+    <None Include="badge.png" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

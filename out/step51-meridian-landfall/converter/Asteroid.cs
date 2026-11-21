@@ -18,8 +18,6 @@ static class Asteroid
 {
     public const byte Plain = 0, InCrater = 1, InPit = 2, AtEdge = 3, Hull = 4, BayDoor = 5, HullSide = 6;
     public const double CutBelow = 110, PitWall = 110, EdgeWall = 110, VoidFloor = 450;
-    /// <summary>A ship floor above this (its own heights: the bulkheads' cap, 340, less 60) gets its walls raised 60 over it.</summary>
-    public const double HighFloor = Layout.Bulkhead - 60;
 
     public sealed class Land
     {
@@ -264,30 +262,6 @@ static class Asteroid
                 land.H[i] = (float)h;
                 land.VoidV[i] = (float)voidV;
                 land.Kind[i] = kind;
-            }
-        });
-
-        // Meridian's bulkheads are capped at 340, under the top of its bridge ramps (380 down to 240): there a vehicle can
-        // drive off the ramp onto the wall's top and on over the bow's hull. Here a wall within 48 of a floor above 280
-        // (the bridge's, its landings', the ramps' upper parts) stands at least 60 over it; every other wall is Meridian's.
-        Parallel.For(0, nz, z =>
-        {
-            for (int x = 0; x <= half; x++)
-            {
-                int si = land.ShipIndex(x, z);
-                if (si < 0 || ship.Cell[si] != Terrain.Solid || ship.Floor[si]) continue;
-                int sx = si % ship.NX, sz = si / ship.NX;
-                double floor = double.MinValue;
-                for (int dz = -6; dz <= 6; dz++)
-                    for (int dx = -6; dx <= 6; dx++)
-                    {
-                        int ox = sx + dx, oz = sz + dz;
-                        if (ox < 0 || oz < 0 || ox >= ship.NX || oz >= ship.NZ || dx * dx + dz * dz > 36) continue;
-                        int o = oz * ship.NX + ox;
-                        if (ship.Floor[o]) floor = Math.Max(floor, ship.H[o]);
-                    }
-                int i = z * nx + x;
-                if (floor > HighFloor && land.H[i] < floor + World.HY + 60) land.H[i] = (float)(floor + World.HY + 60);
             }
         });
 

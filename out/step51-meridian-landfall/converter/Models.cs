@@ -304,15 +304,27 @@ static class Models
         return new FeatureDef("sm_coolant", "Starship Meridian: a coolant tower", Features.Centred(m), true, 0);
     }
 
+    /// <summary>
+    /// This map's engine bell (Starship Meridian 1.0's, kept: 1.1's is smaller and hangs lower): its axis over its origin,
+    /// its throat's, mouth's and rim's radii and where along its length (aft, +x) each is. Meridian's Check.cs and Paint.cs,
+    /// compiled in, read them (the dark ring painted round each throat on the housings' aft faces).
+    /// </summary>
+    public const float BellAxis = 140, BellThroat = 110, BellMouth = 210, BellRim = 214, BellFlare = 60, BellEnd = 330, BellRimEnd = 340;
+
+    /// <summary>The bell's outer radius at a point along its length (model x).</summary>
+    public static float BellRadius(float x) =>
+        x < BellFlare ? BellThroat : x < BellEnd ? BellThroat + (BellMouth - BellThroat) * (x - BellFlare) / (BellEnd - BellFlare) : BellRim;
+
     public static FeatureDef EngineBell()
     {
         var m = new Mesh();
         // Mounted on its housing's aft end, the bell flaring out aft (+x) over space.
+        const float Y = BellAxis;
         m.Box(V(-120, 0, -150), V(0, 150, 150), Region.Plate, Region.Graphite);
-        m.Tube(V(0, 140, 0), V(60, 140, 0), 110, 110, Region.Graphite, 24, cap0: Region.Dark);
-        m.Tube(V(60, 140, 0), V(330, 140, 0), 110, 210, Region.Plate, 24);
-        m.Tube(V(60, 140, 0), V(328, 140, 0), 100, 200, Region.EngineBell, 24, inside: true);
-        m.Tube(V(330, 140, 0), V(340, 140, 0), 214, 214, Region.Graphite, 24);
+        m.Tube(V(0, Y, 0), V(BellFlare, Y, 0), BellThroat, BellThroat, Region.Graphite, 24, cap0: Region.Dark);
+        m.Tube(V(BellFlare, Y, 0), V(BellEnd, Y, 0), BellThroat, BellMouth, Region.Plate, 24);
+        m.Tube(V(BellFlare, Y, 0), V(BellEnd - 2, Y, 0), BellThroat - 10, BellMouth - 10, Region.EngineBell, 24, inside: true);
+        m.Tube(V(BellEnd, Y, 0), V(BellRimEnd, Y, 0), BellRim, BellRim, Region.Graphite, 24);
         return new FeatureDef("sm_enginebell", "Starship Meridian: a main engine", m, true, 0, Blocking: false);
     }
 

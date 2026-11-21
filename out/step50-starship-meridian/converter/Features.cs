@@ -6,11 +6,24 @@ using System.Numerics;
 using System.Text;
 
 /// <summary>
-/// One feature: its model, how it blocks and what it is worth. Landmarks are indestructible with nothing to reclaim;
-/// the rest are reclaimable. A footprint may be given (the base of a machine whose boom or wheel overhangs the ground).
+/// One feature: its model, how it blocks and what it is worth. Every feature can be reclaimed (1.1) but the ship's own
+/// thrusters (<paramref name="Fixed"/>: part of the hull, indestructible, nothing to reclaim). What a feature gives is by
+/// its size: energy from 50 (a 2 × 2 footprint) to 250 (18 × 18) on a log scale of its footprint's area, and metal a fifth
+/// of that, as befits a metal map; the reactor's core overrides its energy. Landmarks stand firm: they can't be crushed
+/// and weapons can't bring them down. A footprint may be given (the base of a machine whose boom or wheel overhangs the ground).
 /// </summary>
-sealed record FeatureDef(string Name, string Description, Mesh Mesh, bool Landmark, int Metal, int Energy = 0, bool Blocking = true, (int X, int Z)? Base = null)
+sealed record FeatureDef(string Name, string Description, Mesh Mesh, bool Landmark, bool Blocking = true, (int X, int Z)? Base = null,
+    bool Fixed = false, int? EnergyOverride = null)
 {
+    public int Energy => Fixed ? 0 : EnergyOverride ?? BySize(Footprint);
+    public int Metal => Fixed ? 0 : Math.Min(50, (int)Math.Round(Energy / 5.0));
+
+    static int BySize((int X, int Z) fp)
+    {
+        double k = Math.Clamp(Math.Log(fp.X * fp.Z / 4.0) / Math.Log(324 / 4.0), 0, 1);
+        return (int)Math.Round((50 + 200 * k) / 10) * 10;
+    }
+
     /// <summary>The box of what stands above ground (a little above, so a skirt doesn't count).</summary>
     public (Vector3 Min, Vector3 Max) Box => Mesh.Solid(above: 2);
 
@@ -54,10 +67,13 @@ static class Features
         sb.Append("\tupright = true,\n");
         sb.Append($"\tfootprintx = {fx},\n");
         sb.Append($"\tfootprintz = {fz},\n");
-        if (d.Landmark)
+        if (d.Fixed)
             sb.Append("\tdamage = 1000000000,\n\tindestructible = true,\n\tcrushresistance = 1000000,\n\treclaimable = false,\n\tautoreclaimable = false,\n\tmetal = 0,\n\tenergy = 0,\n");
         else
-            sb.Append($"\tdamage = {Math.Max(2000, d.Metal * 12)},\n\treclaimable = true,\n\tautoreclaimable = false,\n\tmetal = {d.Metal},\n\tenergy = {d.Energy},\n\treclaimtime = {Math.Max(400, d.Metal * 6)},\n");
+        {
+            sb.Append(d.Landmark ? "\tdamage = 1000000000,\n\tcrushresistance = 1000000,\n" : $"\tdamage = {Math.Max(2000, d.Energy * 30)},\n");
+            sb.Append($"\treclaimable = true,\n\tautoreclaimable = false,\n\tmetal = {d.Metal},\n\tenergy = {d.Energy},\n\treclaimtime = {Math.Max(400, (d.Metal + d.Energy) * 6)},\n");
+        }
         sb.Append("\tflammable = false,\n");
         sb.Append("\tcollisionvolumetype = \"box\",\n");
         sb.Append($"\tcollisionvolumescales = \"{F(max.X - min.X)} {F(max.Y)} {F(max.Z - min.Z)}\",\n");
