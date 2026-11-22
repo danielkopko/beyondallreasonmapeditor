@@ -1,4 +1,8 @@
-**Starship Meridian 1.1** for [Beyond All Reason](https://www.beyondallreason.info/): a 24 × 28 map for 8v8.
+**Starship Meridian 1.2** for [Beyond All Reason](https://www.beyondallreason.info/): a 24 × 28 map for 8v8.
+
+**New in 1.2:**
+
+- **Metal extractors can be placed.** On 1.1 BAR didn't recognise the ship as a metal map, so it refused every extractor, though every other building placed. Its spot finder loses regions as it scans, and on this ship's decks it lost every one. Two short strips of trace metal in the top corners of space (raw 1, worth nothing) now make BAR read a metal map. Extractors go anywhere on deck, as intended. Nothing else changes.
 
 **New in 1.1:**
 
@@ -37,6 +41,6 @@ A battle-carrier adrift in space, boarded from both sides at once. Port fights s
 - The ship, the reactor's core, the drive core and the main engines were modelled and painted for this map. The minimap and lobby picture are the ship seen straight down in 3D, on the starfield.
 - The gadgets are from All That Simmers by Nikuksis.
 
-**Install:** put `starship_meridian_1.1.sd7` in BAR's `maps` folder (usually `%LOCALAPPDATA%\Programs\Beyond-All-Reason\data\maps`). To see its picture on the lobby's setup screen, put `Starship_Meridian_1.1.jpg` in `data\LuaMenu\Images\Minimaps` and restart the lobby.
+**Install:** put `starship_meridian_1.2.sd7` in BAR's `maps` folder (usually `%LOCALAPPDATA%\Programs\Beyond-All-Reason\data\maps`). To see its picture on the lobby's setup screen, put `Starship_Meridian_1.2.jpg` in `data\LuaMenu\Images\Minimaps` and restart the lobby.
 
 **Not yet tried in a game.** It is the first of these maps whose space isn't drawn (`voidGround`): a transport could drop units onto the invisible ground there, where they would stand stuck. The map has no start boxes.

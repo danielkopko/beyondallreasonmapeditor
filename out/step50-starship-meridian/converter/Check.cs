@@ -358,31 +358,34 @@ static class Check
         P CellCentre(int x, int z) => new(x * Metal.CellSize + 8, z * Metal.CellSize + 8);
         bool FloorCell(int x, int z) => t.Floor[(2 * z + 1) * t.NX + 2 * x + 1];
         var misplaced = new List<string>();
-        int cells = 0, notMirrored = 0;
+        int cells = 0, notMirrored = 0, markers = 0;
         var bySide = new Dictionary<string, int>();
         for (int z = 0; z < mh; z++)
             for (int x = 0; x < mw; x++)
             {
                 byte v = metal[z * mw + x];
                 if (v != metal[z * mw + mw - 1 - x]) notMirrored++;
-                if ((v != 0) != FloorCell(x, z) || (v != 0 && v != Layout.MetalRaw))
+                bool marker = Metal.Marker(x, z, mw);
+                if ((v != 0) != (FloorCell(x, z) || marker) || (v != 0 && v != (marker ? Metal.MarkerRaw : Layout.MetalRaw)) || (marker && FloorCell(x, z)))
                     misplaced.Add($"({CellCentre(x, z).X:0}, {CellCentre(x, z).Z:0}) {v}");
-                if (v == 0) continue;
+                if (marker && v != 0) markers++;
+                if (v == 0 || marker) continue;
                 cells++;
                 int c = CellAt(CellCentre(x, z));
                 string side = c >= 0 ? Layout.Cells[c].Side : "door";      // doorways, and (1.1) the outer walk
                 bySide[side] = bySide.GetValueOrDefault(side) + 1;
             }
         double Area(int n) => n * 256 / 1e6;
-        Expect(misplaced.Count == 0, $"metal {Layout.MetalRaw} on every deck floor cell and nowhere else (not the walls, hull tops or space): {cells} cells, {Area(cells):0.0} M square units{List(misplaced)}");
+        Expect(misplaced.Count == 0, $"metal {Layout.MetalRaw} on every deck floor cell and nowhere else (not the walls, hull tops or space), but for BAR's marker strips ({markers} cells of {Metal.MarkerRaw} in space's top corners): {cells} cells, {Area(cells):0.0} M square units{List(misplaced)}");
         Expect(notMirrored == 0, $"the metal is its own mirror image ({notMirrored} cells differ)");
         Expect(bySide.GetValueOrDefault("port") == bySide.GetValueOrDefault("starboard"),
             $"each team's rooms hold the same metal: {Area(bySide.GetValueOrDefault("port")):0.0} M square units each, the shared rooms {Area(bySide.GetValueOrDefault("centre")):0.0} M, the doorways and the outer walk {Area(bySide.GetValueOrDefault("door")):0.0} M");
-        var smf = new MapCore.Smf.SmfFile(Layout.SquaresX, Layout.SquaresZ);
-        metal.CopyTo(smf.MetalMap, 0);
-        var widest = new MapCore.Metal.MetalLayer(smf).FindSpots()
-            .Select(s => (Math.Max(s.Cells.Max(q => q.X) - s.Cells.Min(q => q.X), s.Cells.Max(q => q.Z) - s.Cells.Min(q => q.Z)) + 1) * Metal.CellSize).Max();
-        Expect(widest > 6 * extractorRadius, $"BAR reads it as a metal map, not spots: its widest stretch of metal is {widest} across, over 6 x the extractor radius ({6 * extractorRadius:0})");
+        // 1.2: BAR's own test, run here line for line (Metal.BarReads), not a guess at it: 1.1 passed a guess (its widest
+        // stretch of metal) and BAR still refused every extractor.
+        var bar = Metal.BarReads(metal, mw, mh, extractorRadius);
+        var decksOnly = Metal.BarReads(metal.Select((v, i) => Metal.Marker(i % mw, i / mw, mw) ? (byte)0 : v).ToArray(), mw, mh, extractorRadius);
+        Expect(bar.MetalMap && !bar.Error,
+            $"BAR reads it as a metal map, so its mex denier stands down and extractors go anywhere on deck: its spot finder (api_resource_spot_finder.lua), run here line for line, keeps {bar.Regions} region(s) and reads a metal map from a marker strip; on the decks' metal alone it keeps {decksOnly.Regions} and {(decksOnly.Error ? "stops on an error" : decksOnly.MetalMap ? "reads a metal map too" : "reads no metal map (1.1's fault)")}");
         double centred = 9 * Layout.MetalRaw * Layout.MaxMetal * 0.001;
         var yields = starts.Select(s => Metal.T1Income(metal, mw, mh, new P(Math.Floor(s.X / 16) * 16 + 8, Math.Floor(s.Z / 16) * 16 + 8), maxMetal, extractorRadius)).ToArray();
         double corner = Metal.T1Income(metal, mw, mh, new P(Math.Floor(starts[0].X / 16) * 16, Math.Floor(starts[0].Z / 16) * 16), maxMetal, extractorRadius);
@@ -393,7 +396,7 @@ static class Check
         for (int z = 0; z < mh; z++)
             for (int x = 0; x < mw; x++)
             {
-                if (metal[z * mw + x] == 0) continue;
+                if (metal[z * mw + x] == 0 || Metal.Marker(x, z, mw)) continue;
                 var p = CellCentre(x, z);
                 if (Has(all, p)) byVehicle++;
                 else if (Has(bots, p)) byBot++;

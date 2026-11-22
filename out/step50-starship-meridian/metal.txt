@@ -1,3 +1,5 @@
 maxMetal 7.5, extractorRadius 24: T1 income = 0.001 x sum(raw x maxMetal) within the radius
-1 spots, total raw metal 34855432, 2.37 metal/s with a T1 extractor on every spot
+3 spots, total raw metal 34855464, 2.4 metal/s with a T1 extractor on every spot
+  (   144,     24)  16 cells  raw    16   0.015 metal/s
+  ( 12144,     24)  16 cells  raw    16   0.015 metal/s
   (  6144,   7200)  441208 cells  raw 34855432    2.37 metal/s

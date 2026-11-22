@@ -137,7 +137,7 @@ return 0;
 
 static class Build
 {
-    public const string File = "starship_meridian_1.1", Smf = "StarshipMeridian";
+    public const string File = "starship_meridian_1.2", Smf = "StarshipMeridian";
 
     /// <summary>The features: every model, and a mirror-image twin (name_m) of any that isn't symmetric about its length.</summary>
     public static List<FeatureDef> Models()
@@ -199,7 +199,7 @@ static class Build
         void Set(string key, string value) => info.SetFromText(key, value);
         Set("name", "Starship Meridian");
         Set("shortname", "StarshipMeridian");
-        Set("version", "1.1");
+        Set("version", "1.2");
         Set("author", "Daniel Kopko");
         Set("description", "An 8v8 map that is one whole starship adrift in space, port against starboard: hangars, a crew deck, a cargo hold, power rooms on each side, and on the centreline the bridge, command room, reactor, shield generator and engine room to fight over. No wind in space. Gadgets from All That Simmers by Nikuksis.");
         Set("maxMetal", Layout.MaxMetal.ToString(CultureInfo.InvariantCulture));

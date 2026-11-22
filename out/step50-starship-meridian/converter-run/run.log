@@ -558,6 +558,6 @@ pilha_crystal_teal1 added to mapconfig/featureplacer/set.lua at (6732, 12494)
 pilha_crystal_teal1 added to mapconfig/featureplacer/set.lua at (6824, 12358)
 sm_reactor added to mapconfig/featureplacer/set.lua at (6144, 8050)
 sm_drivecore added to mapconfig/featureplacer/set.lua at (6144, 11650)
-warning: The map is still called "Starship Meridian 1.1", like the original: BAR would treat the two as the same map. Change the name or the version.
+warning: The map is still called "Starship Meridian 1.2", like the original: BAR would treat the two as the same map. Change the name or the version.
 warning: Not defined by this map: pilha_crystal_quartz2, pilha_crystal_quartz1, pilha_crystal_teal3, pilha_crystal_teal2, pilha_crystal_teal1. They must exist in BAR, or those items will simply be missing in game.
-Wrote C:\Users\DanielKopko\AppData\Local\Temp\claude\284c7bf65c69a6fa\dbce7ec2-7026-4c13-85a6-481328f92158\scratchpad\meridian11\features.sd7
+Wrote C:\Users\DanielKopko\AppData\Local\Temp\claude\284c7bf65c69a6fa\dbce7ec2-7026-4c13-85a6-481328f92158\scratchpad\meridian12\features.sd7

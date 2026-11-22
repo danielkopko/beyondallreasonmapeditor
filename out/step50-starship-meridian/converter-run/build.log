@@ -58,10 +58,10 @@ Standing true:
   ok   the 6 main engines stand on the outer walk's level and wholly under it: their highest point 10 below its surface
   ok   the main engines' cones clear the ground of space under them, by 33 at the least
 Metal (a metal map: the whole deck), vents and starts:
-  ok   metal 79 on every deck floor cell and nowhere else (not the walls, hull tops or space): 441208 cells, 112.9 M square units
+  ok   metal 79 on every deck floor cell and nowhere else (not the walls, hull tops or space), but for BAR's marker strips (32 cells of 1 in space's top corners): 441208 cells, 112.9 M square units
   ok   the metal is its own mirror image (0 cells differ)
   ok   each team's rooms hold the same metal: 39.2 M square units each, the shared rooms 26.4 M, the doorways and the outer walk 8.1 M
-  ok   BAR reads it as a metal map, not spots: its widest stretch of metal is 13600 across, over 6 x the extractor radius (144)
+  ok   BAR reads it as a metal map, so its mex denier stands down and extractors go anywhere on deck: its spot finder (api_resource_spot_finder.lua), run here line for line, keeps 2 region(s) and reads a metal map from a marker strip; on the decks' metal alone it keeps 0 and reads no metal map (1.1's fault)
   ok   Cloud9's yield (maxMetal 7.5, extractor radius 24): a T1 extractor on open deck takes 5.33 metal/s centred on a metal cell (9 cells), 2.37 on a cell corner (4)
   ok   all the metal is in reach: vehicles reach 99.8% of its cells, bots another 0.1%, and 0.1% is under features
 Gun sites (1.1: the bridge and the thruster platforms, high ground for long-range guns):
@@ -72,5 +72,5 @@ Gun sites (1.1: the bridge and the thruster platforms, high ground for long-rang
   ok   every start is on level deck
   ok   every start's floor circle (16) lies wholly on its room's level deck, clear of ramps, doors and walls
        the fronts: air start to the enemy's air start 8603, forward hangar to the enemy's forward hangar 8891 (driving)
-map and texture in 19s
-built in 42s
+map and texture in 12s
+built in 32s

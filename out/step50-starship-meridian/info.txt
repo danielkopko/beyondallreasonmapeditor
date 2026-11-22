@@ -1,4 +1,4 @@
-Name         : Starship Meridian 1.1
+Name         : Starship Meridian 1.2
 Author       : Daniel Kopko
 Heights      : 0 to 520 (mapinfo.lua smf.minheight/maxheight, replacing the SMF header's)
 Metal        : maxMetal 7.5, extractorRadius 24
@@ -9,7 +9,7 @@ Height range : 0 to 520 (SMF header; mapinfo.lua may override)
 Map id       : 20261124
 Tile files   : StarshipMeridian.smt (172032 tiles)
 Tile index   : 384x448, 172032 distinct tiles used
-Metal map    : 441208 non-zero cells, highest value 79
+Metal map    : 441240 non-zero cells, highest value 79
 Grass map    : none
 Minimap      : 1024x1024 DXT1, 0 transparent pixels
 Features     : 4 placed, 1 types defined
